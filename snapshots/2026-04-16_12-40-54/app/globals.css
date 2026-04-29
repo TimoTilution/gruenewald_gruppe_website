@@ -1,0 +1,101 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 9rem;
+}
+
+body {
+  @apply bg-forest-900 text-white antialiased;
+}
+
+@layer components {
+  .content-shell {
+    @apply mx-auto w-full max-w-[80rem] px-4 sm:px-6 lg:px-8;
+  }
+
+  .section-card {
+    @apply rounded-[2rem] border border-white/10 bg-forest-800 shadow-soft;
+  }
+}
+
+a {
+  @apply transition-colors duration-200;
+}
+
+::selection {
+  @apply bg-forest-700 text-white;
+}
+
+.leaflet-container {
+  height: 100%;
+  width: 100%;
+  font: inherit;
+}
+
+.leaflet-control-zoom {
+  border: 0 !important;
+  box-shadow: 0 16px 28px rgba(7, 18, 48, 0.18) !important;
+}
+
+.leaflet-control-zoom a {
+  display: grid !important;
+  place-items: center !important;
+  width: 2.5rem !important;
+  height: 2.5rem !important;
+  border: 1px solid rgba(24, 41, 86, 0.12) !important;
+  background: rgba(255, 255, 255, 0.92) !important;
+  color: #182956 !important;
+}
+
+.leaflet-control-zoom a:first-child {
+  border-radius: 0.95rem 0.95rem 0 0 !important;
+}
+
+.leaflet-control-zoom a:last-child {
+  border-radius: 0 0 0.95rem 0.95rem !important;
+}
+
+.leaflet-control-attribution {
+  background: rgba(255, 255, 255, 0.78) !important;
+  border-radius: 0.6rem 0 0 0 !important;
+  padding: 0.18rem 0.45rem !important;
+  color: rgba(24, 41, 86, 0.7) !important;
+}
+
+.leaflet-control-attribution a {
+  color: #182956 !important;
+}
+
+.gruenewald-map-marker {
+  background: transparent;
+  border: 0;
+}
+
+.gruenewald-map-marker__core {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 32% 30%, rgba(108, 138, 221, 0.48) 0%, rgba(108, 138, 221, 0) 42%),
+    linear-gradient(135deg, rgba(24, 41, 86, 0.98) 0%, rgba(39, 61, 120, 0.9) 100%);
+  box-shadow:
+    0 18px 30px rgba(24, 41, 86, 0.22),
+    0 0 0 6px rgba(255, 255, 255, 0.86);
+}
+
+.gruenewald-map-marker__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.18);
+}
