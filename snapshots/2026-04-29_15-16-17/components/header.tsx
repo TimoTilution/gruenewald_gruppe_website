@@ -25,8 +25,6 @@ export function Header() {
   const router = useRouter();
   const [activeSection, setActiveSection] = useState("hero");
   const [isCompact, setIsCompact] = useState(false);
-  const [isImprintVisible, setIsImprintVisible] = useState(false);
-  const [hasScrolledPastTop, setHasScrolledPastTop] = useState(false);
   const [monogramTop, setMonogramTop] = useState<number | null>(null);
   const [monogramLeft, setMonogramLeft] = useState<number | null>(null);
   const [secondaryIndicator, setSecondaryIndicator] = useState({
@@ -48,7 +46,6 @@ export function Header() {
   useLayoutEffect(() => {
     const handleScroll = () => {
       setIsCompact(window.scrollY > 12);
-      setHasScrolledPastTop(window.scrollY > 0);
     };
 
     handleScroll();
@@ -189,35 +186,6 @@ export function Header() {
       window.removeEventListener("resize", updateSecondaryIndicator);
     };
   }, [activeSection, isCompact]);
-
-  useLayoutEffect(() => {
-    if (pathname !== "/") {
-      setIsImprintVisible(false);
-      return;
-    }
-
-    const footerElement = document.querySelector("footer");
-
-    if (!(footerElement instanceof HTMLElement)) {
-      setIsImprintVisible(false);
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsImprintVisible(entry?.isIntersecting ?? false);
-      },
-      {
-        threshold: 0.01,
-      }
-    );
-
-    observer.observe(footerElement);
-
-    return () => {
-      observer.disconnect();
-    };
-  }, [pathname]);
 
   const handleSectionClick = (
     event: MouseEvent<SecondaryTriggerElement>,
@@ -364,14 +332,10 @@ export function Header() {
         href="/"
         aria-label="Grünewald Gruppe Zusatzlogo"
         className={cn(
-          "fixed z-[2147482990] hidden -translate-x-1/2 -translate-y-1/2 items-center justify-center transition-all duration-700 ease-out md:flex",
-          pathname === "/" &&
-          hasScrolledPastTop &&
-          !isImprintVisible &&
-          monogramTop !== null &&
-          monogramLeft !== null
-            ? "scale-100 opacity-100"
-            : "scale-[0.94] opacity-0"
+          "fixed z-[2147482990] hidden -translate-x-1/2 -translate-y-1/2 items-center justify-center transition-opacity duration-200 md:flex",
+          pathname === "/" && monogramTop !== null && monogramLeft !== null
+            ? "opacity-100"
+            : "opacity-0"
         )}
         style={
           monogramTop !== null && monogramLeft !== null

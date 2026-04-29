@@ -1,0 +1,76 @@
+<svg width="900" height="1200" viewBox="0 0 900 1200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="120" y1="40" x2="780" y2="1160" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#5A95D6"/>
+      <stop offset="1" stop-color="#EAF2FB"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(460 600) rotate(90) scale(520 360)">
+      <stop stop-color="#FFFFFF" stop-opacity="0.8"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="land" x1="260" y1="120" x2="620" y2="1060" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#D9D9D9"/>
+      <stop offset="1" stop-color="#C6C6C6"/>
+    </linearGradient>
+    <filter id="shadow" x="110" y="60" width="680" height="1060" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="16" stdDeviation="18" flood-color="#1B4F8B" flood-opacity="0.18"/>
+    </filter>
+    <style>
+      .city { font: 500 18px Arial, sans-serif; fill: #2B2B2B; }
+      .city-small { font: 500 16px Arial, sans-serif; fill: #2B2B2B; }
+      .brand { font: 700 22px Arial, sans-serif; fill: #1A1A1A; }
+      .copyright { font: 400 13px Arial, sans-serif; fill: #8D8D8D; }
+    </style>
+  </defs>
+
+  <rect width="900" height="1200" rx="42" fill="url(#bg)"/>
+  <rect width="900" height="1200" rx="42" fill="url(#glow)"/>
+
+  <g filter="url(#shadow)">
+    <path d="M453 96L506 112L562 108L614 134L646 178L686 216L666 272L697 320L683 374L709 432L684 510L714 582L698 664L728 760L706 836L650 890L622 968L566 1020L530 1090L472 1112L421 1086L352 1112L308 1082L279 1026L230 990L199 934L179 876L196 822L164 760L154 698L172 630L145 558L162 494L141 422L162 344L203 290L226 224L281 188L324 144L382 134L420 104L453 96Z" fill="url(#land)"/>
+  </g>
+
+  <path d="M438 140C432 200 430 248 438 294C448 346 453 389 449 438C444 496 440 542 438 596C435 654 434 720 438 778C443 850 444 918 441 988L443 1088" stroke="#2A88C9" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M358 518C391 540 418 559 441 573C468 558 497 547 533 544C571 542 607 547 648 564" stroke="#2A88C9" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M278 509C311 500 338 499 362 504" stroke="#2A88C9" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M442 294C420 279 401 256 388 225" stroke="#2A88C9" stroke-width="3.5" stroke-linecap="round"/>
+
+  <g fill="#FF9F0A">
+    <rect x="395" y="184" width="16" height="16" rx="3"/>
+    <rect x="298" y="235" width="16" height="16" rx="3"/>
+    <rect x="659" y="320" width="16" height="16" rx="3"/>
+    <rect x="372" y="372" width="16" height="16" rx="3"/>
+    <rect x="229" y="520" width="16" height="16" rx="3"/>
+    <rect x="184" y="553" width="16" height="16" rx="3"/>
+    <rect x="223" y="603" width="16" height="16" rx="3"/>
+    <rect x="569" y="555" width="16" height="16" rx="3"/>
+    <rect x="690" y="586" width="16" height="16" rx="3"/>
+    <rect x="290" y="716" width="16" height="16" rx="3"/>
+    <rect x="495" y="807" width="16" height="16" rx="3"/>
+    <rect x="332" y="914" width="16" height="16" rx="3"/>
+    <rect x="536" y="1000" width="16" height="16" rx="3"/>
+  </g>
+
+  <g>
+    <circle cx="438" cy="524" r="18" fill="#163E9F"/>
+    <text x="466" y="534" class="brand">Scheden</text>
+  </g>
+
+  <g class="city">
+    <text x="416" y="198">Hamburg</text>
+    <text x="318" y="249">Bremen</text>
+    <text x="679" y="334">Berlin</text>
+    <text x="392" y="386">Hannover</text>
+    <text x="249" y="534">Essen</text>
+    <text x="204" y="567">Düsseldorf</text>
+    <text x="243" y="617">Köln</text>
+    <text x="589" y="570">Leipzig</text>
+    <text x="710" y="601">Dresden</text>
+    <text x="310" y="730">Frankfurt am Main</text>
+    <text x="515" y="821">Nürnberg</text>
+    <text x="352" y="928">Stuttgart</text>
+    <text x="556" y="1014">München</text>
+  </g>
+
+  <text x="240" y="1128" class="copyright">© mixmaps.de</text>
+</svg>
