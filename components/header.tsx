@@ -382,8 +382,9 @@ export function Header() {
         <Image
           src="/logos/gruenewald-monogram-white.png"
           alt="Grünewald Gruppe Monogramm"
-          width={240}
-          height={240}
+          width={1536}
+          height={1024}
+          sizes="(min-width: 1280px) 840px, 660px"
           className="h-auto w-[41.25rem] drop-shadow-[0_20px_44px_rgba(14,25,55,0.24)] xl:w-[52.5rem]"
           priority
         />

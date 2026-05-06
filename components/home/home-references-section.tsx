@@ -1,57 +1,69 @@
-"use client";
+﻿"use client";
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { X } from "lucide-react";
 import { SectionShell } from "@/components/section-shell";
 
 const project = {
   title: "Sprudelhof Therme, Bad Nauheim",
-  description: "Test",
+  description:
+    "Die Sanierung der historischen Sprudelhof Therme in Bad Nauheim verbindet eindrucksvoll Tradition und Moderne. Bei diesem außergewöhnlichen Projekt treffen denkmalgeschützte Architektur, hochwertige Materialien und modernste Bauanforderungen aufeinander. Für uns war die Mitwirkung an einem der bekanntesten Thermenprojekte Deutschlands eine besondere Aufgabe - geprägt von Präzision, handwerklichem Anspruch und der Herausforderung, historische Substanz mit zeitgemäßem Komfort zu vereinen.",
   previewImages: [
     {
       src: "/references/sprudelhof-therme/title-images/sprudelhof-therme-title-01.svg",
+      hoverText: "Sprudelhof Therme, Bad Nauheim | öffentlich | Tilution GmbH",
       alt: "Titelbild der Sprudelhof Therme Bad Nauheim",
       isSvg: true,
     },
     {
-      src: "/references/sprudelhof-therme/title-images/sprudelhof-therme-title-02.svg",
-      alt: "Weiteres Titelbild der Sprudelhof Therme Bad Nauheim",
-      isSvg: true,
+      src: "/references/sprudelhof-therme/title-images/fraunhofer-iff-title.png",
+      hoverText: "Fraunhofer Institut, Kassel | öffentlich | Tilution GmbH",
+      alt: "Außenansicht des Fraunhofer IFF Gebäudes",
     },
     {
       src: "/references/sprudelhof-therme/title-images/sprudelhof-therme-title-03.png",
+      hoverText: "Dom Hotel, Köln | gewerblich | Tilution GmbH",
       alt: "Außenansicht eines Referenzprojekts am Kölner Dom",
     },
     {
       src: "/references/sprudelhof-therme/title-images/sprudelhof-therme-title-04.svg",
+      hoverText: "Privathaus, Kassel | privat | Grünewald GmbH",
       alt: "Weiteres Titelbild der Sprudelhof Therme Bad Nauheim",
       isSvg: true,
     },
     {
       src: "/references/sprudelhof-therme/title-images/sprudelhof-therme-title-05.svg",
+      hoverText: "Josef-Schwarz-Schule, Heilbronn | gewerblich | Clay Construction",
       alt: "Weiteres Titelbild der Sprudelhof Therme Bad Nauheim",
       isSvg: true,
     },
     {
       src: "/references/sprudelhof-therme/title-images/sprudelhof-therme-title-06.png",
-      alt: "Außenansicht eines modernen Büro- und Verwaltungsgebäudes",
+      hoverText: "Friedensschule, Köln | gewerblich | Tilution GmbH",
+      alt: "AuÃŸenansicht eines modernen BÃ¼ro- und VerwaltungsgebÃ¤udes",
     },
     {
       src: "/references/sprudelhof-therme/title-images/sprudelhof-therme-title-07.jpg",
+      hoverText: "Stadthalle, Göttingen | öffentlich | Tilution GmbH",
       alt: "Außenansicht der Stadthalle Göttingen",
     },
     {
       src: "/references/sprudelhof-therme/title-images/sprudelhof-therme-title-08.jpeg",
+      hoverText: "BMW Autohaus, Göttingen | gewerblich | Tilution GmbH",
       alt: "Außenansicht eines BMW Autohauses in Göttingen",
     },
     {
       src: "/references/sprudelhof-therme/title-images/sprudelhof-therme-title-09.jpg",
+      hoverText: "Feuerwehr, Duderstadt | gewerblich | Tilution GmbH",
       alt: "Visualisierung des Feuerwehrzentrums Duderstadt",
     },
   ],
   images: [
     {
       src: "/references/sprudelhof-therme/sprudelhof-therme-aussenansicht.svg",
+      description:
+        "Die Sanierung der historischen Sprudelhof Therme in Bad Nauheim verbindet eindrucksvoll Tradition und Moderne. Bei diesem außergewöhnlichen Projekt treffen denkmalgeschützte Architektur, hochwertige Materialien und modernste Bauanforderungen aufeinander. Für uns war die Mitwirkung an einem der bekanntesten Thermenprojekte Deutschlands eine besondere Aufgabe - geprägt von Präzision, handwerklichem Anspruch und der Herausforderung, historische Substanz mit zeitgemäßem Komfort zu vereinen.",
       alt: "Außenansicht der Sprudelhof Therme Bad Nauheim",
       isSvg: true,
     },
@@ -97,7 +109,7 @@ export function HomeReferencesSection() {
   const [isOpen, setIsOpen] = useState(false);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
 
-  const activeImage = project.images[activeImageIndex];
+  const activeImage = project.previewImages[activeImageIndex];
 
   const openGallery = (index: number) => {
     setActiveImageIndex(index);
@@ -110,13 +122,13 @@ export function HomeReferencesSection() {
 
   const showPrevious = () => {
     setActiveImageIndex((current) =>
-      current === 0 ? project.images.length - 1 : current - 1
+      current === 0 ? project.previewImages.length - 1 : current - 1
     );
   };
 
   const showNext = () => {
     setActiveImageIndex((current) =>
-      current === project.images.length - 1 ? 0 : current + 1
+      current === project.previewImages.length - 1 ? 0 : current + 1
     );
   };
 
@@ -139,14 +151,17 @@ export function HomeReferencesSection() {
       }
     };
 
+    const previousOverflow = document.body.style.overflow;
     window.addEventListener("keydown", handleKeyDown);
     document.body.classList.add("reference-gallery-open");
+    document.body.classList.add("site-overlay-open");
     document.body.style.overflow = "hidden";
 
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
       document.body.classList.remove("reference-gallery-open");
-      document.body.style.overflow = "";
+      document.body.classList.remove("site-overlay-open");
+      document.body.style.overflow = previousOverflow;
     };
   }, [isOpen]);
 
@@ -161,17 +176,17 @@ export function HomeReferencesSection() {
             Projekte aus unterschiedlichen Bereichen
           </h2>
           <p className="section-subline">
-            Gebündelte Kompetenz der Grünewald Gruppe – von der Planung bis zur
+            Gebündelte Kompetenz der Grünewald Gruppe - von der Planung bis zur
             Umsetzung
           </p>
         </div>
 
         <div className="mt-12 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-          {project.previewImages.map((image) => (
+          {project.previewImages.map((image, index) => (
             <button
               key={image.src}
               type="button"
-              onClick={() => openGallery(0)}
+              onClick={() => openGallery(index)}
               className="liquid-card group block aspect-[4/3] w-full text-left lg:aspect-[16/11]"
               aria-label={`Projektgalerie öffnen: ${project.title}`}
             >
@@ -183,7 +198,7 @@ export function HomeReferencesSection() {
                 className="object-cover transition-transform duration-300 ease-out group-hover:scale-[1.02]"
               />
               <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-forest-900/90 via-forest-900/70 to-transparent px-6 py-5 opacity-0 transition duration-300 group-hover:opacity-100">
-                <p className="mt-2 text-lg text-white">{project.description}</p>
+                <p className="mt-2 text-lg text-white">{image.hoverText}</p>
               </div>
             </button>
           ))}
@@ -198,7 +213,7 @@ export function HomeReferencesSection() {
             className="fixed right-3 top-3 z-[2147483110] inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/25 bg-forest-900 text-2xl font-semibold leading-none text-white shadow-soft transition hover:bg-forest-700 sm:right-6 sm:top-6 sm:h-12 sm:w-12"
             aria-label="Galerie schließen"
           >
-            X
+            <X className="h-5 w-5" />
           </button>
 
           <div className="flex h-full items-center justify-center px-4 py-8 lg:px-10">
@@ -236,7 +251,7 @@ export function HomeReferencesSection() {
 
               <div className="flex flex-col justify-center lg:translate-x-20 lg:py-6 xl:translate-x-28">
                 <div className="grid grid-cols-2 gap-3 lg:grid-cols-1 lg:gap-5">
-                  {project.images.map((image, index) => {
+                  {project.previewImages.map((image, index) => {
                     const isActive = index === activeImageIndex;
 
                     return (

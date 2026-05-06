@@ -171,15 +171,15 @@ export function HomeServicesSection() {
                       isSupporting
                         ? "min-h-[2.25rem] text-[0.94rem] sm:text-[0.98rem]"
                         : "min-h-[2.75rem] text-[1.05rem] sm:text-[1.1rem]"
-                    } ${company.name === "Klimadecken & Lehmbau" ? "whitespace-nowrap" : ""}`}
+                    } whitespace-nowrap`}
                   >
                     {company.name}
                   </h3>
                   <p
-                    className={`self-center text-forest-100/86 ${
+                    className={`w-full self-center whitespace-nowrap text-forest-100/86 ${
                       isSupporting
-                        ? "mt-1.5 w-[90%] max-w-none text-[0.72rem] leading-[1.125rem]"
-                        : "mt-0 max-w-[28ch] text-[0.95rem] leading-7"
+                        ? "mt-1.5 text-[0.72rem] leading-[1.125rem]"
+                        : "mt-0 text-[0.95rem] leading-7"
                     }`}
                   >
                     {company.text}

@@ -1,46 +1,115 @@
+"use client";
+
 import Image from "next/image";
+import { useEffect, useState } from "react";
+import { X } from "lucide-react";
 import { SectionShell } from "@/components/section-shell";
 
 export function HomeAboutSection() {
+  const [isMapOpen, setIsMapOpen] = useState(false);
+
+  useEffect(() => {
+    if (!isMapOpen) {
+      return;
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsMapOpen(false);
+      }
+    };
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.classList.add("site-overlay-open");
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.body.classList.remove("site-overlay-open");
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isMapOpen]);
+
   return (
     <SectionShell id="ueber-uns">
       <section className="section-card relative overflow-hidden px-6 py-10 sm:px-9 lg:p-12">
-        <div className="relative z-20 lg:grid lg:grid-cols-[minmax(0,13cm)_minmax(0,1fr)] lg:items-start lg:gap-10">
-          <div className="max-w-2xl lg:w-[13cm] lg:max-w-[13cm]">
+        <div className="relative z-20 flex flex-col gap-12 lg:flex-row lg:items-start lg:justify-between lg:gap-10">
+          <div className="max-w-2xl lg:min-w-0 lg:flex-1">
             <p className="section-eyebrow">Über uns</p>
             <h2 className="section-heading">
               Die richtige Lösung für jede Projektanforderung
             </h2>
-            <div className="mt-7 space-y-5 text-base leading-8 text-forest-100/78">
-              <p>
-                Die Grünewald Gruppe ist ein familiengeführter
-                Unternehmensverbund im Bau- und Ausbaugewerbe.
-              </p>
-              <p>
-                Aus einem klassischen Fliesenlegerbetrieb entstanden, vereinen
-                wir heute spezialisierte Unternehmen für private Bauvorhaben,
-                gewerbliche Großprojekte und innovative Systemlösungen.
-              </p>
-              <p>
-                Klare Strukturen und fokussierte Kompetenzen ermöglichen es
-                uns, jedes Projekt passgenau und auf höchstem Niveau
-                umzusetzen. Dank unserer zentralen Lage in Deutschland sind wir
-                bundesweit im Einsatz und erreichen unsere Projekte schnell,
-                effizient und zuverlässig.
-              </p>
-            </div>
+            <ul className="mt-7 list-disc space-y-3 pl-6 text-base leading-8 text-forest-100/78 sm:text-lg">
+              <li>
+                Familiengeführte Unternehmensgruppe im Bau- und Ausbaugewerbe
+              </li>
+              <li>
+                Spezialisiert auf private, gewerbliche und öffentliche
+                Bauprojekte
+              </li>
+              <li>
+                Bundesweit im Einsatz - schnell, flexibel und zuverlässig
+              </li>
+              <li>Klare Strukturen für effiziente Projektabläufe</li>
+              <li>
+                Hochwertige Lösungen mit Fokus auf Qualität und Termintreue
+              </li>
+            </ul>
           </div>
 
-          <div className="relative z-10 mt-12 h-[22rem] min-w-0 overflow-hidden rounded-[1.9rem] lg:mt-0 lg:h-full lg:min-h-[28rem] lg:self-stretch">
+          <button
+            type="button"
+            onClick={() => setIsMapOpen(true)}
+            className="group block w-full overflow-hidden rounded-[1.9rem] text-left transition-transform duration-300 hover:scale-[1.01] lg:w-[22rem] lg:max-w-[22rem] lg:flex-none lg:self-start xl:w-[24rem] xl:max-w-[24rem]"
+            aria-label="Deutschlandkarte im Großformat öffnen"
+          >
             <Image
               src="/deutschland-karte.png"
               alt="Deutschlandkarte"
-              fill
-              className="object-cover object-right"
-              sizes="(min-width: 1024px) 40vw, 100vw"
+              width={1080}
+              height={1536}
+              className="h-auto w-full"
+              sizes="(min-width: 1280px) 24rem, (min-width: 1024px) 22rem, 100vw"
+              priority
             />
-          </div>
+          </button>
         </div>
+
+        {isMapOpen ? (
+          <div
+            className="fixed inset-0 z-[2147483100] flex items-center justify-center bg-forest-900/88 px-4 py-6 backdrop-blur-md sm:px-8"
+            onClick={() => setIsMapOpen(false)}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Deutschlandkarte im Großformat"
+          >
+            <div
+              className="relative w-full max-w-[72rem]"
+              onClick={(event) => event.stopPropagation()}
+            >
+              <button
+                type="button"
+                onClick={() => setIsMapOpen(false)}
+                className="absolute right-3 top-3 z-10 inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-forest-900/72 text-white transition-colors duration-200 hover:bg-forest-800"
+                aria-label="Großansicht schließen"
+              >
+                <X className="h-5 w-5" />
+              </button>
+
+              <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 shadow-2xl">
+                <Image
+                  src="/deutschland-karte.png"
+                  alt="Deutschlandkarte im Großformat"
+                  width={1080}
+                  height={1536}
+                  className="h-auto max-h-[88vh] w-full object-contain"
+                  sizes="100vw"
+                />
+              </div>
+            </div>
+          </div>
+        ) : null}
       </section>
     </SectionShell>
   );

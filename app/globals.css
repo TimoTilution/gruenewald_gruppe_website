@@ -107,6 +107,16 @@ a {
   }
 }
 
+body.site-overlay-open header,
+body.site-overlay-open header * {
+  z-index: 0 !important;
+}
+
+body.site-overlay-open header {
+  isolation: auto !important;
+  pointer-events: none;
+}
+
 .leaflet-container {
   height: 100%;
   width: 100%;
