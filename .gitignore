@@ -147,4 +147,6 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
->>>>>>> df78cff8eb0907be3772dc164ae0cdce4f3b5bcd
+
+# Large media files kept local only
+public/videos/*.mp4

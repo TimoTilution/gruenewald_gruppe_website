@@ -1,11 +1,17 @@
-import { PageHero } from "@/components/page-hero";
+import { HomeCareerSection } from "@/components/home/home-career-section";
+import { HomeContactSection } from "@/components/home/home-contact-section";
+import { HomeHeroSection } from "@/components/home/home-hero-section";
+import { HomeTeamSection } from "@/components/home/home-team-section";
+import { TilutionServicesSection } from "@/components/tilution/tilution-services-section";
 
 export default function HrwPage() {
   return (
-    <PageHero
-      eyebrow="HRW"
-      title="Spezialisierte Leistungen unter eigener Marke."
-      description="Die HRW-Seite steht als sauberer Einstiegspunkt bereit und kann künftig detaillierte Informationen zu Angebot, Referenzen und Ansprechpartnern aufnehmen."
-    />
+    <div className="verwaltung-theme hrw-theme contents">
+      <HomeHeroSection variant="hrw" />
+      <TilutionServicesSection />
+      <HomeTeamSection />
+      <HomeCareerSection />
+      <HomeContactSection />
+    </div>
   );
 }

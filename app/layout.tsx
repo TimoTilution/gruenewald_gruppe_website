@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Montserrat } from "next/font/google";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
@@ -19,6 +19,11 @@ export const metadata: Metadata = {
   },
   description:
     "Unternehmenswebsite der Grünewald Gruppe für Privatkunden, Gewerbebau, Klimadecken, Personal und zentrale Steuerung.",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({

@@ -4,6 +4,7 @@ import { HomeContactSection } from "@/components/home/home-contact-section";
 import { HomeHeroSection } from "@/components/home/home-hero-section";
 import { HomeReferencesSection } from "@/components/home/home-references-section";
 import { HomeServicesSection } from "@/components/home/home-services-section";
+import { HomeTeamSection } from "@/components/home/home-team-section";
 
 export default function HomePage() {
   return (
@@ -12,6 +13,7 @@ export default function HomePage() {
       <HomeAboutSection />
       <HomeServicesSection />
       <HomeReferencesSection />
+      <HomeTeamSection />
       <HomeCareerSection />
       <HomeContactSection />
     </>

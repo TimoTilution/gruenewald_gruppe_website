@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Check } from "lucide-react";
 import { SectionShell } from "@/components/section-shell";
 
 const heroActions = [
@@ -50,7 +50,191 @@ function HeroButton({ label }: { label: string }) {
   );
 }
 
-export function HomeHeroSection() {
+const tilutionProofPoints = ["Terminsicher", "Präzise", "Deutschlandweit"];
+const hrwProofPoints = ["Flexibel", "Erfahren", "Zuverlässig"];
+const verwaltungProofPoints = [
+  "Servicebereiche",
+  "Interne Funktionen",
+  "Gruppenweite Informationen",
+];
+const clayProofPoints = ["Nachhaltig", "Regulierend", "Energieeffizient"];
+
+type HomeHeroSectionProps = {
+  variant?: "group" | "tilution" | "verwaltung" | "hrw" | "clay";
+};
+
+export function HomeHeroSection({ variant = "group" }: HomeHeroSectionProps) {
+  if (variant === "clay") {
+    return (
+      <SectionShell id="hero">
+        <section
+          className="relative isolate w-[calc(100vw-2.5rem)] max-w-full overflow-hidden rounded-[2.75rem] border border-white/10 px-6 py-12 text-porcelain shadow-premium sm:w-full sm:px-9 lg:px-14 lg:py-20"
+        >
+          <Image
+            src="/images/clay/clay-hero-lehmklimasystem.png"
+            alt=""
+            fill
+            priority
+            sizes="(min-width: 1320px) 1240px, calc(100vw - 40px)"
+            className="-z-20 object-cover"
+            aria-hidden="true"
+          />
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 -z-10 sm:hidden"
+            style={{
+              background:
+                "linear-gradient(90deg, rgba(48, 14, 22, 0.9) 0%, rgba(48, 14, 22, 0.78) 56%, rgba(48, 14, 22, 0.54) 100%)",
+            }}
+          />
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 -z-10 hidden sm:block"
+            style={{
+              background:
+                "linear-gradient(90deg, rgba(48, 14, 22, 0.82) 0%, rgba(48, 14, 22, 0.6) 48%, rgba(48, 14, 22, 0.2) 100%)",
+            }}
+          />
+
+          <div className="relative z-10 max-w-[18.5rem] sm:max-w-5xl">
+            <p
+              className="section-eyebrow"
+              style={{ textShadow: "0 1px 5px rgba(0, 0, 0, 0.55)" }}
+            >
+              Clay Construction
+            </p>
+            <h1
+              className="mt-6 max-w-full text-4xl font-semibold leading-[1.06] tracking-[-0.045em] sm:max-w-[26ch] sm:text-5xl lg:text-6xl"
+              style={{ textShadow: "0 2px 12px rgba(0, 0, 0, 0.38)" }}
+            >
+              Klimadecken und Lehmbau für moderne, gesunde Gebäude.
+            </h1>
+            <p
+              className="mt-6 max-w-full break-words text-base font-semibold leading-8 text-white/86 sm:max-w-4xl sm:text-lg"
+              style={{ textShadow: "0 1px 5px rgba(0, 0, 0, 0.55)" }}
+            >
+              Als spezialisierter Montagepartner realisieren wir patentierte
+              ArgillaTherm Lehmklimasysteme für Neubau, Sanierung und
+              anspruchsvolle Innenräume.
+            </p>
+          </div>
+
+          <div className="relative z-10 mt-12 grid max-w-[18.5rem] min-w-0 gap-4 sm:max-w-none sm:grid-cols-3">
+            {clayProofPoints.map((point) => (
+              <div
+                key={point}
+                className="liquid-card-dark flex min-h-20 items-center justify-center gap-3 rounded-[1.35rem] px-5 py-4 text-center text-white"
+              >
+                <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/35 bg-white/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.35)]">
+                  <Check className="h-4.5 w-4.5 stroke-[2.4]" />
+                </span>
+                <span className="text-base font-semibold sm:text-lg">
+                  {point}
+                </span>
+              </div>
+            ))}
+          </div>
+        </section>
+      </SectionShell>
+    );
+  }
+
+  if (variant === "tilution" || variant === "verwaltung" || variant === "hrw") {
+    const isHrw = variant === "hrw";
+    const isVerwaltung = variant === "verwaltung";
+    const proofPoints = isHrw
+      ? hrwProofPoints
+      : isVerwaltung
+        ? verwaltungProofPoints
+        : tilutionProofPoints;
+    const eyebrow = isHrw ? "HRW" : isVerwaltung ? "Verwaltung" : "Tilution";
+    const title = isHrw
+      ? "Spezialisierte Leistungen unter eigener Marke."
+      : isVerwaltung
+        ? "Zentrale Steuerung für die gesamte Gruppe."
+        : "Ihr Partner für Fliesenarbeiten bei anspruchsvollen Großprojekten.";
+    const description = isHrw
+      ? "Die HRW-Seite steht als sauberer Einstiegspunkt bereit und kann künftig detaillierte Informationen zu Angebot, Referenzen und Ansprechpartnern aufnehmen."
+      : isVerwaltung
+        ? "Die Verwaltungsseite bildet die organisatorische Ebene ab und eignet sich als Platzhalter für Servicebereiche, interne Funktionen oder gruppenweite Informationen."
+        : "Als Fachbetrieb im Objektbau realisieren wir Fliesen- und Plattenarbeiten für Schwimmbäder, Hotels, Kliniken, Großküchen, öffentliche Einrichtungen und gewerbliche Bauprojekte.";
+
+    return (
+      <SectionShell id="hero">
+        <section
+          className="relative isolate w-[calc(100vw-2.5rem)] max-w-full overflow-hidden rounded-[2.75rem] border border-white/10 px-6 py-12 text-porcelain shadow-premium sm:w-full sm:px-9 lg:px-14 lg:py-20"
+        >
+          <Image
+            src={
+              isVerwaltung
+                ? "/images/verwaltung/verwaltung-hero.png"
+                : "/hero-start.jpg"
+            }
+            alt=""
+            fill
+            priority
+            sizes="(min-width: 1320px) 1240px, calc(100vw - 40px)"
+            className="-z-20 object-cover"
+            aria-hidden="true"
+          />
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 -z-10 hidden sm:block"
+            style={{
+              background:
+                "radial-gradient(circle at 12% 14%, rgba(20, 24, 34, 0.34) 0%, rgba(20, 24, 34, 0.18) 24%, rgba(20, 24, 34, 0) 48%), linear-gradient(90deg, rgba(20, 24, 34, 0.78) 0%, rgba(20, 24, 34, 0.52) 45%, rgba(20, 24, 34, 0.16) 100%)",
+            }}
+          />
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 -z-10 sm:hidden"
+            style={{
+              background:
+                "radial-gradient(circle at 18% 12%, rgba(20, 24, 34, 0.42) 0%, rgba(20, 24, 34, 0.24) 30%, rgba(20, 24, 34, 0) 58%), linear-gradient(90deg, rgba(20, 24, 34, 0.84) 0%, rgba(20, 24, 34, 0.66) 56%, rgba(20, 24, 34, 0.38) 100%)",
+            }}
+          />
+
+          <div className="shared-company-hero__content relative z-10 max-w-full min-w-0 sm:max-w-5xl">
+            <p
+              className="section-eyebrow"
+              style={{ textShadow: "0 1px 5px rgba(0, 0, 0, 0.58)" }}
+            >
+              {eyebrow}
+            </p>
+            <h1
+              className="shared-company-hero__title mt-6 max-w-full text-4xl font-semibold leading-[1.06] tracking-[-0.045em] sm:max-w-[26ch] sm:text-5xl lg:text-6xl"
+              style={{ textShadow: "0 2px 12px rgba(0, 0, 0, 0.42)" }}
+            >
+              {title}
+            </h1>
+            <p
+              className="shared-company-hero__description mt-6 max-w-full text-base font-semibold leading-8 text-white/86 sm:max-w-4xl sm:text-lg"
+              style={{ textShadow: "0 1px 5px rgba(0, 0, 0, 0.58)" }}
+            >
+              {description}
+            </p>
+          </div>
+
+          <div className="relative z-10 mt-12 grid max-w-full min-w-0 gap-4 sm:grid-cols-3">
+            {proofPoints.map((point) => (
+              <div
+                key={point}
+                className="liquid-card-dark flex min-h-20 min-w-0 items-center justify-center gap-3 rounded-[1.35rem] px-5 py-4 text-center text-white"
+              >
+                <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/35 bg-white/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.35)]">
+                  <Check className="h-4.5 w-4.5 stroke-[2.4]" />
+                </span>
+                <span className="min-w-0 text-base font-semibold [overflow-wrap:anywhere] sm:text-lg">
+                  {point}
+                </span>
+              </div>
+            ))}
+          </div>
+        </section>
+      </SectionShell>
+    );
+  }
+
   return (
     <SectionShell id="hero">
       <section

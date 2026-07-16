@@ -43,6 +43,25 @@ body {
     @apply mt-5 max-w-3xl text-base leading-8 text-forest-100/75 sm:text-lg;
   }
 
+  .shared-company-hero__content,
+  .shared-company-hero__title,
+  .shared-company-hero__description {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .shared-company-hero__title,
+  .shared-company-hero__description {
+    overflow-wrap: break-word;
+    text-wrap: wrap;
+  }
+
+  @media (min-width: 640px) {
+    .shared-company-hero__title {
+      text-wrap: balance;
+    }
+  }
+
   .elevated-card {
     @apply rounded-[2rem] border border-white/45 bg-white/95 shadow-card transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-lift;
   }
@@ -81,6 +100,124 @@ body {
     z-index: 1;
   }
 
+  .team-member-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+    align-items: stretch;
+  }
+
+  .team-member-card {
+    width: 100%;
+    min-width: 0;
+    cursor: default;
+  }
+
+  .team-member-card:has(img) {
+    cursor: zoom-in;
+  }
+
+  .team-member-photo {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 100%;
+    aspect-ratio: 4 / 4.35;
+    overflow: hidden;
+    background: rgba(20, 35, 75, 0.35);
+  }
+
+  .team-member-placeholder {
+    display: grid;
+    width: 7rem;
+    height: 7rem;
+    place-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    border-radius: 999px;
+    background:
+      radial-gradient(circle at 28% 24%, rgba(255, 255, 255, 0.32), transparent 44%),
+      linear-gradient(145deg, rgba(255, 255, 255, 0.18), rgba(20, 35, 75, 0.36));
+    color: #ffffff;
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.24),
+      0 18px 42px rgba(7, 18, 48, 0.16);
+  }
+
+  .team-member-meta {
+    display: flex;
+    min-height: 5.35rem;
+    flex: 1;
+    flex-direction: column;
+    padding: 0.7rem 0.65rem 0.8rem;
+  }
+
+  .team-member-degree {
+    min-height: 0.72rem;
+    font-size: 0.52rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    line-height: 0.72rem;
+    text-transform: uppercase;
+  }
+
+  .team-member-name {
+    margin-top: 0.38rem;
+    overflow: hidden;
+    color: #ffffff;
+    font-size: 0.78rem;
+    font-weight: 700;
+    line-height: 1.2;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .team-member-role {
+    margin-top: 0.45rem;
+    color: #ffffff;
+    font-size: 0.64rem;
+    font-weight: 800;
+    line-height: 1.25;
+  }
+
+  @media (min-width: 640px) {
+    .team-member-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.25rem;
+    }
+
+    .team-member-meta {
+      min-height: 7.35rem;
+      padding: 1.15rem 1.15rem 1.25rem;
+    }
+
+    .team-member-degree {
+      min-height: 0.95rem;
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      line-height: 0.95rem;
+    }
+
+    .team-member-name {
+      margin-top: 0.55rem;
+      font-size: 1.12rem;
+    }
+
+    .team-member-role {
+      margin-top: 0.7rem;
+      font-size: 0.82rem;
+      line-height: 1.35;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .team-member-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
   .liquid-card-dark {
     @apply relative overflow-hidden rounded-[2rem] border border-white/25 bg-white/20 shadow-card backdrop-blur-xl;
     background:
@@ -90,6 +227,374 @@ body {
     box-shadow:
       inset 0 1px 0 rgba(255, 255, 255, 0.22),
       0 24px 58px rgba(7, 18, 48, 0.18);
+  }
+
+  .tilution-services-section {
+    border-radius: 2rem;
+    background:
+      radial-gradient(circle at 12% 0%, rgba(255, 210, 168, 0.16), transparent 24rem),
+      linear-gradient(145deg, rgba(142, 57, 5, 0.9), rgba(58, 23, 5, 0.96));
+    color: #ffffff;
+    padding: 2.5rem 1.5rem;
+    box-shadow: 0 28px 80px rgba(58, 23, 5, 0.22);
+  }
+
+  .tilution-services-header {
+    max-width: 48rem;
+  }
+
+  .tilution-services-eyebrow {
+    color: rgba(255, 232, 213, 0.82);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+  }
+
+  .tilution-services-heading {
+    margin-top: 1.25rem;
+    color: #ffffff;
+    font-size: 1.875rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.12;
+  }
+
+  .tilution-services-subline {
+    margin-top: 1.25rem;
+    color: rgba(255, 232, 213, 0.82);
+    font-size: 1rem;
+    line-height: 2;
+  }
+
+  .tilution-services-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-top: 2.5rem;
+  }
+
+  .tilution-service-card {
+    position: relative;
+    min-height: 18rem;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    border-radius: 1.1rem;
+    background: #182956;
+    box-shadow: 0 14px 34px rgba(24, 41, 86, 0.11);
+    transition:
+      transform 300ms ease,
+      box-shadow 300ms ease;
+  }
+
+  .tilution-service-card:hover {
+    transform: translateY(-0.125rem);
+    box-shadow: 0 20px 46px rgba(24, 41, 86, 0.16);
+  }
+
+  .tilution-service-card__image {
+    object-fit: cover;
+    transition: transform 500ms ease;
+  }
+
+  .tilution-service-card:hover .tilution-service-card__image {
+    transform: scale(1.03);
+  }
+
+  .tilution-service-card__fade-top,
+  .tilution-service-card__fade-bottom {
+    position: absolute;
+    left: 0;
+    right: 0;
+    pointer-events: none;
+  }
+
+  .tilution-service-card__fade-top {
+    top: 0;
+  }
+
+  .tilution-service-card__fade-bottom {
+    bottom: 0;
+  }
+
+  .tilution-service-card__fade-top--1 {
+    height: 7rem;
+    background: linear-gradient(to bottom, rgba(142, 57, 5, 0.82), rgba(236, 102, 2, 0.32), transparent);
+  }
+
+  .tilution-service-card__fade-bottom--1 {
+    height: 9rem;
+    background: linear-gradient(to top, rgba(142, 57, 5, 0.86), rgba(236, 102, 2, 0.36), transparent);
+  }
+
+  .tilution-service-card__fade-top--2 {
+    height: 8rem;
+    background: linear-gradient(to bottom, rgba(142, 57, 5, 0.78), rgba(236, 102, 2, 0.28), transparent);
+  }
+
+  .tilution-service-card__fade-bottom--2 {
+    height: 10rem;
+    background: linear-gradient(to top, rgba(142, 57, 5, 0.88), rgba(236, 102, 2, 0.34), transparent);
+  }
+
+  .tilution-service-card__fade-top--3 {
+    height: 9rem;
+    background: linear-gradient(to bottom, rgba(142, 57, 5, 0.84), rgba(236, 102, 2, 0.3), transparent);
+  }
+
+  .tilution-service-card__fade-bottom--3 {
+    height: 8rem;
+    background: linear-gradient(to top, rgba(142, 57, 5, 0.82), rgba(236, 102, 2, 0.28), transparent);
+  }
+
+  .tilution-service-card__fade-top--4 {
+    height: 8rem;
+    background: linear-gradient(to bottom, rgba(142, 57, 5, 0.88), rgba(236, 102, 2, 0.36), transparent);
+  }
+
+  .tilution-service-card__fade-bottom--4 {
+    height: 9rem;
+    background: linear-gradient(to top, rgba(142, 57, 5, 0.86), rgba(236, 102, 2, 0.3), transparent);
+  }
+
+  .tilution-service-card__fade-top--5 {
+    height: 6rem;
+    background: linear-gradient(to bottom, rgba(142, 57, 5, 0.76), rgba(236, 102, 2, 0.24), transparent);
+  }
+
+  .tilution-service-card__fade-bottom--5 {
+    height: 10rem;
+    background: linear-gradient(to top, rgba(142, 57, 5, 0.9), rgba(236, 102, 2, 0.38), transparent);
+  }
+
+  .tilution-service-card__fade-top--6 {
+    height: 9rem;
+    background: linear-gradient(to bottom, rgba(142, 57, 5, 0.8), rgba(236, 102, 2, 0.26), transparent);
+  }
+
+  .tilution-service-card__fade-bottom--6 {
+    height: 9rem;
+    background: linear-gradient(to top, rgba(142, 57, 5, 0.84), rgba(236, 102, 2, 0.3), transparent);
+  }
+
+  .tilution-service-card__fade-top--7 {
+    height: 7rem;
+    background: linear-gradient(to bottom, rgba(142, 57, 5, 0.86), rgba(236, 102, 2, 0.34), transparent);
+  }
+
+  .tilution-service-card__fade-bottom--7 {
+    height: 11rem;
+    background: linear-gradient(to top, rgba(142, 57, 5, 0.9), rgba(236, 102, 2, 0.32), transparent);
+  }
+
+  .tilution-service-card__fade-top--8 {
+    height: 10rem;
+    background: linear-gradient(to bottom, rgba(142, 57, 5, 0.88), rgba(236, 102, 2, 0.32), transparent);
+  }
+
+  .tilution-service-card__fade-bottom--8 {
+    height: 8rem;
+    background: linear-gradient(to top, rgba(142, 57, 5, 0.82), rgba(236, 102, 2, 0.26), transparent);
+  }
+
+  .tilution-service-card__content {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    height: 100%;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    align-items: stretch;
+    padding: clamp(1.125rem, 2vw, 1.5rem);
+    text-align: center;
+  }
+
+  .tilution-service-card__title {
+    max-width: min(100%, 15rem);
+    margin: 0 auto;
+    color: #ffffff;
+    font-size: clamp(1.25rem, 1vw + 0.85rem, 1.45rem);
+    font-weight: 700;
+    line-height: 1.18;
+    overflow-wrap: anywhere;
+    hyphens: auto;
+    text-wrap: balance;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.52);
+  }
+
+  .tilution-service-card__attributes {
+    display: flex;
+    max-width: min(100%, 15.5rem);
+    align-self: end;
+    margin: 0 auto;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: clamp(0.95rem, 0.35vw + 0.86rem, 1.05rem);
+    font-weight: 700;
+    line-height: 1.45;
+    text-wrap: balance;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.56);
+  }
+
+  .tilution-service-card__attribute {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .tilution-service-card__separator {
+    margin-inline: 0.45em;
+    color: rgba(255, 255, 255, 0.76);
+    font-weight: 600;
+  }
+
+  .tilution-services-cta {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    margin-top: 2.5rem;
+    border: 1px solid rgba(255, 232, 213, 0.2);
+    border-radius: 1.35rem;
+    background:
+      radial-gradient(circle at 18% 12%, rgba(255, 255, 255, 0.22), transparent 16rem),
+      linear-gradient(145deg, rgba(255, 255, 255, 0.16), rgba(76, 31, 5, 0.36));
+    padding: 1.5rem;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.18),
+      0 18px 42px rgba(58, 23, 5, 0.18);
+    backdrop-filter: blur(18px);
+  }
+
+  .tilution-services-cta__title {
+    color: #ffffff;
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.18;
+  }
+
+  .tilution-services-cta__text {
+    max-width: 48rem;
+    margin-top: 0.5rem;
+    color: rgba(255, 232, 213, 0.78);
+    font-size: 0.875rem;
+    line-height: 1.75;
+  }
+
+  .tilution-services-cta__button {
+    display: inline-flex;
+    width: fit-content;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 0.625rem;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 232, 213, 0.28);
+    background: rgba(255, 255, 255, 0.14);
+    padding: 0.75rem 1.25rem;
+    color: #ffffff;
+    font-size: 0.875rem;
+    font-weight: 600;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.18),
+      0 12px 26px rgba(58, 23, 5, 0.16);
+    transition:
+      transform 300ms ease,
+      background-color 300ms ease,
+      box-shadow 300ms ease;
+  }
+
+  .tilution-services-cta__button:hover {
+    transform: translateY(-0.125rem);
+    border-color: rgba(255, 232, 213, 0.42);
+    background: rgba(236, 102, 2, 0.74);
+    box-shadow: 0 16px 32px rgba(58, 23, 5, 0.24);
+  }
+
+  .tilution-services-cta__button:focus-visible {
+    outline: 2px solid rgba(236, 102, 2, 0.45);
+    outline-offset: 2px;
+  }
+
+  .tilution-services-cta__button-icon {
+    width: 1rem;
+    height: 1rem;
+    stroke-width: 2.2;
+    transition: transform 300ms ease;
+  }
+
+  .tilution-services-cta__button:hover .tilution-services-cta__button-icon {
+    transform: translateX(0.125rem);
+  }
+
+  @media (min-width: 640px) {
+    .tilution-services-section {
+      padding-right: 2.25rem;
+      padding-left: 2.25rem;
+    }
+
+    .tilution-services-heading {
+      font-size: 2.25rem;
+    }
+
+    .tilution-services-subline {
+      font-size: 1.125rem;
+    }
+
+    .tilution-services-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+  }
+
+  @media (min-width: 768px) {
+    .tilution-services-cta {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      padding-right: 2rem;
+      padding-left: 2rem;
+    }
+
+    .tilution-services-cta__text {
+      font-size: 1rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .tilution-services-section {
+      padding: 3rem;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .tilution-services-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  .monogram-ambient,
+  .milestone-rail {
+    display: none;
+  }
+
+  .milestone-inline {
+    display: block;
+  }
+}
+
+@media (min-width: 1760px) and (min-height: 900px) {
+  .milestone-rail {
+    display: block;
+  }
+
+  .milestone-inline {
+    display: none;
+  }
+}
+
+@media (min-width: 1760px) {
+  .monogram-ambient {
+    display: flex;
   }
 }
 
@@ -201,4 +706,926 @@ body.site-overlay-open header {
   border-radius: 999px;
   background: #ffffff;
   box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.18);
+}
+
+body:has(.tilution-theme) {
+  background:
+    radial-gradient(circle at 12% 8%, rgba(236, 102, 2, 0.18), transparent 28rem),
+    radial-gradient(circle at 88% 22%, rgba(255, 224, 194, 0.12), transparent 30rem),
+    linear-gradient(180deg, #4d1f04 0%, #6f2e06 38%, #371604 100%);
+}
+
+/* Grünewald Verwaltung: eigenständiges, helles Farbsystem */
+body:has(.verwaltung-theme) {
+  --background-neutral: #e3e6eb;
+  --background-light: #f7f8fa;
+  --surface: #ffffff;
+  --surface-accent: #f1f0f8;
+  --text-primary: #20242b;
+  --text-secondary: #68707c;
+  --border-neutral: #cdd2da;
+  --group-primary: #182956;
+  --company-primary: #5658af;
+  background: var(--background-neutral);
+  color: var(--text-primary);
+}
+
+/* HRW: identisches Layout wie die Verwaltung, mit Farben aus dem HRW-Logo */
+body:has(.hrw-theme) {
+  --surface-accent: #fff4e8;
+  --group-primary: #4f4c4d;
+  --company-primary: #f68712;
+}
+
+body:has(.verwaltung-theme) > div > .pointer-events-none {
+  background: none;
+}
+
+.verwaltung-theme .section-card,
+.verwaltung-theme .tilution-services-section {
+  border: 1px solid var(--border-neutral);
+  background: var(--surface);
+  color: var(--text-primary);
+  box-shadow: 0 18px 48px rgba(32, 36, 43, 0.08);
+}
+
+.verwaltung-theme #leistungen .tilution-services-section {
+  background: var(--background-light);
+}
+
+.verwaltung-theme .section-eyebrow,
+.verwaltung-theme .tilution-services-eyebrow {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  color: var(--company-primary) !important;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+}
+
+.verwaltung-theme .section-eyebrow::before,
+.verwaltung-theme .tilution-services-eyebrow::before {
+  content: "";
+  width: 1.75rem;
+  height: 2px;
+  flex: 0 0 auto;
+  border-radius: 999px;
+  background: var(--company-primary);
+}
+
+.verwaltung-theme .section-heading,
+.verwaltung-theme .tilution-services-heading,
+.verwaltung-theme .tilution-services-cta__title {
+  color: var(--text-primary);
+}
+
+.verwaltung-theme .section-subline,
+.verwaltung-theme .tilution-services-subline,
+.verwaltung-theme .tilution-services-cta__text {
+  color: var(--text-secondary);
+}
+
+.verwaltung-theme .liquid-card {
+  border: 1px solid var(--border-neutral);
+  background: var(--surface);
+  box-shadow: 0 12px 30px rgba(32, 36, 43, 0.08);
+  backdrop-filter: none;
+}
+
+.verwaltung-theme .liquid-card::before,
+.verwaltung-theme .liquid-card::after {
+  background: none;
+}
+
+.verwaltung-theme #team .section-card {
+  background: var(--surface-accent);
+}
+
+.verwaltung-theme #hero .section-eyebrow {
+  color: #ffffff !important;
+}
+
+.verwaltung-theme #hero .section-eyebrow::before {
+  background: var(--company-primary);
+}
+
+.verwaltung-theme #hero .liquid-card-dark {
+  border-color: rgba(86, 88, 175, 0.58);
+  background:
+    linear-gradient(145deg, rgba(32, 36, 43, 0.52), rgba(32, 36, 43, 0.34));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 18px 40px rgba(32, 36, 43, 0.16);
+}
+
+.verwaltung-theme #hero .liquid-card-dark > span:first-child {
+  border-color: rgba(86, 88, 175, 0.72);
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--company-primary);
+}
+
+.verwaltung-theme .team-member-photo {
+  background: var(--background-light);
+}
+
+.verwaltung-theme .team-member-placeholder {
+  border-color: var(--border-neutral);
+  background: var(--background-neutral);
+  color: var(--company-primary);
+  box-shadow: none;
+}
+
+.verwaltung-theme .team-member-degree {
+  color: var(--company-primary) !important;
+}
+
+.verwaltung-theme .team-member-name {
+  color: var(--text-primary);
+}
+
+.verwaltung-theme .team-member-role {
+  color: var(--company-primary);
+}
+
+.verwaltung-theme .team-member-card {
+  border-top: 2px solid var(--company-primary);
+}
+
+.verwaltung-theme #team [role="tab"] {
+  border-color: var(--border-neutral);
+  background: var(--surface);
+  color: var(--text-primary);
+}
+
+.verwaltung-theme #team [role="tab"][aria-selected="true"] {
+  border-color: var(--company-primary);
+  background: var(--company-primary);
+  color: #ffffff !important;
+  box-shadow: 0 10px 24px rgba(86, 88, 175, 0.2);
+}
+
+.verwaltung-theme .tilution-service-card {
+  border-color: var(--border-neutral);
+  box-shadow: 0 12px 30px rgba(32, 36, 43, 0.09);
+}
+
+.verwaltung-theme .tilution-service-card__fade-top {
+  background: linear-gradient(to bottom, rgba(32, 36, 43, 0.66), rgba(32, 36, 43, 0.16), transparent) !important;
+}
+
+.verwaltung-theme .tilution-service-card__fade-bottom {
+  background: linear-gradient(to top, rgba(32, 36, 43, 0.78), rgba(32, 36, 43, 0.2), transparent) !important;
+}
+
+.verwaltung-theme .tilution-services-cta {
+  border: 1px solid var(--border-neutral);
+  background: var(--surface);
+  box-shadow: 0 10px 28px rgba(32, 36, 43, 0.07);
+  backdrop-filter: none;
+}
+
+.verwaltung-theme .tilution-services-cta__button {
+  border-color: var(--company-primary);
+  background: var(--company-primary);
+  color: #ffffff;
+  box-shadow: 0 10px 24px rgba(86, 88, 175, 0.2);
+}
+
+.verwaltung-theme #kontakt .liquid-card {
+  color: var(--text-primary) !important;
+}
+
+.verwaltung-theme #kontakt .liquid-card > span:first-child {
+  border-color: var(--border-neutral);
+  background: var(--background-light);
+  color: var(--company-primary);
+  box-shadow: none;
+}
+
+.verwaltung-theme #kontakt .liquid-card span[class*="text-forest-100"] {
+  color: var(--company-primary) !important;
+}
+
+.verwaltung-theme #kontakt .liquid-card span[class*="text-white"] {
+  color: var(--text-primary) !important;
+}
+
+body:has(.verwaltung-theme) footer > div > header p {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+body:has(.verwaltung-theme) footer {
+  background: #182956;
+  color: #ffffff;
+}
+
+body:has(.verwaltung-theme) footer p,
+body:has(.verwaltung-theme) footer h3,
+body:has(.verwaltung-theme) footer [class*="text-forest-100"] {
+  color: #ffffff !important;
+}
+
+body:has(.verwaltung-theme) footer .liquid-card-dark {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: #182956;
+  box-shadow: none;
+}
+
+body:has(.verwaltung-theme) footer .liquid-card-dark::before,
+body:has(.verwaltung-theme) footer .liquid-card-dark::after {
+  display: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .verwaltung-theme .liquid-card:hover {
+    border-color: var(--company-primary);
+    box-shadow: 0 18px 40px rgba(32, 36, 43, 0.13);
+  }
+
+  .verwaltung-theme .team-member-card:hover,
+  .verwaltung-theme #kontakt .liquid-card:hover {
+    background: var(--surface-accent);
+  }
+
+  .verwaltung-theme #team [role="tab"]:hover {
+    border-color: var(--company-primary);
+    background: var(--surface-accent);
+    color: var(--company-primary);
+  }
+
+  .verwaltung-theme #team [role="tab"][aria-selected="true"]:hover {
+    border-color: #484a96;
+    background: #484a96;
+    color: #ffffff;
+  }
+
+  .verwaltung-theme .tilution-service-card:hover {
+    border-color: var(--company-primary);
+    box-shadow: 0 18px 40px rgba(32, 36, 43, 0.15);
+  }
+
+  .verwaltung-theme .tilution-services-cta__button:hover {
+    border-color: #484a96;
+    background: #484a96;
+    box-shadow: 0 14px 30px rgba(32, 36, 43, 0.16);
+  }
+}
+
+@media (hover: none), (pointer: coarse) {
+  .verwaltung-theme .liquid-card:hover,
+  .verwaltung-theme .tilution-service-card:hover,
+  .verwaltung-theme .tilution-services-cta__button:hover {
+    transform: none;
+  }
+
+  .verwaltung-theme .liquid-card:hover,
+  .verwaltung-theme .tilution-service-card:hover {
+    border-color: var(--border-neutral);
+  }
+
+  .verwaltung-theme .tilution-services-cta__button:hover {
+    border-color: var(--company-primary);
+    background: var(--company-primary);
+  }
+}
+
+body:has(.tilution-theme) > div > .pointer-events-none {
+  background: radial-gradient(circle at top, rgba(255, 224, 194, 0.16), transparent 34%);
+}
+
+.tilution-theme .section-card {
+  background:
+    radial-gradient(circle at 12% 0%, rgba(255, 210, 168, 0.16), transparent 24rem),
+    linear-gradient(145deg, rgba(142, 57, 5, 0.9), rgba(58, 23, 5, 0.96));
+}
+
+.tilution-theme .section-eyebrow,
+.tilution-theme [class*="text-forest-100"] {
+  color: rgba(255, 232, 213, 0.82) !important;
+}
+
+.tilution-theme [class*="text-forest-900"],
+.tilution-theme .text-ink {
+  color: #4d1f04 !important;
+}
+
+.tilution-theme [class*="bg-forest-900"] {
+  background-color: rgba(58, 23, 5, 0.92) !important;
+}
+
+.tilution-theme [class*="bg-forest-800"] {
+  background-color: rgba(76, 31, 5, 0.9) !important;
+}
+
+.tilution-theme [class*="border-forest-900"] {
+  border-color: rgba(58, 23, 5, 0.24) !important;
+}
+
+.tilution-theme [class*="focus:ring-white"] {
+  --tw-ring-color: rgba(255, 224, 194, 0.42) !important;
+}
+
+.tilution-theme .liquid-card {
+  background:
+    radial-gradient(circle at 18% 12%, rgba(255, 255, 255, 0.32), transparent 13rem),
+    radial-gradient(circle at 86% 92%, rgba(236, 102, 2, 0.2), transparent 16rem),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.24), rgba(255, 224, 194, 0.14));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.42),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.16),
+    0 24px 58px rgba(58, 23, 5, 0.18);
+}
+
+.tilution-theme .liquid-card-dark {
+  background:
+    radial-gradient(circle at 16% 12%, rgba(255, 255, 255, 0.24), transparent 16rem),
+    radial-gradient(circle at 88% 92%, rgba(236, 102, 2, 0.2), transparent 18rem),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.18), rgba(76, 31, 5, 0.42));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    0 24px 58px rgba(58, 23, 5, 0.22);
+}
+
+.tilution-theme span[class*="linear-gradient(90deg"] {
+  border-color: rgba(76, 31, 5, 0.22) !important;
+  background-image:
+    radial-gradient(circle at 18% 35%, rgba(255, 210, 168, 0.42) 0%, rgba(255, 210, 168, 0) 32%),
+    linear-gradient(90deg, rgba(236, 102, 2, 0.98) 0%, rgba(236, 102, 2, 0.88) 44%, rgba(142, 57, 5, 0.82) 100%) !important;
+  box-shadow: 0 12px 28px rgba(76, 31, 5, 0.2) !important;
+}
+
+.tilution-theme .group:hover span[class*="linear-gradient(90deg"] {
+  border-color: rgba(76, 31, 5, 0.32) !important;
+  background-image:
+    radial-gradient(circle at 18% 35%, rgba(255, 224, 194, 0.5) 0%, rgba(255, 224, 194, 0) 34%),
+    linear-gradient(90deg, rgba(236, 102, 2, 1) 0%, rgba(236, 102, 2, 0.94) 46%, rgba(142, 57, 5, 0.88) 100%) !important;
+  box-shadow: 0 16px 34px rgba(76, 31, 5, 0.28) !important;
+}
+
+/* Tilution: identische Farblogik wie Verwaltung/HRW mit Primär- und Sekundärfarbe */
+body:has(.tilution-theme) {
+  --background-neutral: #e3e6eb;
+  --background-light: #f7f8fa;
+  --surface: #ffffff;
+  --surface-accent: #fff4e8;
+  --text-primary: #20242b;
+  --text-secondary: #68707c;
+  --border-neutral: #cdd2da;
+  --group-primary: #182956;
+  --company-primary: #ec6602;
+  background: var(--background-neutral);
+  color: var(--text-primary);
+}
+
+body:has(.tilution-theme) > div > .pointer-events-none {
+  background: none;
+}
+
+.tilution-theme .section-card,
+.tilution-theme .tilution-services-section {
+  border: 1px solid var(--border-neutral);
+  background: var(--surface);
+  color: var(--text-primary);
+  box-shadow: 0 18px 48px rgba(32, 36, 43, 0.08);
+}
+
+.tilution-theme #leistungen .tilution-services-section,
+.tilution-theme #team .section-card {
+  background: var(--background-light);
+}
+
+.tilution-theme .section-eyebrow,
+.tilution-theme .tilution-services-eyebrow {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  color: var(--company-primary) !important;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+}
+
+.tilution-theme .section-eyebrow::before,
+.tilution-theme .tilution-services-eyebrow::before {
+  content: "";
+  width: 1.75rem;
+  height: 2px;
+  flex: 0 0 auto;
+  border-radius: 999px;
+  background: var(--company-primary);
+}
+
+.tilution-theme .section-heading,
+.tilution-theme .tilution-services-heading,
+.tilution-theme .tilution-services-cta__title,
+.tilution-theme [class*="text-forest-900"],
+.tilution-theme .text-ink {
+  color: var(--text-primary) !important;
+}
+
+.tilution-theme .section-subline,
+.tilution-theme .tilution-services-subline,
+.tilution-theme .tilution-services-cta__text,
+.tilution-theme [class*="text-forest-100"] {
+  color: var(--text-secondary) !important;
+}
+
+.tilution-theme #hero .section-eyebrow {
+  color: #ffffff !important;
+}
+
+.tilution-theme #hero .section-eyebrow::before {
+  background: var(--company-primary);
+}
+
+.tilution-theme .liquid-card {
+  border: 1px solid var(--border-neutral);
+  background: var(--surface);
+  box-shadow: 0 12px 30px rgba(32, 36, 43, 0.08);
+  backdrop-filter: none;
+}
+
+.tilution-theme .liquid-card::before,
+.tilution-theme .liquid-card::after {
+  background: none;
+}
+
+.tilution-theme .liquid-card-dark {
+  border-color: rgba(236, 102, 2, 0.34);
+  background:
+    linear-gradient(145deg, rgba(24, 41, 86, 0.58), rgba(24, 41, 86, 0.4));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 18px 40px rgba(24, 41, 86, 0.16);
+}
+
+.tilution-theme #hero .liquid-card-dark > span:first-child {
+  border-color: rgba(236, 102, 2, 0.72);
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--company-primary);
+}
+
+.tilution-theme .team-member-photo {
+  background: var(--background-light);
+}
+
+.tilution-theme .team-member-placeholder {
+  border-color: var(--border-neutral);
+  background: var(--background-neutral);
+  color: var(--company-primary);
+  box-shadow: none;
+}
+
+.tilution-theme .team-member-degree,
+.tilution-theme .team-member-role {
+  color: var(--company-primary) !important;
+}
+
+.tilution-theme .team-member-name {
+  color: var(--text-primary);
+}
+
+.tilution-theme .team-member-card {
+  border-top: 2px solid var(--company-primary);
+}
+
+.tilution-theme #team [role="tab"] {
+  border-color: var(--border-neutral);
+  background: var(--surface);
+  color: var(--text-primary);
+}
+
+.tilution-theme #team [role="tab"][aria-selected="true"] {
+  border-color: var(--company-primary);
+  background: var(--company-primary);
+  color: #ffffff !important;
+  box-shadow: 0 10px 24px rgba(236, 102, 2, 0.2);
+}
+
+.tilution-theme .tilution-service-card,
+.tilution-theme .reference-card {
+  border-color: var(--border-neutral);
+  box-shadow: 0 12px 30px rgba(32, 36, 43, 0.09);
+}
+
+.tilution-theme .tilution-service-card__fade-top {
+  background: linear-gradient(to bottom, rgba(236, 102, 2, 0.72), rgba(24, 41, 86, 0.18), transparent) !important;
+}
+
+.tilution-theme .tilution-service-card__fade-bottom {
+  background: linear-gradient(to top, rgba(236, 102, 2, 0.78), rgba(24, 41, 86, 0.22), transparent) !important;
+}
+
+.tilution-theme .tilution-services-cta {
+  border: 1px solid var(--border-neutral);
+  background: var(--surface);
+  box-shadow: 0 10px 28px rgba(32, 36, 43, 0.07);
+  backdrop-filter: none;
+}
+
+.tilution-theme .tilution-services-cta__button,
+.tilution-theme span[class*="linear-gradient(90deg"] {
+  border-color: var(--company-primary) !important;
+  background: var(--company-primary) !important;
+  background-image: none !important;
+  color: #ffffff !important;
+  box-shadow: 0 10px 24px rgba(236, 102, 2, 0.2) !important;
+}
+
+.tilution-theme #kontakt .liquid-card {
+  color: var(--text-primary) !important;
+}
+
+.tilution-theme #kontakt .liquid-card > span:first-child {
+  border-color: var(--border-neutral);
+  background: var(--background-light);
+  color: var(--company-primary);
+  box-shadow: none;
+}
+
+.tilution-theme #kontakt .liquid-card span[class*="text-forest-100"] {
+  color: var(--company-primary) !important;
+}
+
+.tilution-theme #kontakt .liquid-card span[class*="text-white"] {
+  color: var(--text-primary) !important;
+}
+
+body:has(.tilution-theme) footer {
+  background: #182956;
+  color: #ffffff;
+}
+
+body:has(.tilution-theme) footer p,
+body:has(.tilution-theme) footer h3,
+body:has(.tilution-theme) footer [class*="text-forest-100"] {
+  color: #ffffff !important;
+}
+
+body:has(.tilution-theme) footer .liquid-card-dark {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: #182956;
+  box-shadow: none;
+}
+
+body:has(.tilution-theme) footer .liquid-card-dark::before,
+body:has(.tilution-theme) footer .liquid-card-dark::after {
+  display: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .tilution-theme .liquid-card:hover {
+    border-color: var(--company-primary);
+    box-shadow: 0 18px 40px rgba(32, 36, 43, 0.13);
+  }
+
+  .tilution-theme .team-member-card:hover,
+  .tilution-theme #kontakt .liquid-card:hover {
+    background: var(--surface-accent);
+  }
+
+  .tilution-theme #team [role="tab"]:hover {
+    border-color: var(--company-primary);
+    background: var(--surface-accent);
+    color: var(--company-primary);
+  }
+
+  .tilution-theme #team [role="tab"][aria-selected="true"]:hover,
+  .tilution-theme .tilution-services-cta__button:hover,
+  .tilution-theme .group:hover span[class*="linear-gradient(90deg"] {
+    border-color: #c95302 !important;
+    background: #c95302 !important;
+    background-image: none !important;
+    color: #ffffff !important;
+    box-shadow: 0 14px 30px rgba(32, 36, 43, 0.16) !important;
+  }
+
+  .tilution-theme .tilution-service-card:hover,
+  .tilution-theme .reference-card:hover {
+    border-color: var(--company-primary);
+    box-shadow: 0 18px 40px rgba(32, 36, 43, 0.15);
+  }
+}
+
+@media (hover: none), (pointer: coarse) {
+  .tilution-theme .liquid-card:hover,
+  .tilution-theme .tilution-service-card:hover,
+  .tilution-theme .reference-card:hover,
+  .tilution-theme .tilution-services-cta__button:hover {
+    transform: none;
+  }
+}
+
+body:has(.clay-theme) {
+  --background-neutral: #e7e1df;
+  --background-light: #f8f6f5;
+  --surface: #ffffff;
+  --surface-accent: #fff0f2;
+  --text-primary: #24191b;
+  --text-secondary: #716568;
+  --border-neutral: #d8cecb;
+  --group-primary: #4b0b16;
+  --company-primary: #cd203b;
+  background: var(--background-neutral);
+  color: var(--text-primary);
+}
+
+body:has(.clay-theme) > div > .pointer-events-none {
+  background: none;
+}
+
+.clay-theme .section-card,
+.clay-theme .tilution-services-section {
+  border: 1px solid var(--border-neutral);
+  background: var(--surface);
+  color: var(--text-primary);
+  box-shadow: 0 18px 48px rgba(36, 25, 27, 0.08);
+}
+
+.clay-theme #leistungen .tilution-services-section,
+.clay-theme #team .section-card {
+  background: var(--background-light);
+}
+
+.clay-theme .section-eyebrow,
+.clay-theme .tilution-services-eyebrow {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  color: var(--company-primary) !important;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+}
+
+.clay-theme .section-eyebrow::before,
+.clay-theme .tilution-services-eyebrow::before {
+  content: "";
+  width: 1.75rem;
+  height: 2px;
+  flex: 0 0 auto;
+  border-radius: 999px;
+  background: var(--company-primary);
+}
+
+.clay-theme .section-heading,
+.clay-theme .tilution-services-heading,
+.clay-theme .tilution-services-cta__title,
+.clay-theme [class*="text-forest-900"],
+.clay-theme .text-ink {
+  color: var(--text-primary) !important;
+}
+
+.clay-theme .section-subline,
+.clay-theme .tilution-services-subline,
+.clay-theme .tilution-services-cta__text,
+.clay-theme [class*="text-forest-100"] {
+  color: var(--text-secondary) !important;
+}
+
+.clay-theme #hero .section-eyebrow {
+  color: #ffffff !important;
+}
+
+.clay-theme #hero .section-eyebrow::before {
+  background: var(--company-primary);
+}
+
+.clay-theme [class*="bg-forest-900"] {
+  background-color: var(--group-primary) !important;
+}
+
+.clay-theme [class*="bg-forest-800"] {
+  background-color: #641421 !important;
+}
+
+.clay-theme [class*="border-forest-900"] {
+  border-color: rgba(75, 11, 22, 0.24) !important;
+}
+
+.clay-theme [class*="focus:ring-white"] {
+  --tw-ring-color: rgba(205, 32, 59, 0.34) !important;
+}
+
+.clay-theme .liquid-card {
+  border: 1px solid var(--border-neutral);
+  background: var(--surface);
+  box-shadow: 0 12px 30px rgba(36, 25, 27, 0.08);
+  backdrop-filter: none;
+}
+
+.clay-theme .liquid-card::before,
+.clay-theme .liquid-card::after {
+  background: none;
+}
+
+.clay-theme .liquid-card-dark {
+  border-color: rgba(205, 32, 59, 0.34);
+  background:
+    linear-gradient(145deg, rgba(75, 11, 22, 0.58), rgba(75, 11, 22, 0.4));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 18px 40px rgba(75, 11, 22, 0.16);
+}
+
+.clay-theme #hero .liquid-card-dark > span:first-child {
+  border-color: rgba(205, 32, 59, 0.72);
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--company-primary);
+}
+
+.clay-theme span[class*="linear-gradient(90deg"] {
+  border-color: var(--company-primary) !important;
+  background: var(--company-primary) !important;
+  background-image: none !important;
+  color: #ffffff !important;
+  box-shadow: 0 10px 24px rgba(205, 32, 59, 0.2) !important;
+}
+
+.clay-theme .team-member-photo {
+  background: var(--background-light);
+}
+
+.clay-theme .team-member-placeholder {
+  border-color: var(--border-neutral);
+  background: var(--background-neutral);
+  color: var(--company-primary);
+  box-shadow: none;
+}
+
+.clay-theme .team-member-degree,
+.clay-theme .team-member-role {
+  color: var(--company-primary) !important;
+}
+
+.clay-theme .team-member-name {
+  color: var(--text-primary);
+}
+
+.clay-theme .team-member-card {
+  border-top: 2px solid var(--company-primary);
+}
+
+.clay-theme #team [role="tab"] {
+  border-color: var(--border-neutral);
+  background: var(--surface);
+  color: var(--text-primary);
+}
+
+.clay-theme #team [role="tab"][aria-selected="true"] {
+  border-color: var(--company-primary);
+  background: var(--company-primary);
+  color: #ffffff !important;
+  box-shadow: 0 10px 24px rgba(205, 32, 59, 0.2);
+}
+
+.clay-theme .tilution-service-card,
+.clay-theme .reference-card {
+  border-color: var(--border-neutral);
+  box-shadow: 0 12px 30px rgba(36, 25, 27, 0.09);
+}
+
+.clay-theme .tilution-service-card__fade-top {
+  background: linear-gradient(to bottom, rgba(205, 32, 59, 0.72), rgba(75, 11, 22, 0.18), transparent) !important;
+}
+
+.clay-theme .tilution-service-card__fade-bottom {
+  background: linear-gradient(to top, rgba(205, 32, 59, 0.78), rgba(75, 11, 22, 0.22), transparent) !important;
+}
+
+.clay-theme .tilution-services-cta {
+  border: 1px solid var(--border-neutral);
+  background: var(--surface);
+  box-shadow: 0 10px 28px rgba(36, 25, 27, 0.07);
+  backdrop-filter: none;
+}
+
+.clay-theme .tilution-services-cta__button {
+  border-color: var(--company-primary);
+  background: var(--company-primary);
+  color: #ffffff;
+  box-shadow: 0 10px 24px rgba(205, 32, 59, 0.2);
+}
+
+.clay-theme .tilution-services-cta__button:hover {
+  border-color: #a71930;
+  background: #a71930;
+  color: #ffffff;
+  box-shadow: 0 14px 30px rgba(36, 25, 27, 0.16);
+}
+
+.clay-theme .tilution-services-cta__button:focus-visible {
+  outline-color: rgba(205, 32, 59, 0.48);
+}
+
+.clay-theme #kontakt .liquid-card {
+  color: var(--text-primary) !important;
+}
+
+.clay-theme #kontakt .liquid-card > span:first-child {
+  border-color: var(--border-neutral);
+  background: var(--background-light);
+  color: #000000;
+  box-shadow: none;
+}
+
+.clay-theme #kontakt .liquid-card span[class*="text-forest-100"],
+.clay-theme #kontakt .liquid-card span[class*="text-white"] {
+  color: var(--company-primary) !important;
+}
+
+.clay-theme #kontakt .liquid-card > span:last-child > span:last-child {
+  color: #000000 !important;
+}
+
+.clay-theme #kontakt .liquid-card > span:first-child,
+.clay-theme #kontakt .liquid-card > span:first-child svg {
+  color: #000000 !important;
+  stroke: #000000;
+}
+
+.clay-theme .tilution-services-header {
+  max-width: none;
+}
+
+.clay-theme .tilution-services-heading {
+  max-width: none;
+  text-wrap: balance;
+}
+
+.clay-theme .tilution-service-card__title,
+.clay-theme .tilution-service-card__attributes {
+  max-width: 100%;
+}
+
+body:has(.clay-theme) footer {
+  background: #182956;
+  color: #ffffff;
+}
+
+body:has(.clay-theme) footer p,
+body:has(.clay-theme) footer h3,
+body:has(.clay-theme) footer [class*="text-forest-100"] {
+  color: #ffffff !important;
+}
+
+body:has(.clay-theme) footer .liquid-card-dark {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: #182956;
+  box-shadow: none;
+}
+
+body:has(.clay-theme) footer .liquid-card-dark::before,
+body:has(.clay-theme) footer .liquid-card-dark::after {
+  display: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .clay-theme .liquid-card:hover {
+    border-color: var(--company-primary);
+    box-shadow: 0 18px 40px rgba(36, 25, 27, 0.13);
+  }
+
+  .clay-theme .team-member-card:hover,
+  .clay-theme #kontakt .liquid-card:hover {
+    background: var(--surface-accent);
+  }
+
+  .clay-theme #team [role="tab"]:hover {
+    border-color: var(--company-primary);
+    background: var(--surface-accent);
+    color: var(--company-primary);
+  }
+
+  .clay-theme #team [role="tab"][aria-selected="true"]:hover,
+  .clay-theme .tilution-services-cta__button:hover,
+  .clay-theme .group:hover span[class*="linear-gradient(90deg"] {
+    border-color: #a71930 !important;
+    background: #a71930 !important;
+    background-image: none !important;
+    color: #ffffff !important;
+    box-shadow: 0 14px 30px rgba(36, 25, 27, 0.16) !important;
+  }
+
+  .clay-theme .tilution-service-card:hover,
+  .clay-theme .reference-card:hover {
+    border-color: var(--company-primary);
+    box-shadow: 0 18px 40px rgba(36, 25, 27, 0.15);
+  }
+}
+
+@media (hover: none), (pointer: coarse) {
+  .clay-theme .liquid-card:hover,
+  .clay-theme .tilution-service-card:hover,
+  .clay-theme .reference-card:hover,
+  .clay-theme .tilution-services-cta__button:hover {
+    transform: none;
+  }
+}
+
+@media (min-width: 1280px) {
+  .clay-services-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
 }

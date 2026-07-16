@@ -176,7 +176,7 @@ export function HomeServicesSection() {
                     {company.name}
                   </h3>
                   <p
-                    className={`w-full self-center whitespace-nowrap text-forest-100/86 ${
+                    className={`w-full self-center text-forest-100/86 ${
                       isSupporting
                         ? "mt-1.5 text-[0.72rem] leading-[1.125rem]"
                         : "mt-0 text-[0.95rem] leading-7"

@@ -1,4 +1,9 @@
-type ImprintEntry = {
+"use client";
+
+import { usePathname } from "next/navigation";
+
+type Imprint = {
+  slug: string;
   company: string;
   address: string[];
   representedBy: string[];
@@ -8,8 +13,9 @@ type ImprintEntry = {
   vatId: string;
 };
 
-const imprintEntries: ImprintEntry[] = [
+const imprints: Imprint[] = [
   {
+    slug: "/tilution",
     company: "Tilution GmbH",
     address: ["Quantzstraße 67", "37127 Scheden"],
     representedBy: ["Jan Grünewald"],
@@ -19,6 +25,7 @@ const imprintEntries: ImprintEntry[] = [
     vatId: "DE360489880",
   },
   {
+    slug: "/gruenewald",
     company: "Grünewald GmbH",
     address: ["Quantzstraße 67", "37127 Scheden"],
     representedBy: ["Jan Grünewald"],
@@ -28,6 +35,7 @@ const imprintEntries: ImprintEntry[] = [
     vatId: "DE358950208",
   },
   {
+    slug: "/clay-construction",
     company: "Clay Construction GmbH",
     address: ["Quantzstraße 67", "37127 Scheden"],
     representedBy: ["Jan Grünewald"],
@@ -37,6 +45,7 @@ const imprintEntries: ImprintEntry[] = [
     vatId: "DE362095278",
   },
   {
+    slug: "/hrw",
     company: "HRW GmbH",
     address: ["Karl-Kochstraße 5", "49080 Osnabrück"],
     representedBy: ["Nobert Bartholomäus"],
@@ -46,6 +55,7 @@ const imprintEntries: ImprintEntry[] = [
     vatId: "DE359281612",
   },
   {
+    slug: "/verwaltung",
     company: "Grünewald Verwaltung GmbH",
     address: ["Quantzstraße 67", "37127 Scheden"],
     representedBy: ["Jan Grünewald"],
@@ -59,52 +69,60 @@ const imprintEntries: ImprintEntry[] = [
   },
 ];
 
-function ImprintCard({
-  company,
-  address,
-  representedBy,
-  contact,
-  registerCourt,
-  registerNumber,
-  vatId,
-}: ImprintEntry) {
+function FooterCard({
+  imprint,
+  isSingleCompany = false,
+}: {
+  imprint: Imprint;
+  isSingleCompany?: boolean;
+}) {
   return (
-    <article className="liquid-card-dark h-full rounded-[1.75rem] p-6 sm:p-7">
-      <h3 className="text-xl font-semibold text-white">{company}</h3>
-
-      <div className="mt-5 space-y-5 text-sm leading-7 text-forest-100/88">
-        <div>
-          {address.map((line) => (
-            <p key={line}>{line}</p>
-          ))}
+    <article className="h-full rounded-[1.75rem] bg-white/8 p-6 shadow-[0_24px_60px_rgba(7,18,48,0.16)] backdrop-blur-md sm:p-7">
+      <div
+        className={
+          isSingleCompany
+            ? "grid gap-6 text-sm leading-7 text-white/88 sm:grid-cols-2 lg:grid-cols-[1.15fr_0.85fr_0.9fr_1.35fr_1.15fr]"
+            : "flex h-full flex-col gap-5 text-sm leading-7 text-white/88"
+        }
+      >
+        <div className="min-w-0">
+          <h3 className="text-xl font-semibold text-white">{imprint.company}</h3>
+          <p className="mt-1 text-xs font-medium tracking-[0.03em] text-white/68 sm:text-[0.8125rem]">
+            Teil der Grünewald-Gruppe
+          </p>
+          <div className="mt-4">
+            {imprint.address.map((line) => (
+              <p key={line}>{line}</p>
+            ))}
+          </div>
         </div>
 
-        <div>
+        <div className="min-w-0">
           <p className="font-semibold text-white">Vertreten durch:</p>
-          {representedBy.map((line) => (
+          {imprint.representedBy.map((line) => (
             <p key={line}>{line}</p>
           ))}
         </div>
 
-        <div>
+        <div className="min-w-0">
           <p className="font-semibold text-white">Kontakt:</p>
-          {contact.map((line) => (
+          {imprint.contact.map((line) => (
             <p key={line}>{line}</p>
           ))}
         </div>
 
-        <div>
+        <div className="min-w-0">
           <p className="font-semibold text-white">Registereintrag:</p>
           <p>Eintragung im Handelsregister.</p>
-          <p>Registergericht: {registerCourt}</p>
-          <p>Registernummer: {registerNumber}</p>
+          <p>Registergericht: {imprint.registerCourt}</p>
+          <p>Registernummer: {imprint.registerNumber}</p>
         </div>
 
-        <div>
+        <div className="min-w-0">
           <p className="font-semibold text-white">
             Umsatzsteuer-Identifikationsnummer gemäß §27 a Umsatzsteuergesetz:
           </p>
-          <p>{vatId}</p>
+          <p>{imprint.vatId}</p>
         </div>
       </div>
     </article>
@@ -112,18 +130,36 @@ function ImprintCard({
 }
 
 export function Footer() {
+  const pathname = usePathname();
+  const activeImprint = imprints.find((entry) => entry.slug === pathname);
+  const visibleImprints = activeImprint ? [activeImprint] : imprints;
+  const isOverview = activeImprint === undefined;
+
   return (
-    <footer className="w-full">
-      <div className="w-full py-12 sm:py-14">
-        <header className="px-4 sm:px-6 lg:px-8">
-          <p className="text-xs uppercase tracking-[0.28em] text-forest-100/75">
+    <footer
+      className="w-full border-t border-white/10"
+      style={{ backgroundColor: "#182956" }}
+    >
+      <div className="w-full px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
+        <header>
+          <p className="text-xs uppercase tracking-[0.28em] text-white/72">
             Impressum
           </p>
         </header>
 
-        <div className="mt-6 grid w-full gap-4 md:grid-cols-2 xl:grid-cols-5">
-          {imprintEntries.map((entry) => (
-            <ImprintCard key={entry.company} {...entry} />
+        <div
+          className={
+            isOverview
+              ? "mt-6 grid w-full gap-6 lg:grid-cols-2 xl:grid-cols-5"
+              : "mt-6 grid w-full gap-6"
+          }
+        >
+          {visibleImprints.map((imprint) => (
+            <FooterCard
+              key={imprint.slug}
+              imprint={imprint}
+              isSingleCompany={!isOverview}
+            />
           ))}
         </div>
       </div>
