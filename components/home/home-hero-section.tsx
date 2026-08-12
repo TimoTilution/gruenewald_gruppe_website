@@ -51,6 +51,7 @@ function HeroButton({ label }: { label: string }) {
 }
 
 const tilutionProofPoints = ["Terminsicher", "Präzise", "Deutschlandweit"];
+const gruenewaldProofPoints = ["Persönlich", "Hochwertig", "Aus einer Hand"];
 const hrwProofPoints = ["Flexibel", "Erfahren", "Zuverlässig"];
 const verwaltungProofPoints = [
   "Servicebereiche",
@@ -60,7 +61,7 @@ const verwaltungProofPoints = [
 const clayProofPoints = ["Nachhaltig", "Regulierend", "Energieeffizient"];
 
 type HomeHeroSectionProps = {
-  variant?: "group" | "tilution" | "verwaltung" | "hrw" | "clay";
+  variant?: "group" | "tilution" | "gruenewald" | "verwaltung" | "hrw" | "clay";
 };
 
 export function HomeHeroSection({ variant = "group" }: HomeHeroSectionProps) {
@@ -139,21 +140,28 @@ export function HomeHeroSection({ variant = "group" }: HomeHeroSectionProps) {
     );
   }
 
-  if (variant === "tilution" || variant === "verwaltung" || variant === "hrw") {
+  if (variant === "tilution" || variant === "gruenewald" || variant === "verwaltung" || variant === "hrw") {
     const isHrw = variant === "hrw";
+    const isGruenewald = variant === "gruenewald";
     const isVerwaltung = variant === "verwaltung";
-    const proofPoints = isHrw
+    const proofPoints = isGruenewald
+      ? gruenewaldProofPoints
+      : isHrw
       ? hrwProofPoints
       : isVerwaltung
         ? verwaltungProofPoints
         : tilutionProofPoints;
-    const eyebrow = isHrw ? "HRW" : isVerwaltung ? "Verwaltung" : "Tilution";
-    const title = isHrw
+    const eyebrow = isGruenewald ? "Grünewald – planen bauen leben" : isHrw ? "HRW" : isVerwaltung ? "Verwaltung" : "Tilution";
+    const title = isGruenewald
+      ? "Planen, bauen und leben – mit Qualität bis ins Detail."
+      : isHrw
       ? "Spezialisierte Leistungen unter eigener Marke."
       : isVerwaltung
         ? "Zentrale Steuerung für die gesamte Gruppe."
         : "Ihr Partner für Fliesenarbeiten bei anspruchsvollen Großprojekten.";
-    const description = isHrw
+    const description = isGruenewald
+      ? "Wir begleiten private Bauvorhaben von der ersten Idee bis zur hochwertigen Ausführung – persönlich, verlässlich und mit einem klaren Blick für Materialien, Funktion und Gestaltung."
+      : isHrw
       ? "Die HRW-Seite steht als sauberer Einstiegspunkt bereit und kann künftig detaillierte Informationen zu Angebot, Referenzen und Ansprechpartnern aufnehmen."
       : isVerwaltung
         ? "Die Verwaltungsseite bildet die organisatorische Ebene ab und eignet sich als Platzhalter für Servicebereiche, interne Funktionen oder gruppenweite Informationen."
@@ -168,6 +176,8 @@ export function HomeHeroSection({ variant = "group" }: HomeHeroSectionProps) {
             src={
               isVerwaltung
                 ? "/images/verwaltung/verwaltung-hero.png"
+                : isGruenewald
+                  ? "/images/gruenewald-hero-badezimmer.png"
                 : "/hero-start.jpg"
             }
             alt=""
@@ -207,12 +217,12 @@ export function HomeHeroSection({ variant = "group" }: HomeHeroSectionProps) {
             >
               {title}
             </h1>
-            <p
+            {!isVerwaltung ? <p
               className="shared-company-hero__description mt-6 max-w-full text-base font-semibold leading-8 text-white/86 sm:max-w-4xl sm:text-lg"
               style={{ textShadow: "0 1px 5px rgba(0, 0, 0, 0.58)" }}
             >
               {description}
-            </p>
+            </p> : null}
           </div>
 
           <div className="relative z-10 mt-12 grid max-w-full min-w-0 gap-4 sm:grid-cols-3">

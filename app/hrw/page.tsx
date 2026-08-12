@@ -1,17 +1,12 @@
-import { HomeCareerSection } from "@/components/home/home-career-section";
-import { HomeContactSection } from "@/components/home/home-contact-section";
-import { HomeHeroSection } from "@/components/home/home-hero-section";
-import { HomeTeamSection } from "@/components/home/home-team-section";
-import { TilutionServicesSection } from "@/components/tilution/tilution-services-section";
+import { HrwContactSection, HrwHeroSection, HrwServicesSection, HrwWhySection } from "@/components/hrw/hrw-page-sections";
 
 export default function HrwPage() {
   return (
     <div className="verwaltung-theme hrw-theme contents">
-      <HomeHeroSection variant="hrw" />
-      <TilutionServicesSection />
-      <HomeTeamSection />
-      <HomeCareerSection />
-      <HomeContactSection />
+      <HrwHeroSection />
+      <HrwServicesSection />
+      <HrwWhySection />
+      <HrwContactSection />
     </div>
   );
 }

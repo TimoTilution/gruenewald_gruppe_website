@@ -16,6 +16,7 @@ type TeamMember = {
   role: string;
   categoryId: string;
   imageSrc?: string;
+  imagePosition?: string;
 };
 
 const teamCategories: TeamCategory[] = [
@@ -194,16 +195,37 @@ const teamMembers: TeamMember[] = [
   },
 ];
 
-export function HomeTeamSection() {
-  const [activeCategoryId, setActiveCategoryId] = useState(teamCategories[0].id);
+const verwaltungTeamCategories: TeamCategory[] = [
+  { id: "kaufmaennische-leitung", label: "Kaufmännische Leitung" },
+  { id: "kreditorenbuchhaltung", label: "Kreditorenbuchhaltung" },
+  { id: "debitorenbuchhaltung", label: "Debitorenbuchhaltung" },
+  { id: "it", label: "IT" },
+  { id: "personalwesen", label: "Personalwesen" },
+];
+
+const verwaltungTeamMembers: TeamMember[] = [
+  { name: "Alexandra Fieseler", role: "Kaufmännische Leitung", categoryId: "kaufmaennische-leitung", imageSrc: "/images/verwaltung/team-alexandra-fieseler.png" },
+  { name: "Mirco Müller", role: "Kaufmännische Leitung", categoryId: "kaufmaennische-leitung", imageSrc: "/images/verwaltung/team-mirco-mueller.png" },
+  { name: "Birgit Peters", role: "Kreditorenbereich & Immobilienverwaltung", categoryId: "kreditorenbuchhaltung", imageSrc: "/images/verwaltung/team-birgit-peters.png" },
+  { name: "Simone Seibert", role: "Debitorenbereich, Bürgschaftswesen & Rechtsfälle", categoryId: "debitorenbuchhaltung", imageSrc: "/images/verwaltung/team-simone-seibert.png" },
+  { name: "Anke Rode", role: "Debitorenbuchhaltung", categoryId: "debitorenbuchhaltung", imageSrc: "/images/verwaltung/team-anke-rode.png", imagePosition: "center top" },
+  { name: "Shqiprim Salihu", role: "Sachbearbeiter IT", categoryId: "it", imageSrc: "/images/verwaltung/team-shqiprim-salihu.png" },
+  { name: "Brigitte Marx", role: "Lohnbuchhaltung", categoryId: "personalwesen", imageSrc: "/images/verwaltung/team-brigitte-marx.png" },
+  { name: "Theresa Janke", role: "Auszubildende", categoryId: "personalwesen", imageSrc: "/images/verwaltung/team-theresa-janke.png" },
+];
+
+export function HomeTeamSection({ variant = "group" }: { variant?: "group" | "verwaltung" }) {
+  const categories = variant === "verwaltung" ? verwaltungTeamCategories : teamCategories;
+  const members = variant === "verwaltung" ? verwaltungTeamMembers : teamMembers;
+  const [activeCategoryId, setActiveCategoryId] = useState(categories[0].id);
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
-  const activeCategory = teamCategories.find(
+  const activeCategory = categories.find(
     (category) => category.id === activeCategoryId,
   );
   const visibleMembers = useMemo(
     () =>
-      teamMembers.filter((member) => member.categoryId === activeCategoryId),
-    [activeCategoryId],
+      members.filter((member) => member.categoryId === activeCategoryId),
+    [activeCategoryId, members],
   );
 
   useEffect(() => {
@@ -236,11 +258,11 @@ export function HomeTeamSection() {
           <div className="max-w-5xl">
             <p className="section-eyebrow">Team</p>
             <h2 className="section-heading xl:whitespace-nowrap">
-              Menschen, die Projekte führen, planen und möglich machen.
+              {variant === "verwaltung" ? "Menschen, die unsere Verwaltung möglich machen." : "Menschen, die Projekte führen, planen und möglich machen."}
             </h2>
             <p className="section-subline !max-w-none xl:whitespace-nowrap">
               Wählen Sie einen Bereich, um die passenden Ansprechpartnerinnen
-              und Ansprechpartner der Grünewald Gruppe zu sehen.
+              und Ansprechpartner zu sehen.
             </p>
           </div>
 
@@ -251,7 +273,7 @@ export function HomeTeamSection() {
           role="tablist"
           aria-label="Teambereiche"
         >
-          {teamCategories.map((category) => {
+          {categories.map((category) => {
             const isActive = category.id === activeCategoryId;
 
             return (
@@ -302,6 +324,7 @@ export function HomeTeamSection() {
                         alt={`${member.name}, ${member.role}`}
                         fill
                         className="object-cover object-center transition-transform duration-500 group-hover:scale-[1.03]"
+                        style={{ objectPosition: member.imagePosition ?? "center" }}
                         sizes="(min-width: 1024px) 18rem, (min-width: 640px) 45vw, 100vw"
                       />
                     ) : (

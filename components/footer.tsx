@@ -48,7 +48,7 @@ const imprints: Imprint[] = [
     slug: "/hrw",
     company: "HRW GmbH",
     address: ["Karl-Kochstraße 5", "49080 Osnabrück"],
-    representedBy: ["Nobert Bartholomäus"],
+    representedBy: ["Norbert Bartholomäus"],
     contact: ["Telefon: 0151/72226537", "E-Mail: bartholomaeus@hrw-gmbh.com"],
     registerCourt: "Amtsgericht Osnabrück",
     registerNumber: "HRB 219343",

@@ -8,8 +8,8 @@ export default function VerwaltungPage() {
   return (
     <div className="verwaltung-theme contents">
       <HomeHeroSection variant="verwaltung" />
-      <TilutionServicesSection />
-      <HomeTeamSection />
+      <TilutionServicesSection variant="verwaltung" />
+      <HomeTeamSection variant="verwaltung" />
       <HomeCareerSection />
       <HomeContactSection />
     </div>

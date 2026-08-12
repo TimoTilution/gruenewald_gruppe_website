@@ -4,6 +4,15 @@
 
 :root {
   color-scheme: light;
+  --page-background-base: #eef3f8;
+  --page-background-mid: #f7fafd;
+  --page-background-deep: #dde7f2;
+  --page-background-glow: rgba(255, 255, 255, 0.86);
+  --page-background-soft-glow: rgba(24, 41, 86, 0.055);
+  --page-background-side-glow: rgba(143, 170, 216, 0.2);
+  --page-background-depth-glow: rgba(24, 41, 86, 0.04);
+  --page-background-small-glow: rgba(255, 255, 255, 0.66);
+  --page-background-muted-glow: rgba(143, 170, 216, 0.13);
 }
 
 html {
@@ -14,9 +23,22 @@ html {
 body {
   @apply bg-forest-900 text-porcelain antialiased;
   background:
-    radial-gradient(circle at 12% 8%, rgba(95, 132, 197, 0.16), transparent 28rem),
-    radial-gradient(circle at 88% 22%, rgba(219, 228, 242, 0.08), transparent 30rem),
-    linear-gradient(180deg, #14234b 0%, #182956 38%, #101d3f 100%);
+    radial-gradient(circle at 14% 6%, var(--page-background-glow), transparent 24rem),
+    radial-gradient(circle at 86% 16%, var(--page-background-soft-glow), transparent 28rem),
+    radial-gradient(circle at 4% 48%, var(--page-background-side-glow), transparent 26rem),
+    radial-gradient(circle at 32% 28%, var(--page-background-small-glow), transparent 18rem),
+    radial-gradient(circle at 62% 38%, var(--page-background-muted-glow), transparent 22rem),
+    radial-gradient(circle at 78% 72%, var(--page-background-depth-glow), transparent 30rem),
+    radial-gradient(circle at 18% 82%, var(--page-background-muted-glow), transparent 20rem),
+    radial-gradient(circle at 94% 58%, var(--page-background-small-glow), transparent 19rem),
+    linear-gradient(115deg, rgba(255, 255, 255, 0.045), transparent 34%, rgba(255, 255, 255, 0.035) 68%, transparent),
+    linear-gradient(
+      180deg,
+      var(--page-background-mid) 0%,
+      var(--page-background-base) 42%,
+      var(--page-background-deep) 100%
+    );
+  background-attachment: fixed;
 }
 
 @layer components {
@@ -260,12 +282,18 @@ body {
     line-height: 1.12;
   }
 
-  .tilution-services-subline {
-    margin-top: 1.25rem;
-    color: rgba(255, 232, 213, 0.82);
-    font-size: 1rem;
-    line-height: 2;
+.tilution-services-subline {
+  margin-top: 1.25rem;
+  color: rgba(255, 232, 213, 0.82);
+  font-size: 1rem;
+  line-height: 2;
+}
+
+@media (min-width: 1024px) {
+  .tilution-services-subline--single-line {
+    white-space: nowrap;
   }
+}
 
   .tilution-services-grid {
     display: grid;
@@ -422,6 +450,22 @@ body {
     text-shadow: 0 2px 12px rgba(0, 0, 0, 0.52);
   }
 
+  .tilution-service-card__title--long {
+    font-size: 1.15rem;
+  }
+
+  .tilution-service-card__title--long span {
+    white-space: nowrap;
+  }
+
+  .tilution-service-card__title--single-line {
+    max-width: none;
+    white-space: nowrap;
+    overflow-wrap: normal;
+    hyphens: none;
+    text-wrap: nowrap;
+  }
+
   .tilution-service-card__attributes {
     display: flex;
     max-width: min(100%, 15.5rem);
@@ -441,6 +485,23 @@ body {
   .tilution-service-card__attribute {
     display: inline-flex;
     align-items: center;
+  }
+
+  .tilution-service-card__attributes--bathroom {
+    display: block;
+  }
+
+  .tilution-service-card__attributes-line {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .tilution-service-card__attributes--single-line {
+    max-width: none;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    text-wrap: nowrap;
   }
 
   .tilution-service-card__separator {
@@ -582,20 +643,8 @@ body {
   }
 }
 
-@media (min-width: 1760px) and (min-height: 900px) {
-  .milestone-rail {
-    display: block;
-  }
-
-  .milestone-inline {
-    display: none;
-  }
-}
-
-@media (min-width: 1760px) {
-  .monogram-ambient {
-    display: flex;
-  }
+html[data-milestone-rail="active"] .milestone-inline {
+  display: none;
 }
 
 a {
@@ -842,6 +891,9 @@ body:has(.verwaltung-theme) > div > .pointer-events-none {
 
 .verwaltung-theme .team-member-name {
   color: var(--text-primary);
+  overflow: visible;
+  text-overflow: clip;
+  white-space: normal;
 }
 
 .verwaltung-theme .team-member-role {
@@ -868,6 +920,18 @@ body:has(.verwaltung-theme) > div > .pointer-events-none {
 .verwaltung-theme .tilution-service-card {
   border-color: var(--border-neutral);
   box-shadow: 0 12px 30px rgba(32, 36, 43, 0.09);
+}
+
+@media (min-width: 1280px) {
+  .verwaltung-theme .verwaltung-services-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .verwaltung-theme .verwaltung-services-grid .tilution-service-card {
+    min-height: 22rem;
+    height: 22rem;
+    aspect-ratio: auto;
+  }
 }
 
 .verwaltung-theme .tilution-service-card__fade-top {
@@ -1314,6 +1378,365 @@ body:has(.tilution-theme) footer .liquid-card-dark::after {
   .tilution-theme .reference-card:hover,
   .tilution-theme .tilution-services-cta__button:hover {
     transform: none;
+  }
+}
+
+/* Grünewald – planen, bauen, leben: Markenfarbe */
+body:has(.gruenewald-theme) {
+  --company-primary: #009ca6;
+  --surface-accent: #e8f7f8;
+}
+
+.gruenewald-theme .liquid-card-dark {
+  border-color: rgba(0, 156, 166, 0.42);
+}
+
+.gruenewald-theme .tilution-service-card__fade-top {
+  background: linear-gradient(to bottom, rgba(0, 156, 166, 0.72), rgba(24, 41, 86, 0.18), transparent) !important;
+}
+
+.gruenewald-theme .tilution-service-card__fade-bottom {
+  background: linear-gradient(to top, rgba(0, 156, 166, 0.78), rgba(24, 41, 86, 0.22), transparent) !important;
+}
+
+.tilution-service-card-button {
+  display: block;
+  width: 100%;
+  border: 0;
+  border-radius: 1.1rem;
+  background: transparent;
+  padding: 0;
+  color: inherit;
+  font: inherit;
+  text-align: inherit;
+  cursor: pointer;
+}
+
+.tilution-service-card-button .tilution-service-card {
+  width: 100%;
+}
+
+.gruenewald-services-grid .tilution-service-card-button--wide {
+  grid-column: 1 / -1;
+}
+
+.gruenewald-services-grid .tilution-service-card-button--wide .tilution-service-card {
+  min-height: 0;
+  aspect-ratio: 32 / 9;
+}
+
+@media (min-width: 1280px) {
+  .gruenewald-theme .gruenewald-services-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+}
+
+@media (max-width: 639px) {
+  .gruenewald-services-grid .tilution-service-card-button--wide .tilution-service-card {
+    aspect-ratio: 16 / 15;
+  }
+
+  .gruenewald-services-grid .tilution-service-card__attributes--single-line {
+    font-size: 0.78rem;
+  }
+}
+
+.tilution-service-card-button:focus-visible {
+  outline: 3px solid #009ca6;
+  outline-offset: 4px;
+}
+
+.gruenewald-service-modal {
+  position: fixed;
+  z-index: 2147483600;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow-y: auto;
+  background: rgba(10, 24, 43, 0.76);
+  padding: clamp(1rem, 3vw, 2.5rem);
+  backdrop-filter: blur(12px);
+}
+
+.gruenewald-service-modal__panel {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(20rem, 0.85fr);
+  width: min(75rem, 100%);
+  height: min(44rem, calc(100vh - 3rem));
+  max-height: calc(100vh - 3rem);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.58);
+  border-radius: 1.75rem;
+  background: #ffffff;
+  box-shadow: 0 32px 90px rgba(5, 22, 39, 0.42);
+}
+
+.gruenewald-service-modal__close {
+  position: absolute;
+  z-index: 2;
+  top: 1rem;
+  right: 1rem;
+  display: grid;
+  width: 3rem;
+  height: 3rem;
+  place-items: center;
+  border: 1px solid rgba(0, 156, 166, 0.25);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.94);
+  color: #182956;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(10, 24, 43, 0.16);
+}
+
+.gruenewald-service-modal__close:hover,
+.gruenewald-service-modal__close:focus-visible {
+  background: #009ca6;
+  color: #ffffff;
+}
+
+.gruenewald-service-modal__close:focus-visible {
+  outline: 3px solid rgba(0, 156, 166, 0.32);
+  outline-offset: 3px;
+}
+
+.gruenewald-service-modal__close svg {
+  width: 1.45rem;
+  height: 1.45rem;
+}
+
+.gruenewald-service-modal__nav {
+  position: absolute;
+  z-index: 3;
+  top: 50%;
+  display: grid;
+  width: 2.8rem;
+  height: 2.8rem;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 999px;
+  background: rgba(0, 156, 166, 0.94);
+  color: #ffffff;
+  cursor: pointer;
+  box-shadow: 0 9px 24px rgba(10, 24, 43, 0.22);
+  transform: translateY(-50%);
+  transition: background 180ms ease, opacity 180ms ease, transform 180ms ease;
+}
+
+.gruenewald-service-modal__nav--previous {
+  left: 1rem;
+}
+
+.gruenewald-service-modal__nav--next {
+  right: 1rem;
+}
+
+.gruenewald-service-modal__nav:hover:not(:disabled),
+.gruenewald-service-modal__nav:focus-visible:not(:disabled) {
+  background: #007f87;
+  transform: translateY(-50%) scale(1.06);
+}
+
+.gruenewald-service-modal__nav:focus-visible {
+  outline: 3px solid rgba(255, 255, 255, 0.78);
+  outline-offset: 3px;
+}
+
+.gruenewald-service-modal__nav:disabled {
+  opacity: 0.32;
+  cursor: not-allowed;
+}
+
+.gruenewald-service-modal__nav svg {
+  width: 1.55rem;
+  height: 1.55rem;
+}
+
+.gruenewald-service-modal__image-wrap {
+  position: relative;
+  min-height: 0;
+  background: #dcebed;
+}
+
+.gruenewald-service-modal__image {
+  object-fit: cover;
+}
+
+.gruenewald-service-modal__content {
+  min-width: 0;
+  overflow-y: hidden;
+  overflow-x: hidden;
+  padding: clamp(3.75rem, 5vw, 5.5rem) clamp(1.75rem, 4vw, 4rem) clamp(2rem, 4vw, 4rem);
+  color: #4d5865;
+}
+
+.gruenewald-service-modal__eyebrow {
+  margin: 0 0 0.85rem;
+  color: #009ca6;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.gruenewald-service-modal__content h2 {
+  margin: 0 0 1.75rem;
+  color: #182956;
+  font-size: clamp(1.35rem, 1.7vw, 1.85rem);
+  line-height: 1.1;
+  overflow-wrap: normal;
+  white-space: nowrap;
+}
+
+.gruenewald-service-modal__content p:not(.gruenewald-service-modal__eyebrow) {
+  margin: 0 0 1.15rem;
+  font-size: clamp(1rem, 0.3vw + 0.94rem, 1.12rem);
+  line-height: 1.75;
+}
+
+.gruenewald-service-modal__highlights {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem;
+  margin: 0.25rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gruenewald-service-modal__highlights li {
+  position: relative;
+  border-radius: 0.7rem;
+  background: #e8f7f8;
+  padding: 0.65rem 0.75rem 0.65rem 1.6rem;
+  color: #182956;
+  font-size: 0.88rem;
+  line-height: 1.35;
+}
+
+.gruenewald-service-modal__highlights li::before {
+  position: absolute;
+  top: 0.95rem;
+  left: 0.75rem;
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 999px;
+  background: #009ca6;
+  content: "";
+}
+
+.gruenewald-service-modal__content--with-highlights {
+  padding-top: clamp(3.75rem, 5vw, 5.5rem);
+  padding-bottom: 2rem;
+}
+
+.gruenewald-service-modal__content--with-highlights p:not(.gruenewald-service-modal__eyebrow) {
+  margin-bottom: 0.75rem;
+}
+
+.gruenewald-service-modal__content--with-highlights .gruenewald-service-modal__highlights {
+  grid-template-columns: 1fr;
+  gap: 0.55rem;
+}
+
+.gruenewald-service-modal__content--with-highlights .gruenewald-service-modal__highlights li {
+  border-radius: 0;
+  background: transparent;
+  padding: 0.2rem 0 0.2rem 1.15rem;
+  font-size: 1.02rem;
+}
+
+.gruenewald-service-modal__content--with-highlights .gruenewald-service-modal__highlights li::before {
+  top: 0.68rem;
+  left: 0.15rem;
+}
+
+@media (max-width: 760px) {
+  .gruenewald-service-modal {
+    align-items: start;
+    overflow: hidden;
+    padding: 0.75rem;
+  }
+
+  .gruenewald-service-modal__panel {
+    grid-template-columns: 1fr;
+    height: auto;
+    max-height: calc(100vh - 1.5rem);
+    border-radius: 1.35rem;
+  }
+
+  .gruenewald-service-modal__image-wrap {
+    min-height: min(28vh, 15rem);
+  }
+
+  .gruenewald-service-modal__nav {
+    top: min(14vh, 7.5rem);
+    width: 2.65rem;
+    height: 2.65rem;
+  }
+
+  .gruenewald-service-modal__nav--previous {
+    left: 0.75rem;
+  }
+
+  .gruenewald-service-modal__nav--next {
+    right: 0.75rem;
+  }
+
+  .gruenewald-service-modal__content {
+    overflow: visible;
+    padding: 1.5rem 1.4rem 1.6rem;
+  }
+
+  .gruenewald-service-modal__content h2 {
+    margin-bottom: 1rem;
+  }
+
+  .gruenewald-service-modal__content p:not(.gruenewald-service-modal__eyebrow) {
+    margin-bottom: 0.85rem;
+    line-height: 1.62;
+  }
+
+  .gruenewald-service-modal__highlights {
+    gap: 0.4rem;
+  }
+
+  .gruenewald-service-modal__highlights li {
+    padding: 0.48rem 0.55rem 0.48rem 1.35rem;
+    font-size: 0.78rem;
+  }
+
+  .gruenewald-service-modal__highlights li::before {
+    top: 0.75rem;
+    left: 0.58rem;
+  }
+
+  .gruenewald-service-modal__content--with-highlights {
+    padding: 1.5rem 1.4rem 0.9rem;
+  }
+
+  .gruenewald-service-modal__content--with-highlights .gruenewald-service-modal__highlights {
+    gap: 0.48rem;
+  }
+
+  .gruenewald-service-modal__content--with-highlights .gruenewald-service-modal__highlights li {
+    padding-block: 0.18rem;
+    font-size: 0.95rem;
+  }
+
+}
+
+.gruenewald-theme .tilution-services-cta__button,
+.gruenewald-theme span[class*="linear-gradient(90deg"] {
+  box-shadow: 0 10px 24px rgba(0, 156, 166, 0.22) !important;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .gruenewald-theme #team [role="tab"][aria-selected="true"]:hover,
+  .gruenewald-theme .tilution-services-cta__button:hover,
+  .gruenewald-theme .group:hover span[class*="linear-gradient(90deg"] {
+    border-color: #007f87 !important;
+    background: #007f87 !important;
   }
 }
 

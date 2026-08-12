@@ -13,8 +13,8 @@ type ReferenceCategory =
   | "Kliniken & Pflegebereiche"
   | "Großküchen"
   | "Retail & Gewerbeflächen"
-  | "Wohnungsbau & Großprojekte"
-  | "Sonder- & Designflächen";
+  | "Wohnungsbau"
+  | "Fassaden";
 
 type ReferenceImage = {
   src: string;
@@ -32,8 +32,8 @@ const referenceFilterOptions: Array<"Alle" | ReferenceCategory> = [
   "Kliniken & Pflegebereiche",
   "Großküchen",
   "Retail & Gewerbeflächen",
-  "Wohnungsbau & Großprojekte",
-  "Sonder- & Designflächen",
+  "Wohnungsbau",
+  "Fassaden",
 ];
 
 const project: {

@@ -7,9 +7,12 @@ import { SectionShell } from "@/components/section-shell";
 export function HomeContactSection() {
   const pathname = usePathname();
   const isHrwPage = pathname === "/hrw";
+  const isVerwaltungPage = pathname === "/verwaltung";
   const email =
     isHrwPage
       ? "bartholomaeus@hrw-gmbh.com"
+      : isVerwaltungPage
+      ? "info@verwaltung-gruenewald.de"
       : pathname === "/clay-construction"
       ? "info@clay-construction.de"
       : "info@tilution.de";
@@ -22,7 +25,9 @@ export function HomeContactSection() {
         <header className="w-full">
           <p className="section-eyebrow">Kontakt</p>
           <h2 className="section-heading">
-            Sprechen Sie uns zu Ihrem Projekt an
+            {isVerwaltungPage
+              ? "Sprechen Sie uns an"
+              : "Sprechen Sie uns zu Ihrem Projekt an"}
           </h2>
           <p className="section-subline !max-w-none">
             Wir freuen uns auf Ihre Anfrage und melden uns schnellstmöglich bei

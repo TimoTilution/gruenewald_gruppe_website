@@ -30,6 +30,7 @@ export function HomeAboutSection() {
   const [isMapOpen, setIsMapOpen] = useState(false);
   const [isClayImageOpen, setIsClayImageOpen] = useState(false);
   const isTilutionPage = pathname === "/tilution";
+  const isGruenewaldPage = pathname === "/gruenewald";
   const isClayPage = pathname === "/clay-construction";
 
   useEffect(() => {
@@ -92,6 +93,26 @@ export function HomeAboutSection() {
             controls
             preload="metadata"
             aria-label="Tilution Bad Nauheim Projektvideo"
+          />
+        </section>
+      </SectionShell>
+    );
+  }
+
+  if (isGruenewaldPage) {
+    return (
+      <SectionShell id="gruppe" innerClassName="relative overflow-visible">
+        <section className="section-card overflow-hidden p-0">
+          <video
+            className="block h-auto w-full"
+            src="/videos/gruenewald-schreib-uns-jetzt.mp4"
+            autoPlay
+            muted
+            loop
+            playsInline
+            controls
+            preload="metadata"
+            aria-label="Einblicke bei der Grünewald GmbH"
           />
         </section>
       </SectionShell>
@@ -311,7 +332,7 @@ export function HomeAboutSection() {
           </div>
         ) : null}
       </section>
-      <CompanyMilestoneRail />
+      {isGruenewaldPage ? null : <CompanyMilestoneRail />}
     </SectionShell>
   );
 }

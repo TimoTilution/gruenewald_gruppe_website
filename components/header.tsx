@@ -25,6 +25,15 @@ const tilutionSecondaryNavigation = [
   { href: "#kontakt", label: "Kontakt" },
 ];
 
+const gruenewaldSecondaryNavigation = [
+  { href: "#hero", label: "Start" },
+  { href: "#leistungen", label: "Leistungen" },
+  { href: "#gruppe", label: "Einblicke" },
+  { href: "#referenzen", label: "Referenzen" },
+  { href: "#karriere", label: "Karriere" },
+  { href: "#kontakt", label: "Kontakt" },
+];
+
 const claySecondaryNavigation = [
   { href: "#hero", label: "Start" },
   { href: "#leistungen", label: "Leistungen" },
@@ -43,11 +52,43 @@ const verwaltungSecondaryNavigation = [
   { href: "#kontakt", label: "Kontakt" },
 ];
 
+const hrwSecondaryNavigation = [
+  { href: "#hero", label: "Start" },
+  { href: "#leistungen", label: "Leistungen" },
+  { href: "#warum-hrw", label: "Warum HRW" },
+  { href: "#kontakt", label: "Kontakt" },
+];
+
 function cn(...classes: Array<string | false | null | undefined>) {
   return classes.filter(Boolean).join(" ");
 }
+const containerTone = "#2c2856";
+const MONOGRAM_MIN_VIEWPORT_WIDTH = 1380;
+const MONOGRAM_MIN_VIEWPORT_HEIGHT = 760;
+const MONOGRAM_MIN_GUTTER_WIDTH = 220;
+const MONOGRAM_MIN_WIDTH = 220;
+const MONOGRAM_MAX_WIDTH = 420;
+const MONOGRAM_GUTTER_PADDING = 28;
+
+type MonogramLayout = {
+  left: number;
+  top: number;
+  width: number;
+};
 
 const pageBranding = {
+  gruenewald: {
+    logoSrc: "/logos/companies/gruenewald.svg",
+    logoAlt: "Grünewald planen bauen leben Logo",
+    logoAriaLabel: "Grünewald planen bauen leben",
+    logoHref: "/gruenewald",
+    navClassName: "bg-[#009CA6]",
+    logoClassName: {
+      compact: "h-10 w-[min(54vw,13rem)] sm:h-14 sm:w-[min(58vw,22rem)] lg:h-16 lg:w-[min(50vw,28rem)]",
+      expanded: "h-12 w-[min(58vw,14rem)] sm:h-24 sm:w-[min(64vw,30rem)] lg:h-36 lg:w-[min(56vw,42rem)]",
+    },
+    logoSize: { width: 567, height: 340 },
+  },
   tilution: {
     logoSrc: "/logos/companies/tilution-header.svg",
     logoAlt: "Tilution Logo",
@@ -109,7 +150,9 @@ type SecondaryTriggerElement = HTMLAnchorElement | HTMLButtonElement;
 export function Header() {
   const pathname = usePathname();
   const activeBranding =
-    pathname === "/tilution"
+    pathname === "/gruenewald"
+      ? pageBranding.gruenewald
+      : pathname === "/tilution"
       ? pageBranding.tilution
       : pathname === "/clay-construction"
         ? pageBranding.clay
@@ -120,10 +163,14 @@ export function Header() {
         : null;
   const isVerwaltungPage = pathname === "/verwaltung" || pathname === "/hrw";
   const isLocalOnepager = pathname === "/" || activeBranding !== null;
-  const secondaryNavigation = pathname === "/verwaltung" || pathname === "/hrw"
+  const secondaryNavigation = pathname === "/hrw"
+    ? hrwSecondaryNavigation
+    : pathname === "/verwaltung"
     ? verwaltungSecondaryNavigation
     : pathname === "/clay-construction"
       ? claySecondaryNavigation
+    : pathname === "/gruenewald"
+      ? gruenewaldSecondaryNavigation
     : activeBranding
       ? tilutionSecondaryNavigation
       : defaultSecondaryNavigation;
@@ -132,8 +179,7 @@ export function Header() {
   const [isCompact, setIsCompact] = useState(false);
   const [isImprintVisible, setIsImprintVisible] = useState(false);
   const [hasScrolledPastTop, setHasScrolledPastTop] = useState(false);
-  const [monogramTop, setMonogramTop] = useState<number | null>(null);
-  const [monogramLeft, setMonogramLeft] = useState<number | null>(null);
+  const [monogramLayout, setMonogramLayout] = useState<MonogramLayout | null>(null);
   const [secondaryIndicator, setSecondaryIndicator] = useState({
     left: 0,
     width: 0,
@@ -171,10 +217,12 @@ export function Header() {
   useLayoutEffect(() => {
     const updateMonogramPosition = () => {
       if (!headerRef.current) {
+        setMonogramLayout(null);
         return;
       }
 
       const headerHeight = headerRef.current.offsetHeight;
+      const viewportWidth = window.innerWidth;
       const viewportHeight = window.innerHeight;
       const freeSpaceHeight = Math.max(viewportHeight - headerHeight, 0);
       const outerFrame =
@@ -189,13 +237,29 @@ export function Header() {
       const contentShellRect = document
         .querySelector(".content-shell")
         ?.getBoundingClientRect();
+      const leftGutterWidth = contentShellRect?.left ?? containerRect?.left ?? 0;
+      const usableMonogramWidth = Math.min(
+        MONOGRAM_MAX_WIDTH,
+        leftGutterWidth - MONOGRAM_GUTTER_PADDING * 2
+      );
+      const shouldShowMonogram =
+        pathname === "/" &&
+        viewportWidth >= MONOGRAM_MIN_VIEWPORT_WIDTH &&
+        viewportHeight >= MONOGRAM_MIN_VIEWPORT_HEIGHT &&
+        freeSpaceHeight >= 320 &&
+        leftGutterWidth >= MONOGRAM_MIN_GUTTER_WIDTH &&
+        usableMonogramWidth >= MONOGRAM_MIN_WIDTH;
 
-      setMonogramTop(headerHeight + freeSpaceHeight / 2);
-      if (contentShellRect) {
-        setMonogramLeft(contentShellRect.left / 2);
-      } else if (containerRect) {
-        setMonogramLeft(containerRect.left / 2);
+      if (!shouldShowMonogram) {
+        setMonogramLayout(null);
+        return;
       }
+
+      setMonogramLayout({
+        top: headerHeight + freeSpaceHeight / 2,
+        left: leftGutterWidth / 2,
+        width: usableMonogramWidth,
+      });
     };
 
     updateMonogramPosition();
@@ -204,7 +268,7 @@ export function Header() {
     return () => {
       window.removeEventListener("resize", updateMonogramPosition);
     };
-  }, [isCompact]);
+  }, [isCompact, pathname]);
 
   useLayoutEffect(() => {
     if (!isLocalOnepager) {
@@ -224,7 +288,10 @@ export function Header() {
       const hash = window.location.hash.replace("#", "");
       if (hash && sectionIds.includes(hash)) {
         setActiveSection(hash);
+        return;
       }
+
+      setActiveSection("hero");
     };
 
     const updateFromScrollPosition = () => {
@@ -236,45 +303,56 @@ export function Header() {
       const documentHeight = document.documentElement.scrollHeight;
 
       if (scrollBottom >= documentHeight - 8) {
-        setActiveSection("kontakt");
+        setActiveSection(sectionIds[sectionIds.length - 1] ?? "hero");
+        return;
       }
+
+      const headerHeight = headerRef.current?.offsetHeight ?? 0;
+      const activationLine = headerHeight + Math.min(window.innerHeight * 0.22, 160);
+      let currentSection = sectionIds[0] ?? "hero";
+
+      for (const section of sections) {
+        if (section.getBoundingClientRect().top <= activationLine) {
+          currentSection = section.id;
+        } else {
+          break;
+        }
+      }
+
+      setActiveSection(currentSection);
     };
 
     updateFromHash();
     updateFromScrollPosition();
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (isSectionClickLocked()) {
-          return;
-        }
-
-        const visibleEntries = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
-
-        if (visibleEntries[0]?.target.id) {
-          setActiveSection(visibleEntries[0].target.id);
-        }
-      },
-      {
-        rootMargin: "-22% 0px -55% 0px",
-        threshold: [0.2, 0.35, 0.5, 0.7],
+    let animationFrameId: number | null = null;
+    const scheduleScrollUpdate = () => {
+      if (animationFrameId !== null) {
+        return;
       }
-    );
 
-    sections.forEach((section) => observer.observe(section));
+      animationFrameId = window.requestAnimationFrame(() => {
+        animationFrameId = null;
+        updateFromScrollPosition();
+      });
+    };
+
     window.addEventListener("hashchange", updateFromHash);
-    window.addEventListener("scroll", updateFromScrollPosition, {
+    window.addEventListener("scroll", scheduleScrollUpdate, {
       passive: true,
     });
+    window.addEventListener("resize", scheduleScrollUpdate);
 
     return () => {
-      observer.disconnect();
+      if (animationFrameId !== null) {
+        window.cancelAnimationFrame(animationFrameId);
+      }
+
       window.removeEventListener("hashchange", updateFromHash);
-      window.removeEventListener("scroll", updateFromScrollPosition);
+      window.removeEventListener("scroll", scheduleScrollUpdate);
+      window.removeEventListener("resize", scheduleScrollUpdate);
     };
-  }, [isLocalOnepager, pathname]);
+  }, [isLocalOnepager, pathname, secondaryNavigation]);
 
   useLayoutEffect(() => {
     const updateSecondaryIndicator = () => {
@@ -302,7 +380,7 @@ export function Header() {
     return () => {
       window.removeEventListener("resize", updateSecondaryIndicator);
     };
-  }, [activeSection, isCompact]);
+  }, [activeSection, isCompact, pathname, secondaryNavigation.length]);
 
   useLayoutEffect(() => {
     const navElement = secondaryNavRef.current;
@@ -498,27 +576,23 @@ export function Header() {
                 aria-hidden="true"
                 className={cn(
                   "pointer-events-none absolute bottom-2 hidden h-[2px] rounded-full transition-all duration-300 ease-in-out sm:block",
-                  "bg-white"
+                  ""
                 )}
                 style={{
                   left: `${secondaryIndicator.left}px`,
                   width: `${secondaryIndicator.width}px`,
                   opacity: secondaryIndicator.opacity,
+                  backgroundColor: "#ffffff",
                 }}
               />
               {secondaryNavigation.map((item) => {
                 const sectionId = item.href.slice(1);
                 const isActive = isLocalOnepager && activeSection === sectionId;
                 const itemClassName = cn(
-                  "flex min-h-8 shrink-0 items-center justify-center rounded-full px-2 py-1 text-center text-[0.94rem] leading-tight transition-colors duration-200 sm:min-h-0 sm:w-auto sm:px-3 sm:py-2 sm:text-[1.25rem] lg:text-[1.42rem] xl:text-[1.5rem]",
-                  isVerwaltungPage
-                    ? "text-white/90 hover:text-white"
-                    : "text-white/90 hover:text-white",
+                  "flex min-h-8 shrink-0 items-center justify-center rounded-full px-2 py-1 text-center text-[0.94rem] leading-tight text-white transition-colors duration-200 hover:text-white sm:min-h-0 sm:w-auto sm:px-3 sm:py-2 sm:text-[1.25rem] lg:text-[1.42rem] xl:text-[1.5rem]",
                   isActive
-                    ? isVerwaltungPage
-                      ? "font-bold text-white"
-                      : "font-bold text-white"
-                    : "font-semibold"
+                    ? "font-bold underline decoration-2 underline-offset-[0.55rem] sm:no-underline"
+                    : "font-semibold text-white/88"
                 );
 
                 if (isLocalOnepager) {
@@ -595,27 +669,39 @@ export function Header() {
           pathname === "/" &&
           hasScrolledPastTop &&
           !isImprintVisible &&
-          monogramTop !== null &&
-          monogramLeft !== null
+          monogramLayout !== null
             ? "scale-100 opacity-100"
             : "scale-[0.94] opacity-0"
         )}
         style={
-          monogramTop !== null && monogramLeft !== null
-            ? { top: `${monogramTop}px`, left: `${monogramLeft}px` }
+          monogramLayout !== null
+            ? {
+                top: `${monogramLayout.top}px`,
+                left: `${monogramLayout.left}px`,
+                display: "flex",
+              }
             : undefined
         }
       >
-        <Image
-          src="/logos/gruenewald-monogram.png"
-          alt="Grünewald Gruppe Monogramm"
-          width={1536}
-          height={1024}
-          sizes="(min-width: 1280px) 840px, 660px"
-          className="h-auto w-[34rem] brightness-0 invert drop-shadow-[0_20px_44px_rgba(14,25,55,0.24)] xl:w-[42rem]"
-          priority
+        <span
+          aria-hidden="true"
+          className="block drop-shadow-[0_20px_44px_rgba(14,25,55,0.24)]"
+          style={{
+            aspectRatio: "1536 / 1024",
+            width: monogramLayout ? `${monogramLayout.width}px` : undefined,
+            backgroundColor: containerTone,
+            WebkitMaskImage: "url('/logos/gruenewald-monogram.png')",
+            WebkitMaskRepeat: "no-repeat",
+            WebkitMaskPosition: "center",
+            WebkitMaskSize: "contain",
+            maskImage: "url('/logos/gruenewald-monogram.png')",
+            maskRepeat: "no-repeat",
+            maskPosition: "center",
+            maskSize: "contain",
+          }}
         />
       </Link>
     </header>
   );
 }
+

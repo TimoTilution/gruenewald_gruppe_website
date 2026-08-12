@@ -150,3 +150,11 @@ vite.config.ts.timestamp-*
 
 # Large media files kept local only
 public/videos/*.mp4
+
+# Local Codex/browser verification artifacts
+.codex-find.txt
+.codex-probe.txt
+.tmp-browser-skill.md
+.next-stale-before-gu-height/
+public/verify-header.html
+snapshots/
