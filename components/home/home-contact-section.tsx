@@ -3,9 +3,10 @@
 import { Mail, Phone } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { SectionShell } from "@/components/section-shell";
+import { normalizeSitePathname } from "@/lib/site-path";
 
 export function HomeContactSection() {
-  const pathname = usePathname();
+  const pathname = normalizeSitePathname(usePathname());
   const isHrwPage = pathname === "/hrw";
   const isVerwaltungPage = pathname === "/verwaltung";
   const email =

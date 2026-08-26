@@ -10,7 +10,7 @@ import {
   CompanyMilestoneRail,
 } from "@/components/home/company-milestone-rail";
 import { SectionShell } from "@/components/section-shell";
-import { withBasePath } from "@/lib/site-path";
+import { normalizeSitePathname, withBasePath } from "@/lib/site-path";
 
 const groupUsps = [
   {
@@ -84,7 +84,7 @@ function canShowFloatingMilestones() {
 }
 
 export function HomeAboutSection() {
-  const pathname = usePathname();
+  const pathname = normalizeSitePathname(usePathname());
   const [isMapOpen, setIsMapOpen] = useState(false);
   const [isClayImageOpen, setIsClayImageOpen] = useState(false);
   const [activeUspIndex, setActiveUspIndex] = useState<number | null>(null);

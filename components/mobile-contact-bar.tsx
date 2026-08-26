@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ArrowRight } from "lucide-react";
 import { useEffect, useState } from "react";
+import { normalizeSitePathname } from "@/lib/site-path";
 
 const companyRoutes = new Set([
   "/tilution",
@@ -12,7 +13,7 @@ const companyRoutes = new Set([
 ]);
 
 export function MobileContactBar() {
-  const pathname = usePathname();
+  const pathname = normalizeSitePathname(usePathname());
   const [isNearContact, setIsNearContact] = useState(false);
 
   useEffect(() => {

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ArrowLeft, ArrowRight, DoorOpen } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { type MouseEvent, useLayoutEffect, useRef, useState } from "react";
-import { withBasePath } from "@/lib/site-path";
+import { normalizeSitePathname, withBasePath } from "@/lib/site-path";
 
 const defaultSecondaryNavigation = [
   { href: "#hero", label: "Start" },
@@ -141,7 +141,8 @@ const pageBranding = {
 type SecondaryTriggerElement = HTMLAnchorElement | HTMLButtonElement;
 
 export function Header() {
-  const pathname = usePathname();
+  const rawPathname = usePathname();
+  const pathname = normalizeSitePathname(rawPathname);
   const activeBranding =
     pathname === "/gruenewald"
       ? pageBranding.gruenewald
@@ -160,7 +161,7 @@ export function Header() {
     if (pathname !== activeLogoHref) return;
 
     event.preventDefault();
-    window.history.replaceState(null, "", pathname);
+    window.history.replaceState(null, "", rawPathname);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
   const isVerwaltungPage = pathname === "/verwaltung" || pathname === "/hrw";
@@ -374,7 +375,11 @@ export function Header() {
       return;
     }
 
-    window.history.replaceState(null, "", `${pathname === "/" ? "/" : pathname}#${sectionId}`);
+    window.history.replaceState(
+      null,
+      "",
+      `${rawPathname === "/" ? "/" : rawPathname}#${sectionId}`
+    );
     const headerOffset = headerRef.current?.offsetHeight ?? 0;
     const targetTop =
       targetSection.getBoundingClientRect().top +

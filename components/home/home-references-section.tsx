@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { getOptimizedReferenceSrc } from "@/lib/reference-image";
+import { normalizeSitePathname } from "@/lib/site-path";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -517,7 +518,7 @@ function ArrowButton({
 }
 
 export function HomeReferencesSection() {
-  const pathname = usePathname();
+  const pathname = normalizeSitePathname(usePathname());
   const isGroupPage = pathname === "/";
   const isTilutionPage = pathname === "/tilution";
   const isClayPage = pathname === "/clay-construction";

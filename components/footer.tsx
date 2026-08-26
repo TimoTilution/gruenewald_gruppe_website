@@ -1,6 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
+import { normalizeSitePathname } from "@/lib/site-path";
 
 type Imprint = {
   slug: string;
@@ -130,7 +131,7 @@ function FooterCard({
 }
 
 export function Footer() {
-  const pathname = usePathname();
+  const pathname = normalizeSitePathname(usePathname());
   const activeImprint = imprints.find((entry) => entry.slug === pathname);
   const visibleImprints = activeImprint ? [activeImprint] : imprints;
   const isOverview = activeImprint === undefined;
