@@ -219,14 +219,12 @@ function getCompanySectionRoute(path: string, slug: string[]): RouteContent | nu
       if (company === "gruenewald" && section === "leistungen") return <TilutionServicesSection variant="gruenewald" />;
       if (company === "gruenewald" && section === "einblicke") return <HomeAboutSection />;
       if (company === "gruenewald" && section === "referenzen") return <GruenewaldReferencesSection />;
-      if (company === "gruenewald" && section === "innovationen") return <HomeInnovationsSection />;
       if (company === "gruenewald" && section === "karriere") return <HomeCareerSection />;
       if (company === "gruenewald" && section === "kontakt") return <GruenewaldContactSection />;
 
       if (company === "clay-construction" && section === "leistungen") return <ClayServicesSection />;
       if (company === "clay-construction" && section === "system-ausfuehrung") return <HomeAboutSection />;
       if (company === "clay-construction" && section === "referenzen") return <HomeReferencesSection />;
-      if (company === "clay-construction" && section === "innovationen") return <HomeInnovationsSection />;
       if (company === "clay-construction" && section === "team") return <HomeTeamSection />;
       if (company === "clay-construction" && section === "karriere") return <HomeCareerSection />;
       if (company === "clay-construction" && section === "kontakt") return <HomeContactSection />;

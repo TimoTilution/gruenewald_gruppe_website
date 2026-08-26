@@ -34,7 +34,6 @@ const gruenewaldSecondaryNavigation = [
   { href: "#leistungen", label: "Leistungen" },
   { href: "#gruppe", label: "Einblicke" },
   { href: "#referenzen", label: "Referenzen" },
-  { href: "#innovationen", label: "Innovationen" },
   { href: "#karriere", label: "Karriere" },
   { href: "#kontakt", label: "Kontakt" },
 ];
@@ -44,7 +43,6 @@ const claySecondaryNavigation = [
   { href: "#leistungen", label: "Leistungen" },
   { href: "#gruppe", label: "System & Ausführung" },
   { href: "#referenzen", label: "Referenzen" },
-  { href: "#innovationen", label: "Innovationen" },
   { href: "#team", label: "Team" },
   { href: "#karriere", label: "Karriere" },
   { href: "#kontakt", label: "Kontakt" },

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
 import Link from "next/link";
-import { X } from "lucide-react";
+import { ArrowRight, X } from "lucide-react";
 import { SectionShell } from "@/components/section-shell";
 import { withBasePath } from "@/lib/site-path";
 
@@ -79,9 +79,10 @@ export function HomeInnovationsSection() {
               href="https://www.raumcheck.de"
               target="_blank"
               rel="noreferrer"
-              className="innovation-primary-button liquid-card group mt-8 hidden items-center gap-3 rounded-full px-5 py-3 text-sm font-semibold text-white transition-transform duration-300 hover:-translate-y-1 sm:inline-flex sm:px-6 sm:py-4 sm:text-base"
+              className="tilution-services-cta__button mt-8 hidden sm:inline-flex"
             >
               Mehr zu Raumcheck
+              <ArrowRight className="tilution-services-cta__button-icon" aria-hidden="true" />
             </Link>
           </div>
 
@@ -105,9 +106,10 @@ export function HomeInnovationsSection() {
             href="https://www.raumcheck.de"
             target="_blank"
             rel="noreferrer"
-            className="innovation-primary-button raumcheck-mobile-cta group -mt-2 inline-flex w-fit items-center justify-self-center gap-3 px-5 py-4 text-sm font-semibold text-white transition-all duration-300 hover:-translate-y-1 sm:hidden"
+            className="tilution-services-cta__button -mt-2 justify-self-center sm:hidden"
           >
             Mehr zu Raumcheck
+            <ArrowRight className="tilution-services-cta__button-icon" aria-hidden="true" />
           </Link>
         </div>
       </section>
