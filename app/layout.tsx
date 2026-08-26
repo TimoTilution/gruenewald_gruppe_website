@@ -2,7 +2,10 @@ import type { Metadata, Viewport } from "next";
 import { Montserrat } from "next/font/google";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
+import { MobileContactBar } from "@/components/mobile-contact-bar";
+import { ScrollReveal } from "@/components/scroll-reveal";
 import { ScrollToTop } from "@/components/scroll-to-top";
+import { siteBaseUrl } from "@/data/site-architecture";
 import "leaflet/dist/leaflet.css";
 import "./globals.css";
 
@@ -13,7 +16,7 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("http://127.0.0.1:3000"),
+  metadataBase: new URL(siteBaseUrl),
   title: {
     default: "Grünewald Gruppe",
     template: "%s | Grünewald Gruppe",
@@ -39,6 +42,8 @@ export default function RootLayout({
           <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(219,228,242,0.13),transparent_34%)]" />
           <ScrollToTop />
           <Header />
+          <MobileContactBar />
+          <ScrollReveal />
           <main className="relative z-0 flex w-full flex-1 flex-col gap-14 py-8 sm:py-10 lg:gap-20 lg:py-14">
             {children}
           </main>

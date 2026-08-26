@@ -1,10 +1,13 @@
 ﻿"use client";
 
 import Image from "next/image";
+import { getOptimizedReferenceSrc } from "@/lib/reference-image";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { ArrowLeft, ArrowRight, X } from "lucide-react";
+import { createPortal } from "react-dom";
+import { X } from "lucide-react";
 import { SectionShell } from "@/components/section-shell";
+import { MobileSnapGallery } from "@/components/mobile-snap-gallery";
 
 type ReferenceCategory =
   | "Schwimmbäder & Thermen"
@@ -192,6 +195,15 @@ const project: {
     },
   ],
 };
+
+const initialGroupReferenceOrder = [
+  "/references/sprudelhof-therme/title-images/sprudelhof-therme-title-01.svg",
+  "/references/sprudelhof-therme/title-images/fraunhofer-iff-title.png",
+  "/references/sprudelhof-therme/title-images/sprudelhof-therme-title-03.png",
+  "/references/josef-schwarz-schule/title-images/josef-schwarz-schule-title-01.png",
+  "/references/badeparadies-eiswiese-goettingen/title-images/badeparadies-eiswiese-title-01.png",
+  "/references/kita-ritterburg-wolfhagen/title-images/kita-ritterburg-title-01.png",
+];
 
 const fraunhoferOverlayImages = [
   {
@@ -496,7 +508,7 @@ function ArrowButton({
     <button
       type="button"
       onClick={onClick}
-      className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-forest-900/80 text-xl text-white transition hover:bg-forest-800"
+      className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/40 bg-forest-900/90 text-2xl font-semibold text-white shadow-[0_12px_28px_rgba(7,18,48,0.38)] backdrop-blur-md transition hover:bg-forest-700 sm:h-11 sm:w-11 sm:text-xl"
       aria-label={direction === "prev" ? "Vorheriges Bild" : "Nächstes Bild"}
     >
       {direction === "prev" ? "←" : "→"}
@@ -506,35 +518,46 @@ function ArrowButton({
 
 export function HomeReferencesSection() {
   const pathname = usePathname();
+  const isGroupPage = pathname === "/";
   const isTilutionPage = pathname === "/tilution";
   const isClayPage = pathname === "/clay-construction";
   const [isOpen, setIsOpen] = useState(false);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [selectedPreviewIndex, setSelectedPreviewIndex] = useState(0);
+  const [showAllGroupReferences, setShowAllGroupReferences] = useState(false);
   const [activeFilter, setActiveFilter] =
     useState<(typeof referenceFilterOptions)[number]>("Alle");
-  const [referenceFilterScrollHint, setReferenceFilterScrollHint] = useState({
-    left: false,
-    right: false,
-  });
-  const [centeredReferenceFilterIndex, setCenteredReferenceFilterIndex] =
-    useState(0);
   const referenceFilterRef = useRef<HTMLDivElement | null>(null);
+  const referencePreviewRef = useRef<HTMLDivElement | null>(null);
   const referenceFilterButtonRefs = useRef<Array<HTMLButtonElement | null>>([]);
+  const [referenceScrollProgress, setReferenceScrollProgress] = useState(0);
 
   const selectedPreviewImage = project.previewImages[selectedPreviewIndex];
   const previewEntries = project.previewImages.map((image, index) => ({
     image,
     index,
   }));
+  const orderedGroupPreviewEntries = [
+    ...initialGroupReferenceOrder
+      .map((src) => previewEntries.find((entry) => entry.image.src === src))
+      .filter((entry): entry is (typeof previewEntries)[number] => Boolean(entry)),
+    ...previewEntries.filter(
+      (entry) => !initialGroupReferenceOrder.includes(entry.image.src)
+    ),
+  ];
+  const groupPreviewEntries = orderedGroupPreviewEntries;
   const visiblePreviewEntries =
     isClayPage
       ? previewEntries.filter((entry) =>
           entry.image.hoverText?.includes("Clay Construction")
         )
-      : !isTilutionPage || activeFilter === "Alle"
+      : isGroupPage
+        ? groupPreviewEntries
+        : !isTilutionPage || activeFilter === "Alle"
         ? previewEntries
         : previewEntries.filter((entry) => entry.image.category === activeFilter);
+  const canToggleGroupReferences =
+    isGroupPage && orderedGroupPreviewEntries.length > 6;
   const overlayImages = getReferenceOverlayImages(selectedPreviewImage);
   const activeImage = overlayImages[activeImageIndex];
 
@@ -559,85 +582,6 @@ export function HomeReferencesSection() {
       current === overlayImages.length - 1 ? 0 : current + 1
     );
   };
-
-  const scrollReferenceFilterToIndex = (index: number) => {
-    const filterElement = referenceFilterRef.current;
-    const filterButton = referenceFilterButtonRefs.current[index];
-
-    if (!filterElement || !filterButton) {
-      return;
-    }
-
-    const scrollLeft =
-      filterButton.offsetLeft -
-      (filterElement.clientWidth - filterButton.offsetWidth) / 2;
-
-    filterElement.scrollTo({
-      left: scrollLeft,
-      behavior: "smooth",
-    });
-  };
-
-  const handleReferenceFilterScroll = (direction: "left" | "right") => {
-    const nextIndex =
-      direction === "right"
-        ? Math.min(centeredReferenceFilterIndex + 1, referenceFilterOptions.length - 1)
-        : Math.max(centeredReferenceFilterIndex - 1, 0);
-
-    setCenteredReferenceFilterIndex(nextIndex);
-    scrollReferenceFilterToIndex(nextIndex);
-  };
-
-  useEffect(() => {
-    const filterElement = referenceFilterRef.current;
-
-    if (!isTilutionPage || !filterElement) {
-      return;
-    }
-
-    const updateReferenceFilterScrollHint = () => {
-      const maxScrollLeft =
-        filterElement.scrollWidth - filterElement.clientWidth;
-      const filterCenter = filterElement.scrollLeft + filterElement.clientWidth / 2;
-      const closestIndex = referenceFilterButtonRefs.current.reduce(
-        (closest, button, index) => {
-          if (!button) {
-            return closest;
-          }
-
-          const buttonCenter = button.offsetLeft + button.offsetWidth / 2;
-          const currentDistance = Math.abs(buttonCenter - filterCenter);
-
-          return currentDistance < closest.distance
-            ? { index, distance: currentDistance }
-            : closest;
-        },
-        { index: 0, distance: Number.POSITIVE_INFINITY }
-      ).index;
-
-      setCenteredReferenceFilterIndex(closestIndex);
-
-      setReferenceFilterScrollHint({
-        left: closestIndex > 0 && maxScrollLeft > 4,
-        right:
-          closestIndex < referenceFilterOptions.length - 1 && maxScrollLeft > 4,
-      });
-    };
-
-    updateReferenceFilterScrollHint();
-    filterElement.addEventListener("scroll", updateReferenceFilterScrollHint, {
-      passive: true,
-    });
-    window.addEventListener("resize", updateReferenceFilterScrollHint);
-
-    return () => {
-      filterElement.removeEventListener(
-        "scroll",
-        updateReferenceFilterScrollHint
-      );
-      window.removeEventListener("resize", updateReferenceFilterScrollHint);
-    };
-  }, [isTilutionPage]);
 
   useEffect(() => {
     if (!isOpen) {
@@ -674,7 +618,7 @@ export function HomeReferencesSection() {
 
   return (
     <SectionShell id="referenzen">
-      <section className="section-card px-6 py-10 sm:px-9 lg:p-12">
+      <section className="section-card overflow-hidden px-6 py-10 sm:px-9 lg:p-12">
         <div className="w-full">
           <p className="section-eyebrow">
             Referenzen
@@ -692,9 +636,7 @@ export function HomeReferencesSection() {
           <div className="relative mt-8">
             <div
               ref={referenceFilterRef}
-              className={[
-                "mx-8 flex snap-x snap-mandatory items-center overflow-x-auto scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:flex-wrap sm:gap-2.5 sm:overflow-visible",
-              ].join(" ")}
+              className="reference-mobile-scrollbar flex items-center gap-2.5 overflow-x-auto pb-3 scroll-smooth sm:flex-wrap sm:overflow-visible sm:pb-0 sm:[scrollbar-width:none] sm:[&::-webkit-scrollbar]:hidden"
             >
               {referenceFilterOptions.map((filter, index) => {
                 const isActive = filter === activeFilter;
@@ -706,13 +648,9 @@ export function HomeReferencesSection() {
                       referenceFilterButtonRefs.current[index] = element;
                     }}
                     type="button"
-                    onClick={() => {
-                      setActiveFilter(filter);
-                      setCenteredReferenceFilterIndex(index);
-                      scrollReferenceFilterToIndex(index);
-                    }}
+                    onClick={() => setActiveFilter(filter)}
                     className={[
-                      "flex min-h-10 w-full shrink-0 snap-center items-center justify-center rounded-full border px-4 py-2 text-center text-sm font-semibold transition-all duration-300 sm:min-h-0 sm:w-auto",
+                      "flex min-h-10 shrink-0 items-center justify-center rounded-full border px-4 py-2 text-center text-sm font-semibold transition-all duration-300 sm:min-h-0 sm:w-auto",
                       isActive
                         ? "border-[#ec6602] bg-[#ec6602] text-white shadow-[0_12px_28px_rgba(236,102,2,0.24)]"
                         : "border-slate-200 bg-white text-slate-600 hover:border-[#ec6602]/45 hover:bg-[#fff4e8] hover:text-[#ec6602]",
@@ -724,60 +662,35 @@ export function HomeReferencesSection() {
                 );
               })}
             </div>
-            {referenceFilterScrollHint.left ? (
-              <button
-                type="button"
-                aria-label="Vorherige Bereiche anzeigen"
-                className="absolute left-0 top-1/2 grid h-7 w-7 -translate-y-1/2 place-items-center rounded-full bg-white/16 text-white shadow-[0_8px_18px_rgba(76,31,5,0.16)] backdrop-blur-md transition-colors duration-200 hover:bg-white/24 sm:hidden"
-                onClick={() => handleReferenceFilterScroll("left")}
-              >
-                <ArrowLeft className="h-4 w-4 stroke-[2.4]" />
-              </button>
-            ) : null}
-            {referenceFilterScrollHint.right ? (
-              <button
-                type="button"
-                aria-label="Weitere Bereiche anzeigen"
-                className="absolute right-0 top-1/2 grid h-7 w-7 -translate-y-1/2 place-items-center rounded-full bg-white/16 text-white shadow-[0_8px_18px_rgba(76,31,5,0.16)] backdrop-blur-md transition-colors duration-200 hover:bg-white/24 sm:hidden"
-                onClick={() => handleReferenceFilterScroll("right")}
-              >
-                <ArrowRight className="h-4 w-4 stroke-[2.4]" />
-              </button>
-            ) : null}
-            <div
-              className="relative mx-8 mt-1.5 h-1 overflow-hidden rounded-full bg-white/14 sm:hidden"
-              aria-hidden="true"
-            >
-              <div
-                className="absolute inset-y-0 rounded-full bg-white shadow-[0_0_14px_rgba(255,255,255,0.42)] transition-[left] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
-                style={{
-                  width: `${100 / referenceFilterOptions.length}%`,
-                  left: `${
-                    (centeredReferenceFilterIndex /
-                      (referenceFilterOptions.length - 1)) *
-                    (100 - 100 / referenceFilterOptions.length)
-                  }%`,
-                }}
-              />
-            </div>
           </div>
         ) : null}
 
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-          {visiblePreviewEntries.map(({ image, index }) => (
+        <div
+          ref={referencePreviewRef}
+          onScroll={(event) => {
+            const target = event.currentTarget;
+            const maxScroll = target.scrollWidth - target.clientWidth;
+            setReferenceScrollProgress(maxScroll > 0 ? target.scrollLeft / maxScroll : 0);
+          }}
+          className="reference-preview-scroll mt-12 flex gap-5 overflow-x-scroll pb-4 scroll-smooth sm:grid sm:gap-6 sm:overflow-visible sm:pb-0 sm:grid-cols-2 xl:grid-cols-3"
+        >
+          {visiblePreviewEntries.map(({ image, index }, visibleIndex) => (
             <button
               key={image.src}
               type="button"
               onClick={() => openGallery(index)}
-              className="reference-card liquid-card group block w-full text-left"
+              className={`reference-card liquid-card group block w-[82vw] shrink-0 text-left sm:w-full${image.src === "/references/sprudelhof-therme/title-images/sprudelhof-therme-title-01.svg" ? " reference-card--mobile-first" : ""}${isGroupPage && !showAllGroupReferences && visibleIndex >= 6 ? " sm:hidden" : ""}`}
               aria-label={`Projektgalerie öffnen: ${project.title}`}
             >
               <div className="relative aspect-[4/3] w-full overflow-hidden lg:aspect-[16/11]">
                 <Image
-                  src={image.src}
+                  src={getOptimizedReferenceSrc(image.src)}
                   alt={image.alt}
                   fill
                   unoptimized={image.isSvg}
+                  loading="lazy"
+                  quality={68}
+                  sizes="(max-width: 639px) 82vw, (max-width: 1279px) 50vw, 33vw"
                   className="object-cover transition-transform duration-300 ease-out group-hover:scale-[1.02]"
                 />
                 <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-forest-900/90 via-forest-900/70 to-transparent px-6 py-5 opacity-0 transition duration-300 group-hover:opacity-100">
@@ -788,6 +701,15 @@ export function HomeReferencesSection() {
           ))}
         </div>
 
+        {visiblePreviewEntries.length > 1 ? (
+          <div className="reference-scroll-track" aria-hidden="true">
+            <span
+              className="reference-scroll-track__thumb"
+              style={{ transform: `translateX(${referenceScrollProgress * 300}%)` }}
+            />
+          </div>
+        ) : null}
+
         {visiblePreviewEntries.length === 0 ? (
           <div className="liquid-card-dark mt-8 rounded-[1.25rem] px-5 py-4">
             <p className="text-sm font-semibold text-white">
@@ -796,10 +718,30 @@ export function HomeReferencesSection() {
             </p>
           </div>
         ) : null}
+
+        {canToggleGroupReferences ? (
+          <div className="mt-10 hidden justify-center sm:flex">
+            <button
+              type="button"
+              onClick={() => setShowAllGroupReferences((current) => !current)}
+              className="liquid-card group inline-flex items-center gap-3 rounded-full px-6 py-3 text-sm font-semibold text-white transition-transform duration-300 hover:-translate-y-1 sm:px-7 sm:py-4 sm:text-base"
+            >
+              {showAllGroupReferences ? "Weniger anzeigen" : "Mehr anzeigen"}
+            </button>
+          </div>
+        ) : null}
       </section>
 
-      {isOpen ? (
-        <div className="fixed inset-0 z-[2147483100] bg-forest-900/92 backdrop-blur-md">
+      {isOpen ? createPortal((
+        <div
+          className="reference-gallery-overlay fixed inset-0 z-[2147483100]"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Referenzgalerie"
+          onClick={(event) => {
+            if (event.target === event.currentTarget) closeGallery();
+          }}
+        >
           <button
             type="button"
             onClick={closeGallery}
@@ -809,30 +751,38 @@ export function HomeReferencesSection() {
             <X className="h-5 w-5" />
           </button>
 
-          <div className="flex h-full items-center justify-center px-4 py-8 lg:px-10">
-            <div className="liquid-card-dark relative grid w-full max-w-[118rem] items-center gap-6 overflow-visible p-4 lg:grid-cols-[minmax(0,1.42fr)_14rem] lg:gap-8 lg:p-6">
+          <div
+            className="flex h-full items-center justify-center px-0 py-8 sm:px-4 lg:px-10"
+            onClick={(event) => {
+              if (event.target === event.currentTarget) closeGallery();
+            }}
+          >
+            <MobileSnapGallery images={overlayImages} activeIndex={activeImageIndex} onActiveIndexChange={setActiveImageIndex} />
+            <div className="reference-gallery-panel relative hidden w-full max-w-[118rem] items-center gap-6 overflow-visible p-4 sm:grid lg:grid-cols-[minmax(0,1.42fr)_14rem] lg:gap-8 lg:p-6">
               <div className="flex flex-col justify-center gap-4">
                 <div className="relative flex items-center justify-center overflow-visible rounded-[1.5rem]">
-                  <div className="absolute left-4 top-1/2 z-10 -translate-y-1/2">
+                  <div className="absolute -left-3 top-1/2 z-20 -translate-y-1/2 sm:left-4">
                     <ArrowButton direction="prev" onClick={showPrevious} />
                   </div>
 
-                  <div className="relative left-1/2 aspect-video w-[118%] max-w-none -translate-x-1/2 overflow-hidden rounded-[1.5rem] bg-forest-900/70 lg:w-[135%] xl:w-[145%]">
+                  <div className="reference-gallery-image relative left-1/2 aspect-video w-full max-w-none -translate-x-1/2 overflow-hidden rounded-[1.5rem] sm:w-[118%] lg:w-[135%] xl:w-[145%]">
                     <Image
-                      src={activeImage.src}
+                      src={getOptimizedReferenceSrc(activeImage.src)}
                       alt={activeImage.alt}
                       fill
                       unoptimized={activeImage.isSvg}
+                      quality={76}
+                      sizes="(min-width: 1024px) 75vw, 100vw"
                       className="object-cover"
                     />
                   </div>
 
-                  <div className="absolute right-4 top-1/2 z-10 -translate-y-1/2">
+                  <div className="absolute -right-3 top-1/2 z-20 -translate-y-1/2 sm:right-4">
                     <ArrowButton direction="next" onClick={showNext} />
                   </div>
                 </div>
 
-                <div className="liquid-card-dark rounded-[1.25rem] px-5 py-4">
+                <div className="liquid-card-dark hidden rounded-[1.25rem] px-5 py-4 sm:block">
                   <p className="text-sm font-semibold tracking-[0.18em] text-forest-100/65">
                     Beschreibung
                   </p>
@@ -860,7 +810,7 @@ export function HomeReferencesSection() {
                       >
                         <div className="relative aspect-video w-full bg-forest-900/60">
                           <Image
-                            src={image.src}
+                            src={getOptimizedReferenceSrc(image.src)}
                             alt={image.alt}
                             fill
                             unoptimized={image.isSvg}
@@ -875,7 +825,7 @@ export function HomeReferencesSection() {
             </div>
           </div>
         </div>
-      ) : null}
+      ), document.body) : null}
     </SectionShell>
   );
 }

@@ -1,10 +1,12 @@
 "use client";
 
 import Image from "next/image";
+import { getOptimizedReferenceSrc } from "@/lib/reference-image";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { SectionShell } from "@/components/section-shell";
+import { MobileSnapGallery } from "@/components/mobile-snap-gallery";
 
 type GruenewaldReferenceCategory =
   | "Außengestaltung"
@@ -106,7 +108,7 @@ const gruenewaldReferences: GruenewaldReference[] = [
     ],
   },
   {
-    title: "Sanierung Terrasse & Eingangsbereich",
+    title: "Sanierung Terrasse - Mauersteine Anthrazit",
     category: "Außengestaltung",
     cover: {
       src: "/references/gruenewald/terrasse-eingang-dunkle-mauer/cover.png",
@@ -726,10 +728,12 @@ export function GruenewaldReferencesSection() {
               >
                 <div className="relative aspect-[4/3] w-full overflow-hidden lg:aspect-[16/11]">
                   <Image
-                    src={reference.cover.src}
+                    src={getOptimizedReferenceSrc(reference.cover.src)}
                     alt={reference.cover.alt}
                     fill
-                    sizes="(min-width: 1280px) 33vw, (min-width: 640px) 50vw, 100vw"
+                    loading="lazy"
+                    quality={68}
+                    sizes="(min-width: 1280px) 33vw, (min-width: 640px) 50vw, 92vw"
                     className="object-cover transition-transform duration-300 ease-out group-hover:scale-[1.02]"
                   />
                   <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#182956]/95 via-[#182956]/70 to-transparent px-5 pb-5 pt-14 text-white">
@@ -755,23 +759,27 @@ export function GruenewaldReferencesSection() {
 
       {selectedProject && activeImage ? createPortal((
         <div
-          className="fixed inset-0 z-[2147483600] grid place-items-center overflow-y-auto bg-[#0a182b]/92 p-3 backdrop-blur-md sm:p-6"
+          className="reference-gallery-overlay fixed inset-0 z-[2147483600] grid place-items-center overflow-hidden p-0 sm:overflow-y-auto sm:p-6"
           role="dialog"
           aria-modal="true"
           aria-labelledby="gruenewald-reference-title"
+          onClick={(event) => {
+            if (event.target === event.currentTarget) closeGallery();
+          }}
         >
-          <div className="relative grid max-h-[calc(100vh-1.5rem)] w-full max-w-[110rem] overflow-visible rounded-[1.5rem] border border-white/20 bg-white/10 shadow-2xl backdrop-blur-xl sm:max-h-[calc(100vh-3rem)] lg:w-[calc(100%-8rem)] lg:grid-cols-[minmax(0,1fr)_12rem] lg:gap-6 lg:p-4 xl:w-[calc(100%-10rem)]">
+          <div className="reference-gallery-panel relative w-[calc(100%_-_1.5rem)] max-w-[110rem] justify-self-center overflow-visible sm:grid sm:w-full sm:max-h-[calc(100vh-3rem)] lg:w-[calc(100%_-_8rem)] lg:grid-cols-[minmax(0,1fr)_12rem] lg:gap-6 lg:p-4 xl:w-[calc(100%_-_10rem)]">
             <button
               type="button"
               onClick={closeGallery}
-              className="absolute right-3 top-3 z-20 grid h-11 w-11 place-items-center rounded-full border border-[#009ca6]/25 bg-white/95 text-[#182956] shadow-lg transition hover:bg-[#009ca6] hover:text-white lg:-right-16 lg:-top-14"
+              className="reference-gallery-close absolute right-3 top-3 z-20 grid h-11 w-11 place-items-center rounded-full border border-[#009ca6]/25 bg-white/95 text-[#182956] shadow-lg transition hover:bg-[#009ca6] hover:text-white lg:-right-16 lg:-top-14"
               aria-label="Projektgalerie schließen"
               autoFocus
             >
               <X className="h-5 w-5" />
             </button>
 
-            <div className="relative h-[68vh] min-h-[18rem] w-full overflow-hidden rounded-[1.25rem] bg-[#071426] sm:h-[76vh]">
+            <MobileSnapGallery images={galleryImages} activeIndex={activeImageIndex} onActiveIndexChange={setActiveImageIndex} />
+            <div className="reference-gallery-image relative hidden h-[76vh] min-h-[18rem] w-full overflow-hidden rounded-[1.25rem] sm:block">
               <div className="absolute left-4 top-4 z-10 max-w-[calc(100%-8rem)] rounded-xl bg-[#071426]/75 px-4 py-3 text-white backdrop-blur-md sm:left-5 sm:top-5">
                 <p className="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-[#62d4da]">
                   {selectedProject.category}
@@ -784,11 +792,12 @@ export function GruenewaldReferencesSection() {
                 </h2>
               </div>
               <Image
-                src={activeImage.src}
+                src={getOptimizedReferenceSrc(activeImage.src)}
                 alt={activeImage.alt}
                 fill
                 priority
-                sizes="100vw"
+                quality={76}
+                sizes="(min-width: 1024px) 75vw, 100vw"
                 className="object-contain"
               />
               {galleryImages.length > 1 ? (
@@ -814,7 +823,7 @@ export function GruenewaldReferencesSection() {
             </div>
 
             {galleryImages.length > 1 ? (
-                <div className="flex shrink-0 justify-start gap-2 overflow-x-auto bg-transparent p-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:p-4 lg:max-h-[76vh] lg:flex-col lg:justify-center lg:overflow-y-auto lg:p-0 lg:translate-x-16 xl:translate-x-20">
+                <div className="hidden shrink-0 justify-start gap-2 overflow-x-auto bg-transparent p-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:flex sm:p-4 lg:max-h-[76vh] lg:flex-col lg:justify-center lg:overflow-y-auto lg:p-0 lg:translate-x-16 xl:translate-x-20">
                   {galleryImages.map((image, index) => (
                     <button
                       key={`${image.src}-${index}`}
@@ -828,7 +837,7 @@ export function GruenewaldReferencesSection() {
                       aria-label={`Projektbild ${index + 1} anzeigen`}
                     >
                       <Image
-                        src={image.src}
+                        src={getOptimizedReferenceSrc(image.src)}
                         alt=""
                         fill
                         sizes="6rem"

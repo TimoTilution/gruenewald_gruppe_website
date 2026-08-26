@@ -11,6 +11,8 @@ const defaultSecondaryNavigation = [
   { href: "#gruppe", label: "Gruppe" },
   { href: "#leistungen", label: "Leistungen" },
   { href: "#referenzen", label: "Referenzen" },
+  { href: "#innovationen", label: "Innovationen" },
+  { href: "#team", label: "Team" },
   { href: "#karriere", label: "Karriere" },
   { href: "#kontakt", label: "Kontakt" },
 ];
@@ -20,6 +22,7 @@ const tilutionSecondaryNavigation = [
   { href: "#leistungen", label: "Leistungen" },
   { href: "#gruppe", label: "Einblicke" },
   { href: "#referenzen", label: "Referenzen" },
+  { href: "#innovationen", label: "Innovationen" },
   { href: "#team", label: "Team" },
   { href: "#karriere", label: "Karriere" },
   { href: "#kontakt", label: "Kontakt" },
@@ -30,6 +33,7 @@ const gruenewaldSecondaryNavigation = [
   { href: "#leistungen", label: "Leistungen" },
   { href: "#gruppe", label: "Einblicke" },
   { href: "#referenzen", label: "Referenzen" },
+  { href: "#innovationen", label: "Innovationen" },
   { href: "#karriere", label: "Karriere" },
   { href: "#kontakt", label: "Kontakt" },
 ];
@@ -39,6 +43,7 @@ const claySecondaryNavigation = [
   { href: "#leistungen", label: "Leistungen" },
   { href: "#gruppe", label: "System & Ausführung" },
   { href: "#referenzen", label: "Referenzen" },
+  { href: "#innovationen", label: "Innovationen" },
   { href: "#team", label: "Team" },
   { href: "#karriere", label: "Karriere" },
   { href: "#kontakt", label: "Kontakt" },
@@ -62,19 +67,6 @@ const hrwSecondaryNavigation = [
 function cn(...classes: Array<string | false | null | undefined>) {
   return classes.filter(Boolean).join(" ");
 }
-const containerTone = "#2c2856";
-const MONOGRAM_MIN_VIEWPORT_WIDTH = 1380;
-const MONOGRAM_MIN_VIEWPORT_HEIGHT = 760;
-const MONOGRAM_MIN_GUTTER_WIDTH = 220;
-const MONOGRAM_MIN_WIDTH = 220;
-const MONOGRAM_MAX_WIDTH = 420;
-const MONOGRAM_GUTTER_PADDING = 28;
-
-type MonogramLayout = {
-  left: number;
-  top: number;
-  width: number;
-};
 
 const pageBranding = {
   gruenewald: {
@@ -85,7 +77,7 @@ const pageBranding = {
     navClassName: "bg-[#009CA6]",
     logoClassName: {
       compact: "h-10 w-[min(54vw,13rem)] sm:h-14 sm:w-[min(58vw,22rem)] lg:h-16 lg:w-[min(50vw,28rem)]",
-      expanded: "h-12 w-[min(58vw,14rem)] sm:h-24 sm:w-[min(64vw,30rem)] lg:h-36 lg:w-[min(56vw,42rem)]",
+      expanded: "h-24 w-[min(82vw,28rem)] sm:h-24 sm:w-[min(64vw,30rem)] lg:h-36 lg:w-[min(56vw,42rem)]",
     },
     logoSize: { width: 567, height: 340 },
   },
@@ -97,7 +89,7 @@ const pageBranding = {
     navClassName: "bg-[#ec6602]",
     logoClassName: {
       compact: "h-10 w-[min(54vw,13rem)] sm:h-14 sm:w-[min(58vw,22rem)] lg:h-16 lg:w-[min(50vw,28rem)]",
-      expanded: "h-12 w-[min(58vw,14rem)] sm:h-24 sm:w-[min(64vw,30rem)] lg:h-36 lg:w-[min(56vw,42rem)]",
+      expanded: "h-24 w-[min(82vw,28rem)] sm:h-24 sm:w-[min(64vw,30rem)] lg:h-36 lg:w-[min(56vw,42rem)]",
     },
     logoSize: {
       width: 1920,
@@ -112,7 +104,7 @@ const pageBranding = {
     navClassName: "bg-[#cd203b]",
     logoClassName: {
       compact: "h-10 w-[min(54vw,13rem)] sm:h-14 sm:w-[min(58vw,22rem)] lg:h-16 lg:w-[min(50vw,28rem)]",
-      expanded: "h-12 w-[min(58vw,14rem)] sm:h-24 sm:w-[min(64vw,30rem)] lg:h-36 lg:w-[min(56vw,42rem)]",
+      expanded: "h-24 w-[min(82vw,28rem)] sm:h-24 sm:w-[min(64vw,30rem)] lg:h-36 lg:w-[min(56vw,42rem)]",
     },
     logoSize: {
       width: 1920,
@@ -127,7 +119,7 @@ const pageBranding = {
     navClassName: "bg-[#5658af]",
     logoClassName: {
       compact: "h-10 w-[min(54vw,13rem)] sm:h-14 sm:w-[min(58vw,22rem)] lg:h-16 lg:w-[min(50vw,28rem)]",
-      expanded: "h-12 w-[min(58vw,14rem)] sm:h-24 sm:w-[min(64vw,30rem)] lg:h-36 lg:w-[min(56vw,42rem)]",
+      expanded: "h-24 w-[min(82vw,28rem)] sm:h-24 sm:w-[min(64vw,30rem)] lg:h-36 lg:w-[min(56vw,42rem)]",
     },
     logoSize: { width: 567, height: 340 },
   },
@@ -139,7 +131,7 @@ const pageBranding = {
     navClassName: "bg-[#f68712]",
     logoClassName: {
       compact: "h-10 w-[min(54vw,13rem)] sm:h-14 sm:w-[min(58vw,22rem)] lg:h-16 lg:w-[min(50vw,28rem)]",
-      expanded: "h-12 w-[min(58vw,14rem)] sm:h-24 sm:w-[min(64vw,30rem)] lg:h-36 lg:w-[min(56vw,42rem)]",
+      expanded: "h-24 w-[min(82vw,28rem)] sm:h-24 sm:w-[min(64vw,30rem)] lg:h-36 lg:w-[min(56vw,42rem)]",
     },
     logoSize: { width: 605, height: 227 },
   },
@@ -160,7 +152,16 @@ export function Header() {
           ? pageBranding.verwaltung
           : pathname === "/hrw"
             ? pageBranding.hrw
-        : null;
+      : null;
+  const activeLogoHref = activeBranding?.logoHref ?? "/";
+
+  const handleLogoClick = (event: MouseEvent<HTMLAnchorElement>) => {
+    if (pathname !== activeLogoHref) return;
+
+    event.preventDefault();
+    window.history.replaceState(null, "", pathname);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
   const isVerwaltungPage = pathname === "/verwaltung" || pathname === "/hrw";
   const isLocalOnepager = pathname === "/" || activeBranding !== null;
   const secondaryNavigation = pathname === "/hrw"
@@ -177,9 +178,6 @@ export function Header() {
   const router = useRouter();
   const [activeSection, setActiveSection] = useState("hero");
   const [isCompact, setIsCompact] = useState(false);
-  const [isImprintVisible, setIsImprintVisible] = useState(false);
-  const [hasScrolledPastTop, setHasScrolledPastTop] = useState(false);
-  const [monogramLayout, setMonogramLayout] = useState<MonogramLayout | null>(null);
   const [secondaryIndicator, setSecondaryIndicator] = useState({
     left: 0,
     width: 0,
@@ -203,7 +201,6 @@ export function Header() {
   useLayoutEffect(() => {
     const handleScroll = () => {
       setIsCompact(window.scrollY > 12);
-      setHasScrolledPastTop(window.scrollY > 0);
     };
 
     handleScroll();
@@ -213,62 +210,6 @@ export function Header() {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-
-  useLayoutEffect(() => {
-    const updateMonogramPosition = () => {
-      if (!headerRef.current) {
-        setMonogramLayout(null);
-        return;
-      }
-
-      const headerHeight = headerRef.current.offsetHeight;
-      const viewportWidth = window.innerWidth;
-      const viewportHeight = window.innerHeight;
-      const freeSpaceHeight = Math.max(viewportHeight - headerHeight, 0);
-      const outerFrame =
-        headerRef.current.firstElementChild instanceof HTMLElement
-          ? headerRef.current.firstElementChild
-          : null;
-      const containerElement =
-        outerFrame?.firstElementChild instanceof HTMLElement
-          ? outerFrame.firstElementChild
-          : outerFrame;
-      const containerRect = containerElement?.getBoundingClientRect() ?? null;
-      const contentShellRect = document
-        .querySelector(".content-shell")
-        ?.getBoundingClientRect();
-      const leftGutterWidth = contentShellRect?.left ?? containerRect?.left ?? 0;
-      const usableMonogramWidth = Math.min(
-        MONOGRAM_MAX_WIDTH,
-        leftGutterWidth - MONOGRAM_GUTTER_PADDING * 2
-      );
-      const shouldShowMonogram =
-        pathname === "/" &&
-        viewportWidth >= MONOGRAM_MIN_VIEWPORT_WIDTH &&
-        viewportHeight >= MONOGRAM_MIN_VIEWPORT_HEIGHT &&
-        freeSpaceHeight >= 320 &&
-        leftGutterWidth >= MONOGRAM_MIN_GUTTER_WIDTH &&
-        usableMonogramWidth >= MONOGRAM_MIN_WIDTH;
-
-      if (!shouldShowMonogram) {
-        setMonogramLayout(null);
-        return;
-      }
-
-      setMonogramLayout({
-        top: headerHeight + freeSpaceHeight / 2,
-        left: leftGutterWidth / 2,
-        width: usableMonogramWidth,
-      });
-    };
-
-    updateMonogramPosition();
-    window.addEventListener("resize", updateMonogramPosition);
-
-    return () => {
-      window.removeEventListener("resize", updateMonogramPosition);
-    };
-  }, [isCompact, pathname]);
 
   useLayoutEffect(() => {
     if (!isLocalOnepager) {
@@ -411,35 +352,6 @@ export function Header() {
     };
   }, [pathname, secondaryNavigation.length]);
 
-  useLayoutEffect(() => {
-    if (pathname !== "/") {
-      setIsImprintVisible(false);
-      return;
-    }
-
-    const footerElement = document.querySelector("footer");
-
-    if (!(footerElement instanceof HTMLElement)) {
-      setIsImprintVisible(false);
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsImprintVisible(entry?.isIntersecting ?? false);
-      },
-      {
-        threshold: 0.01,
-      }
-    );
-
-    observer.observe(footerElement);
-
-    return () => {
-      observer.disconnect();
-    };
-  }, [pathname]);
-
   const handleSectionClick = (
     event: MouseEvent<SecondaryTriggerElement>,
     sectionId: string
@@ -509,7 +421,7 @@ export function Header() {
             <div
               className={cn(
                 "relative overflow-hidden transition-[height] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]",
-                isCompact ? "h-12 sm:h-20" : "h-16 sm:h-[8.75rem] lg:h-[13rem]"
+                isCompact ? "h-12 sm:h-20" : "h-28 sm:h-[8.75rem] lg:h-[13rem]"
               )}
             >
               {activeBranding ? (
@@ -526,7 +438,8 @@ export function Header() {
                 </Link>
               ) : null}
               <Link
-                href={activeBranding?.logoHref ?? "/"}
+                href={activeLogoHref}
+                onClick={handleLogoClick}
                 aria-label={activeBranding?.logoAriaLabel ?? "Grünewald Gruppe"}
                 className={cn(
                   "absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center transition-[height,max-width,transform] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]",
@@ -549,7 +462,7 @@ export function Header() {
                       ? "h-full w-full object-contain"
                       : isCompact
                         ? "h-auto w-[6.65rem] sm:w-[10rem] lg:w-[18rem]"
-                        : "h-auto w-[6.65rem] sm:w-[10rem] lg:w-[36rem]"
+                        : "h-auto w-[13.3rem] sm:w-[10rem] lg:w-[36rem]"
                   )}
                   priority
                 />
@@ -660,47 +573,6 @@ export function Header() {
         </div>
 
       </div>
-
-      <Link
-        href="/"
-        aria-label="Grünewald Gruppe Zusatzlogo"
-        className={cn(
-          "monogram-ambient fixed z-[2147482990] -translate-x-1/2 -translate-y-1/2 items-center justify-center transition-all duration-700 ease-out",
-          pathname === "/" &&
-          hasScrolledPastTop &&
-          !isImprintVisible &&
-          monogramLayout !== null
-            ? "scale-100 opacity-100"
-            : "scale-[0.94] opacity-0"
-        )}
-        style={
-          monogramLayout !== null
-            ? {
-                top: `${monogramLayout.top}px`,
-                left: `${monogramLayout.left}px`,
-                display: "flex",
-              }
-            : undefined
-        }
-      >
-        <span
-          aria-hidden="true"
-          className="block drop-shadow-[0_20px_44px_rgba(14,25,55,0.24)]"
-          style={{
-            aspectRatio: "1536 / 1024",
-            width: monogramLayout ? `${monogramLayout.width}px` : undefined,
-            backgroundColor: containerTone,
-            WebkitMaskImage: "url('/logos/gruenewald-monogram.png')",
-            WebkitMaskRepeat: "no-repeat",
-            WebkitMaskPosition: "center",
-            WebkitMaskSize: "contain",
-            maskImage: "url('/logos/gruenewald-monogram.png')",
-            maskRepeat: "no-repeat",
-            maskPosition: "center",
-            maskSize: "contain",
-          }}
-        />
-      </Link>
     </header>
   );
 }

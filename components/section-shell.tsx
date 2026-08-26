@@ -18,7 +18,11 @@ export function SectionShell({
   children,
 }: SectionShellProps) {
   return (
-    <section id={id} className={cn("w-full py-2 sm:py-3 lg:py-5", outerClassName)}>
+    <section
+      id={id}
+      data-scroll-reveal
+      className={cn("scroll-reveal w-full py-2 sm:py-3 lg:py-5", outerClassName)}
+    >
       <div className={cn("content-shell", innerClassName)}>{children}</div>
     </section>
   );

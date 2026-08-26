@@ -101,13 +101,13 @@ export function HrwContactSection() {
         <div className="relative aspect-[4/5] overflow-hidden rounded-[1.75rem] bg-[#fff4e8]"><Image src="/images/hrw/norbert-bartholomaeus.png" alt="Norbert Bartholomäus" fill sizes="(min-width: 768px) 352px, calc(100vw - 88px)" className="object-cover" /></div>
         <div className="min-w-0"><p className="text-3xl font-semibold text-[#272425]">Norbert Bartholomäus</p><p className="mt-2 text-base font-semibold text-[#f68712]">Ansprechpartner der HRW GmbH</p><p className="mt-6 max-w-xl leading-7 text-[#6e696b]">Kontaktieren Sie uns gern, wenn Sie in unsere Registerkartei aufgenommen werden möchten oder ein Projekt besprechen wollen.</p>
           <div className="mt-7 grid max-w-[34rem] gap-4">
-            <a href="tel:+4915172226537" className="liquid-card group flex h-28 min-w-0 items-center gap-5 p-6 text-white transition-transform duration-300 hover:-translate-y-1">
-              <span className="inline-flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-white/35 bg-white/18 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.45)] backdrop-blur-md"><Phone className="h-6 w-6 stroke-[2]" /></span>
-              <span className="min-w-0"><span className="block text-sm font-semibold uppercase tracking-[0.18em] text-forest-100/72">Telefon</span><span className="mt-1 block text-xl font-semibold leading-tight text-white">0151 / 72226537</span></span>
+            <a href="tel:+4915172226537" className="liquid-card group flex h-24 min-w-0 items-center gap-4 px-5 py-4 text-white transition-transform duration-300 hover:-translate-y-1">
+              <span className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-white/35 bg-white/18 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.45)] backdrop-blur-md"><Phone className="h-5 w-5 stroke-[2]" /></span>
+              <span className="min-w-0"><span className="block text-sm font-semibold uppercase tracking-[0.18em] text-forest-100/72">Telefon</span><span className="mt-1 block text-lg font-semibold leading-tight text-white">0151 / 72226537</span></span>
             </a>
-            <a href="mailto:bartholomaeus@hrw-gmbh.com" className="liquid-card group flex h-28 min-w-0 items-center gap-5 p-6 text-white transition-transform duration-300 hover:-translate-y-1">
-              <span className="inline-flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-white/35 bg-white/18 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.45)] backdrop-blur-md"><Mail className="h-6 w-6 stroke-[2]" /></span>
-              <span className="min-w-0"><span className="block text-sm font-semibold uppercase tracking-[0.18em] text-forest-100/72">E-Mail</span><span className="mt-1 block break-all text-base font-semibold leading-tight text-white sm:text-lg">bartholomaeus@hrw-gmbh.com</span></span>
+            <a href="mailto:bartholomaeus@hrw-gmbh.com" className="liquid-card group flex h-24 min-w-0 items-center gap-4 px-5 py-4 text-white transition-transform duration-300 hover:-translate-y-1">
+              <span className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-white/35 bg-white/18 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.45)] backdrop-blur-md"><Mail className="h-5 w-5 stroke-[2]" /></span>
+              <span className="min-w-0"><span className="block text-sm font-semibold uppercase tracking-[0.18em] text-forest-100/72">E-Mail</span><span className="mt-1 block break-all text-[0.95rem] font-semibold leading-tight text-white sm:text-base">bartholomaeus@hrw-gmbh.com</span></span>
             </a>
           </div>
         </div>

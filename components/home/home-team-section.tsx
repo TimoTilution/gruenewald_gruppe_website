@@ -1,9 +1,13 @@
-"use client";
+﻿"use client";
 
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
+import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 import { SectionShell } from "@/components/section-shell";
+
+const initialVisibleMobileTeamMemberCount = 2;
+const initialVisibleDesktopTeamMemberCount = 4;
 
 type TeamCategory = {
   id: string;
@@ -25,6 +29,12 @@ const teamCategories: TeamCategory[] = [
   { id: "produktion", label: "Produktion" },
   { id: "marketing", label: "Marketing" },
   { id: "zentrale-dienste", label: "Zentrale Dienste" },
+];
+
+const groupTeamCategories: TeamCategory[] = [
+  ...teamCategories,
+  { id: "verwaltung", label: "Verwaltung" },
+  { id: "fachkraefteverwaltung", label: "Fachkräfteverwaltung" },
 ];
 
 const teamMembers: TeamMember[] = [
@@ -214,11 +224,36 @@ const verwaltungTeamMembers: TeamMember[] = [
   { name: "Theresa Janke", role: "Auszubildende", categoryId: "personalwesen", imageSrc: "/images/verwaltung/team-theresa-janke.png" },
 ];
 
-export function HomeTeamSection({ variant = "group" }: { variant?: "group" | "verwaltung" }) {
-  const categories = variant === "verwaltung" ? verwaltungTeamCategories : teamCategories;
-  const members = variant === "verwaltung" ? verwaltungTeamMembers : teamMembers;
+const groupTeamMembers: TeamMember[] = [
+  ...teamMembers,
+  ...verwaltungTeamMembers.map((member) => ({
+    ...member,
+    categoryId: "verwaltung",
+  })),
+  {
+    name: "Norbert Bartholomäus",
+    role: "Ansprechpartner der HRW GmbH",
+    categoryId: "fachkraefteverwaltung",
+    imageSrc: "/images/hrw/norbert-bartholomaeus.png",
+  },
+];
+
+export function HomeTeamSection({ variant = "company" }: { variant?: "company" | "group" | "verwaltung" }) {
+  const categories =
+    variant === "verwaltung"
+      ? verwaltungTeamCategories
+      : variant === "group"
+        ? groupTeamCategories
+        : teamCategories;
+  const members =
+    variant === "verwaltung"
+      ? verwaltungTeamMembers
+      : variant === "group"
+        ? groupTeamMembers
+        : teamMembers;
   const [activeCategoryId, setActiveCategoryId] = useState(categories[0].id);
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
+  const [showAllMembers, setShowAllMembers] = useState(false);
   const activeCategory = categories.find(
     (category) => category.id === activeCategoryId,
   );
@@ -227,6 +262,7 @@ export function HomeTeamSection({ variant = "group" }: { variant?: "group" | "ve
       members.filter((member) => member.categoryId === activeCategoryId),
     [activeCategoryId, members],
   );
+  const displayedMembers = visibleMembers;
 
   useEffect(() => {
     if (!selectedMember) {
@@ -284,7 +320,10 @@ export function HomeTeamSection({ variant = "group" }: { variant?: "group" | "ve
                 role="tab"
                 aria-selected={isActive}
                 aria-controls="team-panel"
-                onClick={() => setActiveCategoryId(category.id)}
+                onClick={() => {
+                  setActiveCategoryId(category.id);
+                  setShowAllMembers(false);
+                }}
                 className={[
                   "shrink-0 rounded-full border px-4 py-2.5 text-sm font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-white/45 focus:ring-offset-2 focus:ring-offset-forest-900",
                   isActive
@@ -301,7 +340,7 @@ export function HomeTeamSection({ variant = "group" }: { variant?: "group" | "ve
         <div id="team-panel" className="mt-8" role="tabpanel">
           {visibleMembers.length > 0 ? (
             <div className="team-member-grid">
-              {visibleMembers.map((member) => (
+              {displayedMembers.map((member, memberIndex) => (
                 <button
                   key={member.name}
                   type="button"
@@ -310,7 +349,15 @@ export function HomeTeamSection({ variant = "group" }: { variant?: "group" | "ve
                       setSelectedMember(member);
                     }
                   }}
-                  className="liquid-card team-member-card group flex h-full flex-col overflow-hidden p-0 text-left"
+                  className={`liquid-card team-member-card group h-full flex-col overflow-hidden p-0 text-left ${
+                    showAllMembers
+                      ? "flex"
+                      : memberIndex >= initialVisibleDesktopTeamMemberCount
+                        ? "hidden"
+                        : memberIndex >= initialVisibleMobileTeamMemberCount
+                          ? "hidden sm:flex"
+                          : "flex"
+                  }`}
                   aria-label={
                     member.imageSrc
                       ? `Großansicht von ${member.name} öffnen`
@@ -325,7 +372,7 @@ export function HomeTeamSection({ variant = "group" }: { variant?: "group" | "ve
                         fill
                         className="object-cover object-center transition-transform duration-500 group-hover:scale-[1.03]"
                         style={{ objectPosition: member.imagePosition ?? "center" }}
-                        sizes="(min-width: 1024px) 18rem, (min-width: 640px) 45vw, 100vw"
+                        sizes="(min-width: 1024px) 18rem, (min-width: 640px) 45vw, 50vw"
                       />
                     ) : (
                       <span className="team-member-placeholder" aria-hidden="true">
@@ -363,32 +410,49 @@ export function HomeTeamSection({ variant = "group" }: { variant?: "group" | "ve
               Ansprechpartnerinnen und Ansprechpartner noch ergänzt.
             </div>
           )}
+
+          {visibleMembers.length > initialVisibleMobileTeamMemberCount ? (
+            <div className={`mt-10 justify-center ${
+              visibleMembers.length > initialVisibleDesktopTeamMemberCount
+                ? "flex"
+                : "flex sm:hidden"
+            }`}>
+              <button
+                type="button"
+                className="liquid-card group inline-flex items-center gap-3 rounded-full px-6 py-3 text-sm font-semibold text-white transition-transform duration-300 hover:-translate-y-1 sm:px-7 sm:py-4 sm:text-base"
+                aria-expanded={showAllMembers}
+                onClick={() => setShowAllMembers((current) => !current)}
+              >
+                {showAllMembers ? "Weniger anzeigen" : "Mehr anzeigen"}
+              </button>
+            </div>
+          ) : null}
         </div>
       </section>
 
-      {selectedMember ? (
+      {selectedMember ? createPortal((
         <div
-          className="fixed inset-0 z-[2147483100] flex items-center justify-center bg-forest-900/88 px-4 py-6 backdrop-blur-md sm:px-8"
+          className="mobile-viewport-overlay fixed inset-0 z-[2147483100] flex items-center justify-center bg-forest-900/88 px-4 py-6 backdrop-blur-md sm:px-8"
           role="dialog"
           aria-modal="true"
           aria-label={`${selectedMember.name} in Großansicht`}
           onClick={() => setSelectedMember(null)}
         >
           <div
-            className="relative w-full max-w-[54rem]"
+            className="team-overlay-panel mobile-viewport-overlay__panel relative w-full max-w-[54rem]"
             onClick={(event) => event.stopPropagation()}
           >
             <button
               type="button"
               onClick={() => setSelectedMember(null)}
-              className="absolute right-3 top-3 z-10 inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-forest-900/72 text-white transition-colors duration-200 hover:bg-forest-800"
+              className="team-overlay-close absolute right-3 top-3 z-10 inline-flex h-11 w-11 items-center justify-center rounded-full border bg-white/95 transition-colors duration-200"
               aria-label="Großansicht schließen"
             >
               <X className="h-5 w-5" />
             </button>
 
             <div className="overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/5 shadow-2xl">
-              <div className="relative h-[min(78vh,46rem)] w-full">
+              <div className="team-overlay-image relative h-[min(78vh,46rem)] w-full">
                 <Image
                   src={selectedMember.imageSrc ?? ""}
                   alt={`${selectedMember.name}, ${selectedMember.role}`}
@@ -398,23 +462,24 @@ export function HomeTeamSection({ variant = "group" }: { variant?: "group" | "ve
                   priority
                 />
               </div>
-              <div className="border-t border-white/10 bg-forest-900/72 px-5 py-4 text-white">
+              <div className="team-overlay-meta border-t px-5 py-4">
                 {selectedMember.degree ? (
-                  <p className="text-xs font-semibold uppercase tracking-[0.22em] text-forest-100/68">
+                  <p className="team-overlay-degree text-xs font-semibold uppercase tracking-[0.22em]">
                     {selectedMember.degree}
                   </p>
                 ) : null}
-                <h3 className="mt-1 text-xl font-semibold leading-tight">
+                <h3 className="team-overlay-name mt-1 text-xl font-semibold leading-tight">
                   {selectedMember.name}
                 </h3>
-                <p className="mt-1 text-sm font-extrabold text-white">
+                <p className="team-overlay-role mt-1 text-sm font-extrabold">
                   {selectedMember.role}
                 </p>
               </div>
             </div>
           </div>
         </div>
-      ) : null}
+      ), document.body) : null}
     </SectionShell>
   );
 }
+

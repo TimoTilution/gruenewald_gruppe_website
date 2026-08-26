@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { ArrowRight, ChevronLeft, ChevronRight, X } from "lucide-react";
+import { ArrowRight, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, X } from "lucide-react";
 import { SectionShell } from "@/components/section-shell";
 
 type ServiceArea = {
@@ -243,6 +243,7 @@ export function TilutionServicesSection({ variant = "tilution" }: { variant?: "t
   const isVerwaltung = variant === "verwaltung";
   const areas = isGruenewald ? gruenewaldServiceAreas : isVerwaltung ? verwaltungServiceAreas : serviceAreas;
   const [activeServiceTitle, setActiveServiceTitle] = useState<string | null>(null);
+  const [showAllServices, setShowAllServices] = useState(false);
   const activeServiceDetails = activeServiceTitle ? gruenewaldServiceDetails[activeServiceTitle] : undefined;
   const activeServiceIndex = activeServiceTitle
     ? gruenewaldServiceAreas.findIndex((area) => area.title === activeServiceTitle)
@@ -260,6 +261,7 @@ export function TilutionServicesSection({ variant = "tilution" }: { variant?: "t
 
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+    document.body.classList.add("site-overlay-open");
     const closeOnEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") setActiveServiceTitle(null);
     };
@@ -267,6 +269,7 @@ export function TilutionServicesSection({ variant = "tilution" }: { variant?: "t
 
     return () => {
       document.body.style.overflow = previousOverflow;
+      document.body.classList.remove("site-overlay-open");
       window.removeEventListener("keydown", closeOnEscape);
     };
   }, [activeServiceDetails]);
@@ -287,14 +290,30 @@ export function TilutionServicesSection({ variant = "tilution" }: { variant?: "t
         </header>
 
         <div className={`tilution-services-grid${isGruenewald ? " gruenewald-services-grid" : ""}${isVerwaltung ? " verwaltung-services-grid" : ""}`}>
-          {areas.map((area) => (
-            <ServiceCard
+          {areas.map((area, index) => (
+            <div
               key={area.title}
-              area={area}
-              onOpen={isGruenewald && gruenewaldServiceDetails[area.title] ? () => setActiveServiceTitle(area.title) : undefined}
-            />
+              className={`${index >= 4 && !showAllServices ? "mobile-service-hidden" : ""}${isGruenewald && area.title === "Generalunternehmer" ? " gruenewald-service-grid-item--wide" : ""}`.trim() || undefined}
+            >
+              <ServiceCard
+                area={area}
+                onOpen={isGruenewald && gruenewaldServiceDetails[area.title] ? () => setActiveServiceTitle(area.title) : undefined}
+              />
+            </div>
           ))}
         </div>
+
+        {areas.length > 4 ? (
+          <button
+            type="button"
+            className="mobile-services-toggle"
+            aria-expanded={showAllServices}
+            onClick={() => setShowAllServices((current) => !current)}
+          >
+            <span>{showAllServices ? "Weniger Leistungen anzeigen" : `${areas.length - 4} weitere Leistungen anzeigen`}</span>
+            {showAllServices ? <ChevronUp aria-hidden="true" /> : <ChevronDown aria-hidden="true" />}
+          </button>
+        ) : null}
 
         <div className="tilution-services-cta">
           <div>
@@ -314,10 +333,12 @@ export function TilutionServicesSection({ variant = "tilution" }: { variant?: "t
             </p>
           </div>
 
-          <Link href="#kontakt" className="tilution-services-cta__button">
-            <span>{isVerwaltung ? "Kontakt aufnehmen" : "Projekt anfragen"}</span>
-            <ArrowRight className="tilution-services-cta__button-icon" />
-          </Link>
+          {!isVerwaltung ? (
+            <Link href="#kontakt" className="tilution-services-cta__button">
+              <span>Projekt anfragen</span>
+              <ArrowRight className="tilution-services-cta__button-icon" />
+            </Link>
+          ) : null}
         </div>
       </section>
 

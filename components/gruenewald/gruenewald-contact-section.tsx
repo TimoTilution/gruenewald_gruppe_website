@@ -3,10 +3,10 @@ import { Mail, Phone } from "lucide-react";
 import { SectionShell } from "@/components/section-shell";
 
 const contactLinkClassName =
-  "group flex min-h-[5.5rem] min-w-0 items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-4 text-[#272425] shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-[#009CA6]/40 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#009CA6] focus-visible:ring-offset-2 sm:gap-4 sm:px-6 lg:min-h-0 lg:h-full lg:px-6 lg:py-5";
+  "group flex min-h-[4.9rem] min-w-0 items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3.5 text-[#272425] shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-[#009CA6]/40 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#009CA6] focus-visible:ring-offset-2 sm:gap-3.5 sm:px-5 lg:min-h-0 lg:h-full lg:px-5 lg:py-4";
 
 const contactValueClassName =
-  "mt-1 block whitespace-nowrap text-[0.95rem] font-semibold leading-snug tracking-[-0.025em] sm:text-[1.0625rem] xl:text-lg";
+  "mt-1 block whitespace-nowrap text-[0.9rem] font-semibold leading-snug tracking-[-0.025em] sm:text-base xl:text-[1.0625rem]";
 
 const contactLabelClassName =
   "block text-xs font-semibold uppercase tracking-[0.16em] text-slate-500 sm:text-[0.8125rem]";
@@ -56,8 +56,8 @@ export function GruenewaldContactSection() {
                     aria-label="E-Mail an Myroslava Golovach senden"
                     className={contactLinkClassName}
                   >
-                    <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-slate-50 text-[#009CA6] transition-colors group-hover:border-[#009CA6]/30 group-hover:bg-[#009CA6]/5 sm:h-12 sm:w-12">
-                      <Mail aria-hidden="true" className="h-[1.35rem] w-[1.35rem] stroke-[2]" />
+                    <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-slate-50 text-[#009CA6] transition-colors group-hover:border-[#009CA6]/30 group-hover:bg-[#009CA6]/5 sm:h-11 sm:w-11">
+                      <Mail aria-hidden="true" className="h-5 w-5 stroke-[2]" />
                     </span>
                     <span className="min-w-0">
                       <span className={contactLabelClassName}>
@@ -74,8 +74,8 @@ export function GruenewaldContactSection() {
                     aria-label="Myroslava Golovach unter 01511 4493597 anrufen"
                     className={contactLinkClassName}
                   >
-                    <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-slate-50 text-[#009CA6] transition-colors group-hover:border-[#009CA6]/30 group-hover:bg-[#009CA6]/5 sm:h-12 sm:w-12">
-                      <Phone aria-hidden="true" className="h-[1.35rem] w-[1.35rem] stroke-[2]" />
+                    <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-slate-50 text-[#009CA6] transition-colors group-hover:border-[#009CA6]/30 group-hover:bg-[#009CA6]/5 sm:h-11 sm:w-11">
+                      <Phone aria-hidden="true" className="h-5 w-5 stroke-[2]" />
                     </span>
                     <span className="min-w-0">
                       <span className={contactLabelClassName}>

@@ -259,8 +259,8 @@ export function HomeHeroSection({ variant = "group" }: HomeHeroSectionProps) {
       >
         <div className="max-w-4xl">
           <p className="section-eyebrow">Grünewald Gruppe</p>
-          <h1 className="mt-6 max-w-[24ch] text-4xl font-semibold leading-[1.06] tracking-[-0.045em] sm:text-5xl lg:text-6xl">
-            Spezialisierte Lösungen für anspruchsvolle Bauprojekte.
+          <h1 className="mt-6 max-w-[22ch] text-4xl font-semibold leading-[1.06] tracking-[-0.045em] sm:text-5xl lg:text-6xl">
+            Handwerk mit Anspruch. Lösungen mit Zukunft.
           </h1>
         </div>
 
