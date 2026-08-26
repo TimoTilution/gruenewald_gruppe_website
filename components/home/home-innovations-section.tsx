@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { X } from "lucide-react";
 import { SectionShell } from "@/components/section-shell";
+import { withBasePath } from "@/lib/site-path";
 
 export function HomeInnovationsSection() {
   const [isImageOpen, setIsImageOpen] = useState(false);
@@ -91,7 +92,7 @@ export function HomeInnovationsSection() {
             aria-label="Vermessungsroboter in der Großansicht öffnen"
           >
             <Image
-              src="/images/innovationen/raumcheck-vermessungsroboter-card.png"
+              src={withBasePath("/images/innovationen/raumcheck-vermessungsroboter-card.png")}
               alt="Vermessungsroboter von Raumcheck auf einer Baustelle"
               width={1030}
               height={1288}
@@ -136,7 +137,7 @@ export function HomeInnovationsSection() {
                 <div className="liquid-card overflow-hidden p-3 sm:p-5">
                   <div className="relative flex min-h-[70vh] items-center justify-center rounded-[1.5rem] bg-white/92 p-4 sm:min-h-[78vh] sm:p-6">
                     <Image
-                      src="/images/innovationen/raumcheck-vermessungsroboter-card.png"
+                      src={withBasePath("/images/innovationen/raumcheck-vermessungsroboter-card.png")}
                       alt="Vermessungsroboter von Raumcheck auf einer Baustelle"
                       width={1030}
                       height={1288}

@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { SectionShell } from "@/components/section-shell";
+import { withBasePath } from "@/lib/site-path";
 
 type CompanyCard = {
   href: string;
@@ -151,7 +152,7 @@ export function HomeServicesSection() {
 
                 <div className={`${company.logoFrameClassName} shrink-0 ${isSupporting ? "-mt-1 -mb-2" : ""}`}>
                   <Image
-                    src={company.logoSrc}
+                    src={withBasePath(company.logoSrc)}
                     alt={`${company.name} Logo`}
                     width={company.logoWidth}
                     height={56}

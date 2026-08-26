@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { SectionShell } from "@/components/section-shell";
+import { withBasePath } from "@/lib/site-path";
 
 type ServiceArea = {
   title: string;
@@ -56,7 +57,7 @@ function ServiceCard({ area }: { area: ServiceArea }) {
   return (
     <article className="tilution-service-card group">
       <Image
-        src={area.image}
+        src={withBasePath(area.image)}
         alt={`${area.title} Beispielbild`}
         fill
         className="tilution-service-card__image"

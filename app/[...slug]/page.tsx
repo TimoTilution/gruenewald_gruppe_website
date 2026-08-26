@@ -19,6 +19,7 @@ import { HrwContactSection, HrwServicesSection, HrwWhySection } from "@/componen
 import { PageHero } from "@/components/page-hero";
 import { SectionShell } from "@/components/section-shell";
 import { TilutionServicesSection } from "@/components/tilution/tilution-services-section";
+import { withBasePath } from "@/lib/site-path";
 import {
   type CompanySlug,
   companies,
@@ -86,7 +87,7 @@ function LinkCard({
       {image ? (
         <div className="relative aspect-[16/10] w-full overflow-hidden">
           <Image
-            src={image.src}
+            src={withBasePath(image.src)}
             alt={image.alt}
             fill
             unoptimized={image.isSvg}
@@ -134,7 +135,7 @@ function ProjectPage({
                 ].join(" ")}
               >
                 <Image
-                  src={image.src}
+                  src={withBasePath(image.src)}
                   alt={image.alt}
                   fill
                   priority={index === 0}

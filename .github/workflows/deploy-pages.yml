@@ -1,5 +1,8 @@
 name: Deploy GitHub Pages
 
+env:
+  NEXT_PUBLIC_BASE_PATH: /gruenewald_gruppe_website
+
 on:
   push:
     branches:

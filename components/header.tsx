@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowLeft, ArrowRight, DoorOpen } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { type MouseEvent, useLayoutEffect, useRef, useState } from "react";
+import { withBasePath } from "@/lib/site-path";
 
 const defaultSecondaryNavigation = [
   { href: "#hero", label: "Start" },
@@ -452,7 +453,7 @@ export function Header() {
                 )}
               >
                 <Image
-                  src={activeBranding?.logoSrc ?? "/logos/gruenewald-gruppe-logo.svg"}
+                  src={withBasePath(activeBranding?.logoSrc ?? "/logos/gruenewald-gruppe-logo.svg")}
                   alt={activeBranding?.logoAlt ?? "Grünewald Gruppe Logo"}
                   width={activeBranding?.logoSize.width ?? 540}
                   height={activeBranding?.logoSize.height ?? 110}

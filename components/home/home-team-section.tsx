@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 import { SectionShell } from "@/components/section-shell";
+import { withBasePath } from "@/lib/site-path";
 
 const initialVisibleMobileTeamMemberCount = 2;
 const initialVisibleDesktopTeamMemberCount = 4;
@@ -367,7 +368,7 @@ export function HomeTeamSection({ variant = "company" }: { variant?: "company" |
                   <div className="team-member-photo">
                     {member.imageSrc ? (
                       <Image
-                        src={member.imageSrc}
+                        src={withBasePath(member.imageSrc)}
                         alt={`${member.name}, ${member.role}`}
                         fill
                         className="object-cover object-center transition-transform duration-500 group-hover:scale-[1.03]"
@@ -454,7 +455,7 @@ export function HomeTeamSection({ variant = "company" }: { variant?: "company" |
             <div className="overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/5 shadow-2xl">
               <div className="team-overlay-image relative h-[min(78vh,46rem)] w-full">
                 <Image
-                  src={selectedMember.imageSrc ?? ""}
+                  src={selectedMember.imageSrc ? withBasePath(selectedMember.imageSrc) : ""}
                   alt={`${selectedMember.name}, ${selectedMember.role}`}
                   fill
                   className="object-contain"

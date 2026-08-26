@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { ArrowRight, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, X } from "lucide-react";
 import { SectionShell } from "@/components/section-shell";
+import { withBasePath } from "@/lib/site-path";
 
 type ServiceArea = {
   title: string;
@@ -173,7 +174,7 @@ function ServiceCard({ area, onOpen }: { area: ServiceArea; onOpen?: () => void 
   const card = (
     <article className="tilution-service-card group">
       <Image
-        src={area.image}
+        src={withBasePath(area.image)}
         alt={`${area.title} Platzhalterbild`}
         fill
         className="tilution-service-card__image"
@@ -386,7 +387,7 @@ export function TilutionServicesSection({ variant = "tilution" }: { variant?: "t
 
             <div className="gruenewald-service-modal__image-wrap">
               <Image
-                src={activeServiceDetails.image}
+                src={withBasePath(activeServiceDetails.image)}
                 alt={activeServiceDetails.alt}
                 fill
                 className="gruenewald-service-modal__image"

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Mail, Phone } from "lucide-react";
 import { SectionShell } from "@/components/section-shell";
+import { withBasePath } from "@/lib/site-path";
 
 const contactLinkClassName =
   "group flex min-h-[4.9rem] min-w-0 items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3.5 text-[#272425] shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-[#009CA6]/40 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#009CA6] focus-visible:ring-offset-2 sm:gap-3.5 sm:px-5 lg:min-h-0 lg:h-full lg:px-5 lg:py-4";
@@ -32,7 +33,7 @@ export function GruenewaldContactSection() {
             <div className="mt-5 grid min-w-0 items-start gap-7 lg:grid-cols-[13.5rem_minmax(0,1fr)] lg:gap-x-10 lg:gap-y-0">
               <div className="relative mx-auto aspect-[4/5] w-full max-w-[13.5rem] overflow-hidden rounded-[1.75rem] bg-slate-100 md:max-w-[10.5rem] lg:mx-0 lg:max-w-[13.5rem]">
                 <Image
-                  src="/images/gruenewald/myroslava-golovach.png"
+                  src={withBasePath("/images/gruenewald/myroslava-golovach.png")}
                   alt="Myroslava Golovach, Backoffice Managerin"
                   fill
                   sizes="(min-width: 1024px) 216px, (min-width: 768px) 168px, calc(100vw - 88px)"
@@ -98,7 +99,7 @@ export function GruenewaldContactSection() {
 
             <div className="relative mt-5 aspect-[4/5] w-full max-w-[13.5rem] overflow-hidden rounded-[1.75rem] bg-slate-100 md:max-w-[10.5rem] lg:max-w-[13.5rem]">
               <Image
-                src="/images/gruenewald/sven-schulze.png"
+                src={withBasePath("/images/gruenewald/sven-schulze.png")}
                 alt="Sven Schulze, Projekt- und Bauleiter"
                 fill
                 sizes="(min-width: 1024px) 216px, (min-width: 768px) 220px, calc(100vw - 88px)"

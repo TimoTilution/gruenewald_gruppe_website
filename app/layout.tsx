@@ -9,6 +9,8 @@ import { siteBaseUrl } from "@/data/site-architecture";
 import "leaflet/dist/leaflet.css";
 import "./globals.css";
 
+const isPreviewBuild = process.env.GITHUB_ACTIONS === "true";
+
 const montserrat = Montserrat({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800"],
@@ -23,6 +25,19 @@ export const metadata: Metadata = {
   },
   description:
     "Unternehmenswebsite der Grünewald Gruppe für Privatkunden, Gewerbebau, Klimadecken, Personal und zentrale Steuerung.",
+  robots: isPreviewBuild
+    ? {
+        index: false,
+        follow: false,
+        googleBot: {
+          index: false,
+          follow: false,
+        },
+      }
+    : {
+        index: true,
+        follow: true,
+      },
 };
 
 export const viewport: Viewport = {

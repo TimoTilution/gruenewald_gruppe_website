@@ -10,6 +10,7 @@ import {
   CompanyMilestoneRail,
 } from "@/components/home/company-milestone-rail";
 import { SectionShell } from "@/components/section-shell";
+import { withBasePath } from "@/lib/site-path";
 
 const groupUsps = [
   {
@@ -223,7 +224,7 @@ export function HomeAboutSection() {
         <section className="company-video-container overflow-hidden p-0">
           <video
             className="block aspect-video w-full object-cover"
-            src="/videos/tilution-bad-nauheim.mp4"
+            src={withBasePath("/videos/tilution-bad-nauheim.mp4")}
             autoPlay
             muted
             loop
@@ -243,7 +244,7 @@ export function HomeAboutSection() {
         <section className="company-video-container overflow-hidden p-0">
           <video
             className="block h-auto w-full"
-            src="/videos/gruenewald-schreib-uns-jetzt.mp4"
+            src={withBasePath("/videos/gruenewald-schreib-uns-jetzt.mp4")}
             autoPlay
             muted
             loop
@@ -310,7 +311,7 @@ export function HomeAboutSection() {
                   aria-label="ArgillaTherm Aufbau in Großansicht öffnen"
                 >
                   <Image
-                    src="/images/clay/argillatherm-aufbau.png"
+                    src={withBasePath("/images/clay/argillatherm-aufbau.png")}
                     alt="Schematischer Aufbau eines ArgillaTherm Lehmklimasystems"
                     width={2048}
                     height={667}
@@ -358,7 +359,7 @@ export function HomeAboutSection() {
 
                 <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-white shadow-2xl">
                   <Image
-                    src="/images/clay/argillatherm-aufbau.png"
+                    src={withBasePath("/images/clay/argillatherm-aufbau.png")}
                     alt="Schematischer Aufbau eines ArgillaTherm Lehmklimasystems im Großformat"
                     width={2048}
                     height={667}
@@ -439,7 +440,7 @@ export function HomeAboutSection() {
               aria-label="Deutschlandkarte im Großformat öffnen"
             >
               <Image
-                src="/deutschland-karte.png"
+                src={withBasePath("/deutschland-karte.png")}
                 alt="Deutschlandkarte"
                 width={1080}
                 height={1536}
@@ -579,7 +580,7 @@ export function HomeAboutSection() {
 
               <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 shadow-2xl">
                 <Image
-                  src="/deutschland-karte.png"
+                  src={withBasePath("/deutschland-karte.png")}
                   alt="Deutschlandkarte im Großformat"
                   width={1080}
                   height={1536}
