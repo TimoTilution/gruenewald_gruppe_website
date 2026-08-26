@@ -58,7 +58,7 @@ const project: {
     },
     {
       src: "/references/freibad-duderstadt/title-images/freibad-duderstadt-title-01.png",
-      hoverText: "Freibad Duderstadt | öffentlich | Tilution GmbH",
+      hoverText: "Freibad, Duderstadt | öffentlich | Tilution GmbH",
       alt: "Luftaufnahme des Freibads Duderstadt",
       category: "Schwimmbäder & Thermen",
     },
@@ -85,13 +85,13 @@ const project: {
     {
       src: "/references/heart-brain-universitaet-goettingen/title-images/heart-brain-title-01.png",
       hoverText:
-        "Heart & Brain Universität Göttingen | öffentlich | Tilution GmbH",
+        "Heart & Brain Universität, Göttingen | öffentlich | Tilution GmbH",
       alt: "Außenansicht der Heart & Brain Universität Göttingen",
       category: "Öffentliche Einrichtungen",
     },
     {
       src: "/references/leibniz-universitaet-hannover/title-images/leibniz-universitaet-hannover-title-01.jpg",
-      hoverText: "Leibniz Universität Hannover | öffentlich | Tilution GmbH",
+      hoverText: "Leibniz Universität, Hannover | öffentlich | Tilution GmbH",
       alt: "Außenansicht der Leibniz Universität Hannover",
       category: "Öffentliche Einrichtungen",
     },
@@ -103,13 +103,13 @@ const project: {
     },
     {
       src: "/references/sprudelhof-therme/title-images/sprudelhof-therme-title-03.png",
-      hoverText: "Dom Hotel, Köln | gewerblich | Tilution GmbH",
+      hoverText: "Dom Hotel, Köln | privat | Tilution GmbH",
       alt: "Außenansicht eines Referenzprojekts am Kölner Dom",
       category: "Hotels & Wellness",
     },
     {
       src: "/references/fischers-hotel-kassel/title-images/fischers-hotel-title-01.png",
-      hoverText: "Fischer's Hotel, Kassel | gewerblich | Tilution GmbH",
+      hoverText: "Fischer's Hotel, Kassel | privat | Tilution GmbH",
       alt: "Außenansicht von Fischer's Hotel in Kassel",
       category: "Hotels & Wellness",
     },
@@ -145,7 +145,7 @@ const project: {
     },
     {
       src: "/references/sprudelhof-therme/title-images/sprudelhof-therme-title-06.png",
-      hoverText: "Friedensschule, Köln | gewerblich | Tilution GmbH",
+      hoverText: "Friedensschule, Köln | öffentlich | Tilution GmbH",
       alt: "Außenansicht eines modernen Büro- und Verwaltungsgebäudes",
       category: "Öffentliche Einrichtungen",
     },
@@ -157,13 +157,13 @@ const project: {
     },
     {
       src: "/references/sprudelhof-therme/title-images/bmw-frontlayer-cover.png",
-      hoverText: "BMW Autohaus, Göttingen | gewerblich | Tilution GmbH",
+      hoverText: "BMW Autohaus, Göttingen | privat | Tilution GmbH",
       alt: "Außenansicht eines BMW Autohauses in Göttingen",
       category: "Retail & Gewerbeflächen",
     },
     {
       src: "/references/sprudelhof-therme/title-images/sprudelhof-therme-title-09.jpg",
-      hoverText: "Feuerwehr, Duderstadt | gewerblich | Tilution GmbH",
+      hoverText: "Feuerwehr, Duderstadt | öffentlich | Tilution GmbH",
       alt: "Visualisierung des Feuerwehrzentrums Duderstadt",
       category: "Öffentliche Einrichtungen",
     },
@@ -517,6 +517,24 @@ function ArrowButton({
   );
 }
 
+function FormattedReferenceText({ text }: { text?: string }) {
+  if (!text) return null;
+
+  const parts = text.split("|").map((part) => part.trim());
+
+  if (parts.length !== 3) {
+    return <>{text}</>;
+  }
+
+  return (
+    <>
+      {parts[0]} <span className="font-semibold">|</span> {parts[1]}{" "}
+      <span className="font-semibold">|</span>{" "}
+      <strong className="font-bold">{parts[2]}</strong>
+    </>
+  );
+}
+
 export function HomeReferencesSection() {
   const pathname = normalizeSitePathname(usePathname());
   const isGroupPage = pathname === "/";
@@ -695,7 +713,9 @@ export function HomeReferencesSection() {
                   className="object-cover transition-transform duration-300 ease-out group-hover:scale-[1.02]"
                 />
                 <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-forest-900/90 via-forest-900/70 to-transparent px-6 py-5 opacity-0 transition duration-300 group-hover:opacity-100">
-                  <p className="mt-2 text-lg text-white">{image.hoverText}</p>
+                  <p className="mt-2 text-lg text-white">
+                    <FormattedReferenceText text={image.hoverText} />
+                  </p>
                 </div>
               </div>
             </button>
@@ -758,7 +778,16 @@ export function HomeReferencesSection() {
               if (event.target === event.currentTarget) closeGallery();
             }}
           >
-            <MobileSnapGallery images={overlayImages} activeIndex={activeImageIndex} onActiveIndexChange={setActiveImageIndex} />
+            <MobileSnapGallery
+              images={overlayImages}
+              activeIndex={activeImageIndex}
+              onActiveIndexChange={setActiveImageIndex}
+              intro={
+                selectedPreviewImage.hoverText
+                  ? { title: selectedPreviewImage.hoverText }
+                  : undefined
+              }
+            />
             <div className="reference-gallery-panel relative hidden w-full max-w-[118rem] items-center gap-6 overflow-visible p-4 sm:grid lg:grid-cols-[minmax(0,1.42fr)_14rem] lg:gap-8 lg:p-6">
               <div className="flex flex-col justify-center gap-4">
                 <div className="relative flex items-center justify-center overflow-visible rounded-[1.5rem]">

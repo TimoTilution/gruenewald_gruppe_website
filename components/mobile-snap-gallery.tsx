@@ -6,14 +6,37 @@ import { getOptimizedReferenceSrc } from "@/lib/reference-image";
 
 type GalleryImage = { src: string; alt: string; isSvg?: boolean };
 
+type MobileGalleryIntro = {
+  eyebrow?: string;
+  title: string;
+};
+
+function FormattedIntroTitle({ title }: { title: string }) {
+  const parts = title.split("|").map((part) => part.trim());
+
+  if (parts.length !== 3) {
+    return <>{title}</>;
+  }
+
+  return (
+    <>
+      {parts[0]} <span className="font-semibold">|</span> {parts[1]}{" "}
+      <span className="font-semibold">|</span>{" "}
+      <strong className="font-bold">{parts[2]}</strong>
+    </>
+  );
+}
+
 export function MobileSnapGallery({
   images,
   activeIndex,
   onActiveIndexChange,
+  intro,
 }: {
   images: GalleryImage[];
   activeIndex: number;
   onActiveIndexChange: (index: number) => void;
+  intro?: MobileGalleryIntro;
 }) {
   const trackRef = useRef<HTMLDivElement>(null);
 
@@ -28,6 +51,18 @@ export function MobileSnapGallery({
 
   return (
     <div className="mobile-snap-gallery sm:hidden">
+      {activeIndex === 0 && intro ? (
+        <div className="mobile-snap-gallery__intro">
+          {intro.eyebrow ? (
+            <p className="mobile-snap-gallery__intro-eyebrow">
+              {intro.eyebrow}
+            </p>
+          ) : null}
+          <p className="mobile-snap-gallery__intro-title">
+            <FormattedIntroTitle title={intro.title} />
+          </p>
+        </div>
+      ) : null}
       <div
         ref={trackRef}
         className="mobile-snap-gallery__track"

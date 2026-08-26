@@ -368,6 +368,38 @@ html.reveal-ready .scroll-reveal.is-visible {
   z-index: 1;
 }
 
+.mobile-snap-gallery__intro {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  right: 1rem;
+  z-index: 3;
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(7, 20, 38, 0.72);
+  padding: 0.85rem 1rem;
+  color: #ffffff;
+  box-shadow: 0 14px 34px rgba(3, 10, 26, 0.22);
+  text-shadow: 0 1px 8px rgba(3, 10, 26, 0.52);
+  backdrop-filter: blur(20px) saturate(145%);
+}
+
+.mobile-snap-gallery__intro-eyebrow {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.66);
+}
+
+.mobile-snap-gallery__intro-title {
+  margin-top: 0.25rem;
+  font-size: 0.96rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: #ffffff;
+}
+
 .reference-gallery-panel > * {
   z-index: 1;
 }
@@ -2302,7 +2334,7 @@ body:has(.gruenewald-theme) {
 @media (max-width: 639px) {
   .gruenewald-services-grid .tilution-service-card-button--wide .tilution-service-card {
     min-height: 0;
-    aspect-ratio: 4 / 5;
+    aspect-ratio: 16 / 9;
   }
 
   .gruenewald-services-grid .tilution-service-card__attributes--single-line {
@@ -2529,18 +2561,28 @@ body:has(.gruenewald-theme) {
 
   .gruenewald-service-modal__panel {
     grid-template-columns: 1fr;
-    grid-template-rows: minmax(8rem, 27%) minmax(0, 1fr);
+    grid-template-rows: minmax(9rem, 30%) minmax(0, 1fr);
     height: calc(100dvh - max(1.5rem, env(safe-area-inset-top) + env(safe-area-inset-bottom)));
     max-height: none;
+    padding-top: 4rem;
     border-radius: 1.35rem;
+  }
+
+  .gruenewald-service-modal__close {
+    top: 0.5rem;
+    right: 0.75rem;
   }
 
   .gruenewald-service-modal__image-wrap {
     min-height: 0;
   }
 
+  .gruenewald-service-modal__image--generalunternehmer {
+    object-position: center 28%;
+  }
+
   .gruenewald-service-modal__nav {
-    top: min(14vh, 7.5rem);
+    top: calc(3.4rem + 15%);
     width: 2.65rem;
     height: 2.65rem;
   }
@@ -2555,7 +2597,7 @@ body:has(.gruenewald-theme) {
 
   .gruenewald-service-modal__content {
     overflow: hidden;
-    padding: clamp(1rem, 2.3vh, 1.35rem) 1.15rem 1rem;
+    padding: clamp(1.2rem, 2.8vh, 1.55rem) 1.15rem 1rem;
   }
 
   .gruenewald-service-modal__eyebrow {
@@ -2565,15 +2607,15 @@ body:has(.gruenewald-theme) {
 
   .gruenewald-service-modal__content h2 {
     margin-bottom: clamp(0.55rem, 1.4vh, 0.85rem);
-    padding-right: 2.5rem;
-    font-size: clamp(1.15rem, 5vw, 1.45rem);
+    padding-right: 0;
+    font-size: clamp(1.4rem, 6vw, 1.7rem);
     white-space: normal;
   }
 
   .gruenewald-service-modal__content p:not(.gruenewald-service-modal__eyebrow) {
     margin-bottom: clamp(0.45rem, 1.1vh, 0.7rem);
-    font-size: clamp(0.76rem, 2.1vw + 0.18rem, 0.94rem);
-    line-height: 1.42;
+    font-size: clamp(0.94rem, 2.4vw + 0.15rem, 1.05rem);
+    line-height: 1.5;
   }
 
   .gruenewald-service-modal__highlights {
@@ -2599,8 +2641,19 @@ body:has(.gruenewald-theme) {
   }
 
   .gruenewald-service-modal__content--with-highlights .gruenewald-service-modal__highlights li {
-    padding-block: 0.08rem;
-    font-size: clamp(0.72rem, 2.3vw, 0.86rem);
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.16rem 0;
+    font-size: clamp(0.98rem, 3vw, 1.08rem);
+    line-height: 1.38;
+  }
+
+  .gruenewald-service-modal__content--with-highlights .gruenewald-service-modal__highlights li::before {
+    position: static;
+    width: 0.48rem;
+    height: 0.48rem;
+    flex: 0 0 0.48rem;
   }
 
 }

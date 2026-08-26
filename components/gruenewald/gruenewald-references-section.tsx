@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { getOptimizedReferenceSrc } from "@/lib/reference-image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { SectionShell } from "@/components/section-shell";
@@ -25,7 +25,8 @@ type GruenewaldReference = {
   images: GruenewaldReferenceImage[];
 };
 
-const referenceFilters: GruenewaldReferenceCategory[] = [
+const referenceFilters: Array<"Alle" | GruenewaldReferenceCategory> = [
+  "Alle",
   "Außengestaltung",
   "Badsanierung",
   "Haus- & Wohnsanierung",
@@ -617,14 +618,19 @@ const gruenewaldReferences: GruenewaldReference[] = [
 
 export function GruenewaldReferencesSection() {
   const [activeFilter, setActiveFilter] =
-    useState<GruenewaldReferenceCategory>(referenceFilters[0]);
+    useState<(typeof referenceFilters)[number]>("Alle");
   const [selectedProject, setSelectedProject] =
     useState<GruenewaldReference | null>(null);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const referencePreviewRef = useRef<HTMLDivElement | null>(null);
+  const [referenceScrollProgress, setReferenceScrollProgress] = useState(0);
 
-  const visibleProjects = gruenewaldReferences.filter(
-    (reference) => reference.category === activeFilter
-  );
+  const visibleProjects =
+    activeFilter === "Alle"
+      ? gruenewaldReferences
+      : gruenewaldReferences.filter(
+          (reference) => reference.category === activeFilter
+        );
   const galleryImages = selectedProject
     ? [
         selectedProject.cover,
@@ -687,34 +693,46 @@ export function GruenewaldReferencesSection() {
           </p>
         </div>
 
-        <div
-          className="mt-8 flex snap-x snap-mandatory gap-2.5 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:flex-wrap sm:overflow-visible"
-          aria-label="Referenzen nach Leistung filtern"
-        >
-          {referenceFilters.map((filter) => {
-            const isActive = filter === activeFilter;
+        <div className="relative mt-8">
+          <div
+            className="reference-mobile-scrollbar flex items-center gap-2.5 overflow-x-auto pb-3 scroll-smooth sm:flex-wrap sm:overflow-visible sm:pb-0 sm:[scrollbar-width:none] sm:[&::-webkit-scrollbar]:hidden"
+            aria-label="Referenzen nach Leistung filtern"
+          >
+            {referenceFilters.map((filter) => {
+              const isActive = filter === activeFilter;
 
-            return (
-              <button
-                key={filter}
-                type="button"
-                onClick={() => setActiveFilter(filter)}
-                className={[
-                  "min-h-10 shrink-0 snap-start rounded-full border px-4 py-2 text-sm font-semibold transition-all duration-300",
-                  isActive
-                    ? "border-[#009ca6] bg-[#009ca6] text-white shadow-[0_12px_28px_rgba(0,156,166,0.24)]"
-                    : "border-slate-200 bg-white text-slate-600 hover:border-[#009ca6]/45 hover:bg-[#e8f7f8] hover:text-[#007f87]",
-                ].join(" ")}
-                aria-pressed={isActive}
-              >
-                {filter}
-              </button>
-            );
-          })}
+              return (
+                <button
+                  key={filter}
+                  type="button"
+                  onClick={() => setActiveFilter(filter)}
+                  className={[
+                    "flex min-h-10 shrink-0 items-center justify-center rounded-full border px-4 py-2 text-center text-sm font-semibold transition-all duration-300 sm:min-h-0 sm:w-auto",
+                    isActive
+                      ? "border-[#009ca6] bg-[#009ca6] text-white shadow-[0_12px_28px_rgba(0,156,166,0.24)]"
+                      : "border-slate-200 bg-white text-slate-600 hover:border-[#009ca6]/45 hover:bg-[#e8f7f8] hover:text-[#007f87]",
+                  ].join(" ")}
+                  aria-pressed={isActive}
+                >
+                  {filter}
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         {visibleProjects.length > 0 ? (
-          <div className="mt-10 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+          <div
+            ref={referencePreviewRef}
+            onScroll={(event) => {
+              const target = event.currentTarget;
+              const maxScroll = target.scrollWidth - target.clientWidth;
+              setReferenceScrollProgress(
+                maxScroll > 0 ? target.scrollLeft / maxScroll : 0
+              );
+            }}
+            className="reference-preview-scroll mt-10 flex gap-5 overflow-x-scroll pb-4 scroll-smooth sm:grid sm:grid-cols-2 sm:gap-6 sm:overflow-visible sm:pb-0 xl:grid-cols-3"
+          >
             {visibleProjects.map((reference) => (
               <button
                 key={reference.cover.src}
@@ -723,7 +741,7 @@ export function GruenewaldReferencesSection() {
                   setSelectedProject(reference);
                   setActiveImageIndex(0);
                 }}
-                className="reference-card liquid-card group block w-full overflow-hidden text-left"
+                className="reference-card liquid-card group block w-[82vw] shrink-0 overflow-hidden text-left sm:w-full"
                 aria-label={`Projektgalerie öffnen: ${reference.title}`}
               >
                 <div className="relative aspect-[4/3] w-full overflow-hidden lg:aspect-[16/11]">
@@ -755,6 +773,17 @@ export function GruenewaldReferencesSection() {
             </p>
           </div>
         )}
+
+        {visibleProjects.length > 1 ? (
+          <div className="reference-scroll-track" aria-hidden="true">
+            <span
+              className="reference-scroll-track__thumb"
+              style={{
+                transform: `translateX(${referenceScrollProgress * 300}%)`,
+              }}
+            />
+          </div>
+        ) : null}
       </section>
 
       {selectedProject && activeImage ? createPortal((
@@ -778,7 +807,15 @@ export function GruenewaldReferencesSection() {
               <X className="h-5 w-5" />
             </button>
 
-            <MobileSnapGallery images={galleryImages} activeIndex={activeImageIndex} onActiveIndexChange={setActiveImageIndex} />
+            <MobileSnapGallery
+              images={galleryImages}
+              activeIndex={activeImageIndex}
+              onActiveIndexChange={setActiveImageIndex}
+              intro={{
+                eyebrow: selectedProject.category,
+                title: selectedProject.title,
+              }}
+            />
             <div className="reference-gallery-image relative hidden h-[76vh] min-h-[18rem] w-full overflow-hidden rounded-[1.25rem] sm:block">
               <div className="absolute left-4 top-4 z-10 max-w-[calc(100%-8rem)] rounded-xl bg-[#071426]/75 px-4 py-3 text-white backdrop-blur-md sm:left-5 sm:top-5">
                 <p className="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-[#62d4da]">
@@ -845,8 +882,9 @@ export function GruenewaldReferencesSection() {
                       />
                     </button>
                   ))}
-                </div>
-              ) : null}
+          </div>
+        ) : null}
+
           </div>
         </div>
       ), document.body) : null}
