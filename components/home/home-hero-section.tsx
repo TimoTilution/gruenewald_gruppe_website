@@ -2,7 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Check } from "lucide-react";
 import { SectionShell } from "@/components/section-shell";
-import { withBasePath } from "@/lib/site-path";
+import { getOptimizedLogoSrc } from "@/lib/logo-image";
+import { getOptimizedSiteImageSrc } from "@/lib/site-image";
 
 const heroActions = [
   {
@@ -15,7 +16,7 @@ const heroActions = [
       "absolute left-1/2 bottom-[-1.75rem] h-40 w-auto -translate-x-1/2 sm:bottom-[-2.25rem] sm:h-48",
   },
   {
-    href: "/gruenewald",
+    href: "/gruenewaldgmbh",
     label: "Privatkunde",
     panelClassName: "",
     logoSrc: "/logos/companies/gruenewald.svg",
@@ -73,7 +74,7 @@ export function HomeHeroSection({ variant = "group" }: HomeHeroSectionProps) {
           className="relative isolate w-[calc(100vw-2.5rem)] max-w-full overflow-hidden rounded-[2.75rem] border border-white/10 px-6 py-12 text-porcelain shadow-premium sm:w-full sm:px-9 lg:px-14 lg:py-20"
         >
           <Image
-            src={withBasePath("/images/clay/clay-hero-lehmklimasystem.png")}
+            src={getOptimizedSiteImageSrc("/images/clay/clay-hero-lehmklimasystem.png")}
             alt=""
             fill
             priority
@@ -174,7 +175,7 @@ export function HomeHeroSection({ variant = "group" }: HomeHeroSectionProps) {
           className="relative isolate w-[calc(100vw-2.5rem)] max-w-full overflow-hidden rounded-[2.75rem] border border-white/10 px-6 py-12 text-porcelain shadow-premium sm:w-full sm:px-9 lg:px-14 lg:py-20"
         >
           <Image
-            src={withBasePath(
+            src={getOptimizedSiteImageSrc(
               isVerwaltung
                 ? "/images/verwaltung/verwaltung-hero.png"
                 : isGruenewald
@@ -252,7 +253,7 @@ export function HomeHeroSection({ variant = "group" }: HomeHeroSectionProps) {
         className="overflow-hidden rounded-[2.75rem] border border-white/10 px-6 py-12 text-porcelain shadow-premium sm:px-9 lg:px-14 lg:py-20"
         style={{
           backgroundImage:
-            `linear-gradient(135deg, rgba(14, 25, 55, 0.52) 0%, rgba(24, 41, 86, 0.44) 42%, rgba(14, 25, 55, 0.7) 100%), url('${withBasePath("/hero-start.jpg")}')`,
+            `linear-gradient(135deg, rgba(14, 25, 55, 0.52) 0%, rgba(24, 41, 86, 0.44) 42%, rgba(14, 25, 55, 0.7) 100%), url('${getOptimizedSiteImageSrc("/hero-start.jpg")}')`,
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
           backgroundSize: "cover",
@@ -274,7 +275,7 @@ export function HomeHeroSection({ variant = "group" }: HomeHeroSectionProps) {
             >
               <div className="relative min-h-[8rem] overflow-hidden sm:min-h-[9rem]">
                 <Image
-                  src={withBasePath(action.logoSrc)}
+                  src={getOptimizedLogoSrc(action.logoSrc)}
                   alt={`${action.label} Logo`}
                   width={action.logoWidth}
                   height={48}

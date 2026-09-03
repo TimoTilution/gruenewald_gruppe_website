@@ -9,6 +9,8 @@ import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 import { SectionShell } from "@/components/section-shell";
 import { MobileSnapGallery } from "@/components/mobile-snap-gallery";
+import { getReferencePath, references } from "@/data/site-architecture";
+import { pushUrlWithoutScroll } from "@/lib/preserve-scroll-url";
 
 type ReferenceCategory =
   | "Schwimmbäder & Thermen"
@@ -40,6 +42,19 @@ const referenceFilterOptions: Array<"Alle" | ReferenceCategory> = [
   "Fassaden",
 ];
 
+const INITIAL_VISIBLE_REFERENCE_COUNT = 6;
+
+const tilutionReferenceCategoryPaths: Partial<Record<ReferenceCategory, string>> = {
+  "Schwimmbäder & Thermen": "/tilution/referenzen/schwimmbaeder-thermen",
+  "Hotels & Wellness": "/tilution/referenzen/hotels-wellness",
+  "Öffentliche Einrichtungen": "/tilution/referenzen/oeffentliche-einrichtungen",
+  "Kliniken & Pflegebereiche": "/tilution/referenzen/kliniken-pflegebereiche",
+  "Großküchen": "/tilution/referenzen/grosskuechen",
+  "Retail & Gewerbeflächen": "/tilution/referenzen/retail-gewerbeflaechen",
+  "Wohnungsbau": "/tilution/referenzen/wohnungsbau",
+  "Fassaden": "/tilution/referenzen/fassaden",
+};
+
 const project: {
   title: string;
   description: string;
@@ -48,7 +63,7 @@ const project: {
 } = {
   title: "Sprudelhof Therme, Bad Nauheim",
   description:
-    "Die Sanierung der historischen Sprudelhof Therme in Bad Nauheim verbindet eindrucksvoll Tradition und Moderne. Bei diesem außergewöhnlichen Projekt treffen denkmalgeschützte Architektur, hochwertige Materialien und modernste Bauanforderungen aufeinander. Für uns war die Mitwirkung an einem der bekanntesten Thermenprojekte Deutschlands eine besondere Aufgabe - geprägt von Präzision, handwerklichem Anspruch und der Herausforderung, historische Substanz mit zeitgemäßem Komfort zu vereinen.",
+    "Die Sprudelhof Therme Bad Nauheim verbindet die traditionsreiche Badekultur der Stadt mit moderner Architektur und hochwertigem Thermenkomfort. In unmittelbarer Nähe zum historischen Jugendstilensemble entstand ein anspruchsvolles Projekt mit besonderem gestalterischem Anspruch. Mit der Tilution und unseren Fliesen- und Betonwerksteinarbeiten haben wir dazu beigetragen, Geschichte, Qualität und modernes Handwerk miteinander zu verbinden.",
   previewImages: [
     {
       src: "/references/rheingau-bad-geisenheim/title-images/rheingau-bad-title-01.png",
@@ -81,6 +96,18 @@ const project: {
       hoverText: "Fraunhofer Institut, Kassel | öffentlich | Tilution GmbH",
       alt: "Außenansicht des Fraunhofer IFF Gebäudes",
       category: "Öffentliche Einrichtungen",
+    },
+    {
+      src: "/references/rathaus-vellmar/title-images/rathaus-vellmar-title-01.png",
+      hoverText: "Rathaus Vellmar, Vellmar | öffentlich | Tilution GmbH",
+      alt: "Außenansicht des Rathauses Vellmar",
+      category: "Großküchen",
+    },
+    {
+      src: "/references/fraunhofer-institut-kassel-grosskueche/title-images/fraunhofer-institut-kassel-grosskueche-title-01.png",
+      hoverText: "Fraunhofer-Institut, Kassel | öffentlich | Tilution GmbH",
+      alt: "Außenansicht des Fraunhofer-Instituts in Kassel",
+      category: "Großküchen",
     },
     {
       src: "/references/heart-brain-universitaet-goettingen/title-images/heart-brain-title-01.png",
@@ -226,6 +253,32 @@ const fraunhoferOverlayImages = [
   {
     src: "/references/fraunhofer/overlay/fraunhofer-overlay-05.jpg",
     alt: "Sanitärbereich im Fraunhofer Institut",
+  },
+];
+
+const rathausVellmarOverlayImages = [
+  {
+    src: "/references/rathaus-vellmar/overlay/rathaus-vellmar-overlay-02.png",
+    alt: "Großküche im Rathaus Vellmar",
+  },
+  {
+    src: "/references/rathaus-vellmar/overlay/rathaus-vellmar-overlay-03.png",
+    alt: "Arbeitsbereich der Großküche im Rathaus Vellmar",
+  },
+];
+
+const fraunhoferGrosskuecheOverlayImages = [
+  {
+    src: "/references/fraunhofer-institut-kassel-grosskueche/overlay/fraunhofer-institut-kassel-grosskueche-overlay-02.png",
+    alt: "Ausgabebereich der Großküche im Fraunhofer-Institut Kassel",
+  },
+  {
+    src: "/references/fraunhofer-institut-kassel-grosskueche/overlay/fraunhofer-institut-kassel-grosskueche-overlay-03.png",
+    alt: "Flurbereich der Großküche im Fraunhofer-Institut Kassel",
+  },
+  {
+    src: "/references/fraunhofer-institut-kassel-grosskueche/overlay/fraunhofer-institut-kassel-grosskueche-overlay-04.png",
+    alt: "Bodenflächen der Großküche im Fraunhofer-Institut Kassel",
   },
 ];
 
@@ -468,6 +521,10 @@ function getReferenceOverlayImages(
       return [selectedPreviewImage, ...leibnizUniversitaetOverlayImages];
     case "/references/sprudelhof-therme/title-images/fraunhofer-iff-title.png":
       return [selectedPreviewImage, ...fraunhoferOverlayImages];
+    case "/references/rathaus-vellmar/title-images/rathaus-vellmar-title-01.png":
+      return [selectedPreviewImage, ...rathausVellmarOverlayImages];
+    case "/references/fraunhofer-institut-kassel-grosskueche/title-images/fraunhofer-institut-kassel-grosskueche-title-01.png":
+      return [selectedPreviewImage, ...fraunhoferGrosskuecheOverlayImages];
     case "/references/sprudelhof-therme/title-images/sprudelhof-therme-title-03.png":
       return [selectedPreviewImage, ...domHotelOverlayImages];
     case "/references/josef-schwarz-schule/title-images/josef-schwarz-schule-title-01.png":
@@ -535,15 +592,93 @@ function FormattedReferenceText({ text }: { text?: string }) {
   );
 }
 
+const referenceDescriptionEmphasis = [
+  "Sprudelhof Therme Bad Nauheim",
+  "Josef-Schwarz-Schule in Heilbronn",
+  "Fraunhofer-Institut in Kassel",
+  "Althoff Dom Hotel in Köln",
+  "Badeparadies Eiswiese in Göttingen",
+  "Kita Ritterburg in Wolfhagen",
+  "Rheingau-Bad in Geisenheim",
+  "Freibad Duderstadt",
+  "Feuerwehr Duderstadt",
+  "Rathaus Vellmar",
+  "Heart & Brain Center Göttingen",
+  "SCALE an der Leibniz Universität Hannover",
+  "Fischer's Hotel Kassel",
+  "Vevio Hotel Elversberg",
+  "Pionierkaserne Ulm",
+  "Markthaus Telfs",
+  "FH Münster",
+  "Friedensschule Köln",
+  "Stadthalle Göttingen",
+  "BMW Autohaus Göttingen",
+  "Tilution",
+  "Clay Construction",
+  "keramischen Oberflächen der Großküche",
+  "Hygiene, Belastbarkeit und dauerhaft sichere Oberflächen",
+  "Hygiene, Funktionalität und langlebige Qualität",
+  "Fliesen- und Betonwerksteinarbeiten",
+  "Lehm-Klimadecken",
+  "Fliesen- und Plattenarbeiten",
+  "Badezimmer",
+  "Beckenbereiche, Beckenköpfe und Zugänge",
+  "hochwertige Ausführung der Pool- und Spa-Bereiche",
+  "taktile Blindenleitsysteme",
+  "Treppenanlagen und Sanitärbereiche",
+  "hochbelastbaren Rüttelboden",
+  "robuste, präzise ausgeführte Bodenflächen",
+].sort((first, second) => second.length - first.length);
+
+function FormattedReferenceDescription({ text }: { text: string }) {
+  const pattern = new RegExp(
+    `(${referenceDescriptionEmphasis
+      .map((phrase) => phrase.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
+      .join("|")})`,
+    "g"
+  );
+
+  return (
+    <>
+      {text.split(pattern).map((part, index) => {
+        if (!part) return null;
+
+        const isEmphasized = referenceDescriptionEmphasis.includes(part);
+
+        return isEmphasized ? (
+          <strong key={`${part}-${index}`} className="font-bold text-white">
+            {part}
+          </strong>
+        ) : (
+          <span key={`${part}-${index}`}>{part}</span>
+        );
+      })}
+    </>
+  );
+}
+
+function getReferenceForPreview(image: ReferenceImage) {
+  return references.find((entry) =>
+    entry.images.some((referenceImage) => referenceImage.src === image.src)
+  );
+}
+
+function getReferencePathForPreview(image: ReferenceImage) {
+  const reference = getReferenceForPreview(image);
+
+  return reference ? getReferencePath(reference) : null;
+}
+
 export function HomeReferencesSection() {
   const pathname = normalizeSitePathname(usePathname());
-  const isGroupPage = pathname === "/";
-  const isTilutionPage = pathname === "/tilution";
-  const isClayPage = pathname === "/clay-construction";
+  const isGroupPage = pathname === "/" || pathname === "/referenzen";
+  const isTilutionPage = pathname === "/tilution" || pathname.startsWith("/tilution/");
+  const isClayPage =
+    pathname === "/clay-construction" || pathname.startsWith("/clay-construction/");
   const [isOpen, setIsOpen] = useState(false);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [selectedPreviewIndex, setSelectedPreviewIndex] = useState(0);
-  const [showAllGroupReferences, setShowAllGroupReferences] = useState(false);
+  const [showAllReferences, setShowAllReferences] = useState(false);
   const [activeFilter, setActiveFilter] =
     useState<(typeof referenceFilterOptions)[number]>("Alle");
   const referenceFilterRef = useRef<HTMLDivElement | null>(null);
@@ -568,26 +703,58 @@ export function HomeReferencesSection() {
   const visiblePreviewEntries =
     isClayPage
       ? previewEntries.filter((entry) =>
-          entry.image.hoverText?.includes("Clay Construction")
+          getReferenceForPreview(entry.image)?.company === "clay-construction"
         )
       : isGroupPage
         ? groupPreviewEntries
-        : !isTilutionPage || activeFilter === "Alle"
-        ? previewEntries
-        : previewEntries.filter((entry) => entry.image.category === activeFilter);
-  const canToggleGroupReferences =
-    isGroupPage && orderedGroupPreviewEntries.length > 6;
+        : isTilutionPage
+          ? previewEntries.filter((entry) => {
+              const reference = getReferenceForPreview(entry.image);
+              return (
+                reference?.company === "tilution" &&
+                (activeFilter === "Alle" || entry.image.category === activeFilter)
+              );
+            })
+          : previewEntries;
+  const canToggleReferences =
+    (isGroupPage || isTilutionPage || isClayPage) &&
+    visiblePreviewEntries.length > INITIAL_VISIBLE_REFERENCE_COUNT;
+  const displayedPreviewEntries =
+    canToggleReferences && !showAllReferences && !isTilutionPage
+      ? visiblePreviewEntries.slice(0, INITIAL_VISIBLE_REFERENCE_COUNT)
+      : visiblePreviewEntries;
   const overlayImages = getReferenceOverlayImages(selectedPreviewImage);
   const activeImage = overlayImages[activeImageIndex];
+  const selectedReferenceDescription =
+    getReferenceForPreview(selectedPreviewImage)?.description ?? project.description;
+  const referenceOverviewPath = isClayPage
+    ? "/clay-construction/referenzen"
+    : isTilutionPage
+      ? "/tilution/referenzen"
+      : "/referenzen";
+
+  useEffect(() => {
+    setShowAllReferences(false);
+  }, [activeFilter, pathname]);
 
   const openGallery = (index: number) => {
+    const referencePath = getReferencePathForPreview(project.previewImages[index]);
+
     setSelectedPreviewIndex(index);
     setActiveImageIndex(0);
     setIsOpen(true);
+
+    if ((isTilutionPage || isClayPage) && referencePath) {
+      pushUrlWithoutScroll(referencePath);
+    }
   };
 
   const closeGallery = () => {
     setIsOpen(false);
+
+    if (isTilutionPage || isClayPage) {
+      pushUrlWithoutScroll(referenceOverviewPath);
+    }
   };
 
   const showPrevious = () => {
@@ -667,7 +834,17 @@ export function HomeReferencesSection() {
                       referenceFilterButtonRefs.current[index] = element;
                     }}
                     type="button"
-                    onClick={() => setActiveFilter(filter)}
+                    onClick={(event) => {
+                      setActiveFilter(filter);
+                      if (isTilutionPage) {
+                        pushUrlWithoutScroll(
+                          filter === "Alle"
+                            ? "/tilution/referenzen"
+                            : tilutionReferenceCategoryPaths[filter] ?? "/tilution/referenzen",
+                          event.currentTarget
+                        );
+                      }
+                    }}
                     className={[
                       "flex min-h-10 shrink-0 items-center justify-center rounded-full border px-4 py-2 text-center text-sm font-semibold transition-all duration-300 sm:min-h-0 sm:w-auto",
                       isActive
@@ -693,12 +870,12 @@ export function HomeReferencesSection() {
           }}
           className="reference-preview-scroll mt-12 flex gap-5 overflow-x-scroll pb-4 scroll-smooth sm:grid sm:gap-6 sm:overflow-visible sm:pb-0 sm:grid-cols-2 xl:grid-cols-3"
         >
-          {visiblePreviewEntries.map(({ image, index }, visibleIndex) => (
+          {displayedPreviewEntries.map(({ image, index }, displayedIndex) => (
             <button
               key={image.src}
               type="button"
               onClick={() => openGallery(index)}
-              className={`reference-card liquid-card group block w-[82vw] shrink-0 text-left sm:w-full${image.src === "/references/sprudelhof-therme/title-images/sprudelhof-therme-title-01.svg" ? " reference-card--mobile-first" : ""}${isGroupPage && !showAllGroupReferences && visibleIndex >= 6 ? " sm:hidden" : ""}`}
+              className={`reference-card liquid-card group block w-[82vw] shrink-0 text-left sm:w-full${image.src === "/references/sprudelhof-therme/title-images/sprudelhof-therme-title-01.svg" ? " reference-card--mobile-first" : ""}${isTilutionPage && !showAllReferences && displayedIndex >= INITIAL_VISIBLE_REFERENCE_COUNT ? " sm:hidden" : ""}`}
               aria-label={`Projektgalerie öffnen: ${project.title}`}
             >
               <div className="relative aspect-[4/3] w-full overflow-hidden lg:aspect-[16/11]">
@@ -740,14 +917,14 @@ export function HomeReferencesSection() {
           </div>
         ) : null}
 
-        {canToggleGroupReferences ? (
-          <div className="mt-10 hidden justify-center sm:flex">
+        {canToggleReferences ? (
+          <div className={`mt-10 justify-center ${isTilutionPage ? "hidden sm:flex" : "flex"}`}>
             <button
               type="button"
-              onClick={() => setShowAllGroupReferences((current) => !current)}
-              className="liquid-card group inline-flex items-center gap-3 rounded-full px-6 py-3 text-sm font-semibold text-white transition-transform duration-300 hover:-translate-y-1 sm:px-7 sm:py-4 sm:text-base"
+              onClick={() => setShowAllReferences((current) => !current)}
+              className="show-more-primary-button liquid-card group inline-flex items-center gap-3 rounded-full px-6 py-3 text-sm font-semibold text-white transition-transform duration-300 hover:-translate-y-1 sm:px-7 sm:py-4 sm:text-base"
             >
-              {showAllGroupReferences ? "Weniger anzeigen" : "Mehr anzeigen"}
+              {showAllReferences ? "Weniger anzeigen" : "Mehr anzeigen"}
             </button>
           </div>
         ) : null}
@@ -784,7 +961,10 @@ export function HomeReferencesSection() {
               onActiveIndexChange={setActiveImageIndex}
               intro={
                 selectedPreviewImage.hoverText
-                  ? { title: selectedPreviewImage.hoverText }
+                  ? {
+                      title: selectedPreviewImage.hoverText,
+                      description: selectedReferenceDescription,
+                    }
                   : undefined
               }
             />
@@ -813,11 +993,13 @@ export function HomeReferencesSection() {
                 </div>
 
                 <div className="liquid-card-dark hidden rounded-[1.25rem] px-5 py-4 sm:block">
-                  <p className="text-sm font-semibold tracking-[0.18em] text-forest-100/65">
+                  <p className="text-sm font-bold tracking-[0.18em] text-white">
                     Beschreibung
                   </p>
-                  <p className="mt-2 text-base leading-7 text-forest-100/82">
-                    {project.description}
+                  <p className="mt-2 text-base font-normal leading-7 text-white">
+                    <FormattedReferenceDescription
+                      text={selectedReferenceDescription}
+                    />
                   </p>
                 </div>
               </div>

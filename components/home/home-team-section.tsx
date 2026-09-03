@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 import { SectionShell } from "@/components/section-shell";
-import { withBasePath } from "@/lib/site-path";
+import { getOptimizedSiteImageSrc } from "@/lib/site-image";
 
 const initialVisibleMobileTeamMemberCount = 2;
 const initialVisibleDesktopTeamMemberCount = 4;
@@ -350,14 +350,14 @@ export function HomeTeamSection({ variant = "company" }: { variant?: "company" |
                       setSelectedMember(member);
                     }
                   }}
-                  className={`liquid-card team-member-card group h-full flex-col overflow-hidden p-0 text-left ${
-                    showAllMembers
-                      ? "flex"
-                      : memberIndex >= initialVisibleDesktopTeamMemberCount
-                        ? "hidden"
-                        : memberIndex >= initialVisibleMobileTeamMemberCount
-                          ? "hidden sm:flex"
-                          : "flex"
+                  className={`liquid-card team-member-card group flex h-full flex-col overflow-hidden p-0 text-left ${
+                    !showAllMembers && memberIndex >= initialVisibleMobileTeamMemberCount
+                      ? "team-member-card--mobile-collapsed"
+                      : ""
+                  } ${
+                    !showAllMembers && memberIndex >= initialVisibleDesktopTeamMemberCount
+                      ? "team-member-card--desktop-collapsed"
+                      : ""
                   }`}
                   aria-label={
                     member.imageSrc
@@ -368,7 +368,7 @@ export function HomeTeamSection({ variant = "company" }: { variant?: "company" |
                   <div className="team-member-photo">
                     {member.imageSrc ? (
                       <Image
-                        src={withBasePath(member.imageSrc)}
+                        src={getOptimizedSiteImageSrc(member.imageSrc)}
                         alt={`${member.name}, ${member.role}`}
                         fill
                         className="object-cover object-center transition-transform duration-500 group-hover:scale-[1.03]"
@@ -420,7 +420,7 @@ export function HomeTeamSection({ variant = "company" }: { variant?: "company" |
             }`}>
               <button
                 type="button"
-                className="liquid-card group inline-flex items-center gap-3 rounded-full px-6 py-3 text-sm font-semibold text-white transition-transform duration-300 hover:-translate-y-1 sm:px-7 sm:py-4 sm:text-base"
+                className="show-more-primary-button liquid-card group inline-flex items-center gap-3 rounded-full px-6 py-3 text-sm font-semibold text-white transition-transform duration-300 hover:-translate-y-1 sm:px-7 sm:py-4 sm:text-base"
                 aria-expanded={showAllMembers}
                 onClick={() => setShowAllMembers((current) => !current)}
               >
@@ -455,7 +455,7 @@ export function HomeTeamSection({ variant = "company" }: { variant?: "company" |
             <div className="overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/5 shadow-2xl">
               <div className="team-overlay-image relative h-[min(78vh,46rem)] w-full">
                 <Image
-                  src={selectedMember.imageSrc ? withBasePath(selectedMember.imageSrc) : ""}
+                  src={selectedMember.imageSrc ? getOptimizedSiteImageSrc(selectedMember.imageSrc) : ""}
                   alt={`${selectedMember.name}, ${selectedMember.role}`}
                   fill
                   className="object-contain"

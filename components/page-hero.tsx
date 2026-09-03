@@ -13,7 +13,7 @@ export function PageHero({ eyebrow, title, description }: PageHeroProps) {
         <p className="text-xs uppercase tracking-[0.28em] text-forest-100/75">
           {eyebrow}
         </p>
-        <h1 className="mt-4 max-w-4xl text-4xl font-semibold tracking-tight text-white sm:text-5xl">
+        <h1 className="page-hero-title mt-4 max-w-4xl text-balance text-4xl font-semibold tracking-tight text-white sm:text-5xl">
           {title}
         </h1>
         <p className="mt-6 max-w-3xl text-lg leading-8 text-forest-100/80">

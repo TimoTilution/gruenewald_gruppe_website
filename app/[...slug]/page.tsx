@@ -5,7 +5,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowRight } from "lucide-react";
 import { ClayServicesSection } from "@/components/clay/clay-services-section";
-import { CompanyMap } from "@/components/company-map";
 import { GruenewaldContactSection } from "@/components/gruenewald/gruenewald-contact-section";
 import { GruenewaldReferencesSection } from "@/components/gruenewald/gruenewald-references-section";
 import { HomeAboutSection } from "@/components/home/home-about-section";
@@ -19,16 +18,18 @@ import { HrwContactSection, HrwServicesSection, HrwWhySection } from "@/componen
 import { PageHero } from "@/components/page-hero";
 import { SectionShell } from "@/components/section-shell";
 import { TilutionServicesSection } from "@/components/tilution/tilution-services-section";
-import { withBasePath } from "@/lib/site-path";
+import { getOptimizedReferenceSrc } from "@/lib/reference-image";
+import { getOptimizedSiteImageSrc } from "@/lib/site-image";
 import {
-  type CompanySlug,
   companies,
   companySectionPages,
   getAllSeoPaths,
+  getCompanySlugFromPathSegment,
   getReferencePath,
   getTeamMemberPath,
   groupPages,
   references,
+  serviceDetails,
   services,
   siteBaseUrl,
   teamMembers,
@@ -48,10 +49,6 @@ type RouteContent = {
 
 function normalizePath(slug: string[]) {
   return `/${slug.join("/")}`;
-}
-
-function isCompanySlug(value: string): value is CompanySlug {
-  return value in companies;
 }
 
 function DetailGrid({
@@ -87,7 +84,7 @@ function LinkCard({
       {image ? (
         <div className="relative aspect-[16/10] w-full overflow-hidden">
           <Image
-            src={withBasePath(image.src)}
+            src={getOptimizedReferenceSrc(image.src)}
             alt={image.alt}
             fill
             unoptimized={image.isSvg}
@@ -135,7 +132,7 @@ function ProjectPage({
                 ].join(" ")}
               >
                 <Image
-                  src={withBasePath(image.src)}
+                  src={getOptimizedReferenceSrc(image.src)}
                   alt={image.alt}
                   fill
                   priority={index === 0}
@@ -166,21 +163,44 @@ function getGroupRoute(path: string): RouteContent | null {
         {path === "/leistungen" ? <HomeServicesSection /> : null}
         {path === "/referenzen" ? <HomeReferencesSection /> : null}
         {path === "/innovationen" ? <HomeInnovationsSection /> : null}
+        {path === "/team" ? <HomeTeamSection variant="group" /> : null}
         {path === "/karriere" ? <HomeCareerSection /> : null}
         {path === "/kontakt" ? <HomeContactSection /> : null}
         {path === "/karte" ? (
           <>
             <PageHero eyebrow={page.eyebrow} title={page.title} description={page.description} />
             <SectionShell>
-              <CompanyMap
-                center={[51.1642, 10.4541]}
-                markerPosition={[51.4591, 9.7272]}
-                zoom={6}
-                mobileZoom={5}
-                titleLines={["Gruenewald Gruppe -", "Die Mitte Deutschlands"]}
-                addressLines={["Quantzstrasse 67,", "37127 Scheden", "05546 - 608"]}
-                note="Zentrale der Gruenewald Gruppe in Scheden - Deutschlandweit fuer Sie taetig"
-              />
+              <section className="liquid-card overflow-hidden rounded-[1.9rem]">
+                <div className="grid gap-6 p-4 sm:p-5 lg:grid-cols-[minmax(0,1fr)_18rem] lg:items-stretch">
+                  <div className="relative min-h-[22rem] overflow-hidden rounded-[1.55rem] sm:min-h-[28rem] lg:min-h-[34rem]">
+                    <Image
+                      src={getOptimizedSiteImageSrc("/deutschland-karte.png")}
+                      alt="Deutschlandkarte mit dem Standort der Gruenewald Gruppe in Scheden"
+                      fill
+                      className="object-cover object-center"
+                      sizes="(min-width: 1024px) 70vw, 100vw"
+                      priority
+                    />
+                  </div>
+                  <aside className="liquid-card-dark flex flex-col justify-center rounded-[1.35rem] p-5 text-white sm:p-6">
+                    <p className="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-forest-100/72">
+                      Standort
+                    </p>
+                    <h2 className="mt-3 text-xl font-semibold leading-tight sm:text-2xl">
+                      Gruenewald Gruppe -
+                      <span className="block">Die Mitte Deutschlands</span>
+                    </h2>
+                    <div className="mt-6 text-sm font-semibold leading-6 text-forest-100 sm:text-base">
+                      <p>Quantzstrasse 67,</p>
+                      <p>37127 Scheden</p>
+                      <p>05546 - 608</p>
+                    </div>
+                    <p className="mt-6 text-sm leading-6 text-forest-100/78 sm:text-base">
+                      Zentrale der Gruenewald Gruppe in Scheden - Deutschlandweit fuer Sie taetig
+                    </p>
+                  </aside>
+                </div>
+              </section>
             </SectionShell>
           </>
         ) : null}
@@ -190,13 +210,14 @@ function getGroupRoute(path: string): RouteContent | null {
 }
 
 function getCompanySectionRoute(path: string, slug: string[]): RouteContent | null {
-  const [company, section] = slug;
+  const [companySegment, section] = slug;
+  const company = getCompanySlugFromPathSegment(companySegment);
   const entry = companySectionPages.find(
     ([entryCompany, entrySection]) =>
       entryCompany === company && entrySection === section
   );
 
-  if (!entry || !isCompanySlug(company)) return null;
+  if (!entry || !company) return null;
 
   const companyInfo = companies[company];
   const [, , eyebrow, title] = entry;
@@ -208,7 +229,14 @@ function getCompanySectionRoute(path: string, slug: string[]): RouteContent | nu
     eyebrow,
     description,
     render: () => {
-      if (company === "tilution" && section === "leistungen") return <TilutionServicesSection />;
+      if (company === "tilution" && section === "leistungen") {
+        return (
+          <>
+            <TilutionServicesSection />
+            <HomeContactSection />
+          </>
+        );
+      }
       if (company === "tilution" && section === "einblicke") return <HomeAboutSection />;
       if (company === "tilution" && section === "referenzen") return <HomeReferencesSection />;
       if (company === "tilution" && section === "innovationen") return <HomeInnovationsSection />;
@@ -216,13 +244,27 @@ function getCompanySectionRoute(path: string, slug: string[]): RouteContent | nu
       if (company === "tilution" && section === "karriere") return <HomeCareerSection />;
       if (company === "tilution" && section === "kontakt") return <HomeContactSection />;
 
-      if (company === "gruenewald" && section === "leistungen") return <TilutionServicesSection variant="gruenewald" />;
+      if (company === "gruenewald" && section === "leistungen") {
+        return (
+          <>
+            <TilutionServicesSection variant="gruenewald" />
+            <GruenewaldContactSection />
+          </>
+        );
+      }
       if (company === "gruenewald" && section === "einblicke") return <HomeAboutSection />;
       if (company === "gruenewald" && section === "referenzen") return <GruenewaldReferencesSection />;
       if (company === "gruenewald" && section === "karriere") return <HomeCareerSection />;
       if (company === "gruenewald" && section === "kontakt") return <GruenewaldContactSection />;
 
-      if (company === "clay-construction" && section === "leistungen") return <ClayServicesSection />;
+      if (company === "clay-construction" && section === "leistungen") {
+        return (
+          <>
+            <ClayServicesSection />
+            <HomeContactSection />
+          </>
+        );
+      }
       if (company === "clay-construction" && section === "system-ausfuehrung") return <HomeAboutSection />;
       if (company === "clay-construction" && section === "referenzen") return <HomeReferencesSection />;
       if (company === "clay-construction" && section === "team") return <HomeTeamSection />;
@@ -244,8 +286,9 @@ function getCompanySectionRoute(path: string, slug: string[]): RouteContent | nu
 }
 
 function getReferenceRoute(path: string, slug: string[]): RouteContent | null {
-  const [company, section, categoryOrProject, projectSlug] = slug;
-  if (!isCompanySlug(company) || section !== "referenzen") return null;
+  const [companySegment, section, categoryOrProject, projectSlug] = slug;
+  const company = getCompanySlugFromPathSegment(companySegment);
+  if (!company || section !== "referenzen") return null;
 
   if (company === "clay-construction" && categoryOrProject) {
     const project = references.find(
@@ -326,8 +369,9 @@ function getReferenceRoute(path: string, slug: string[]): RouteContent | null {
 }
 
 function getTeamRoute(path: string, slug: string[]): RouteContent | null {
-  const [company, section, departmentSlug, personSlug] = slug;
-  if (!isCompanySlug(company) || section !== "team" || !departmentSlug) return null;
+  const [companySegment, section, departmentSlug, personSlug] = slug;
+  const company = getCompanySlugFromPathSegment(companySegment);
+  if (!company || section !== "team" || !departmentSlug) return null;
 
   const departmentMembers = teamMembers.filter(
     (member) => member.company === company && member.departmentSlug === departmentSlug
@@ -388,13 +432,38 @@ function getTeamRoute(path: string, slug: string[]): RouteContent | null {
 }
 
 function getServiceRoute(path: string, slug: string[]): RouteContent | null {
-  const [company, section, serviceSlug] = slug;
+  const [companySegment, section, serviceSlug, serviceDetailSlug] = slug;
+  const company = getCompanySlugFromPathSegment(companySegment);
   if (company !== "gruenewald" || section !== "leistungen" || !serviceSlug) return null;
 
   const service = services.find(
     (entry) => entry.company === "gruenewald" && entry.slug === serviceSlug
   );
   if (!service) return null;
+
+  if (serviceDetailSlug) {
+    const serviceDetail = serviceDetails.find(
+      (entry) =>
+        entry.company === "gruenewald" &&
+        entry.parentSlug === service.slug &&
+        entry.slug === serviceDetailSlug
+    );
+    if (!serviceDetail) return null;
+
+    return {
+      path,
+      title: serviceDetail.title,
+      eyebrow: service.title,
+      description: serviceDetail.description,
+      render: () => (
+        <PageHero
+          eyebrow={service.title}
+          title={serviceDetail.title}
+          description={serviceDetail.description}
+        />
+      ),
+    };
+  }
 
   return {
     path,

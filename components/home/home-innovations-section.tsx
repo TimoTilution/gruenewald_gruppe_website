@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, X } from "lucide-react";
 import { SectionShell } from "@/components/section-shell";
-import { withBasePath } from "@/lib/site-path";
+import { getOptimizedSiteImageSrc } from "@/lib/site-image";
 
 export function HomeInnovationsSection() {
   const [isImageOpen, setIsImageOpen] = useState(false);
@@ -69,7 +69,7 @@ export function HomeInnovationsSection() {
             </div>
             <button
               type="button"
-              className="mt-5 inline-flex rounded-full border border-white/22 bg-white/[0.08] px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-white/[0.14] sm:hidden"
+              className="innovation-primary-button mt-5 inline-flex rounded-full border border-white/22 bg-white/[0.08] px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-white/[0.14] sm:hidden"
               aria-expanded={isTextExpanded}
               onClick={() => setIsTextExpanded((current) => !current)}
             >
@@ -93,7 +93,7 @@ export function HomeInnovationsSection() {
             aria-label="Vermessungsroboter in der Großansicht öffnen"
           >
             <Image
-              src={withBasePath("/images/innovationen/raumcheck-vermessungsroboter-card.png")}
+              src={getOptimizedSiteImageSrc("/images/innovationen/raumcheck-vermessungsroboter-card.png")}
               alt="Vermessungsroboter von Raumcheck auf einer Baustelle"
               width={1030}
               height={1288}
@@ -139,7 +139,7 @@ export function HomeInnovationsSection() {
                 <div className="liquid-card overflow-hidden p-3 sm:p-5">
                   <div className="relative flex min-h-[70vh] items-center justify-center rounded-[1.5rem] bg-white/92 p-4 sm:min-h-[78vh] sm:p-6">
                     <Image
-                      src={withBasePath("/images/innovationen/raumcheck-vermessungsroboter-card.png")}
+                      src={getOptimizedSiteImageSrc("/images/innovationen/raumcheck-vermessungsroboter-card.png")}
                       alt="Vermessungsroboter von Raumcheck auf einer Baustelle"
                       width={1030}
                       height={1288}

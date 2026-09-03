@@ -7,6 +7,8 @@ import { createPortal } from "react-dom";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { SectionShell } from "@/components/section-shell";
 import { MobileSnapGallery } from "@/components/mobile-snap-gallery";
+import { getReferencePath, references } from "@/data/site-architecture";
+import { pushUrlWithoutScroll } from "@/lib/preserve-scroll-url";
 
 type GruenewaldReferenceCategory =
   | "Außengestaltung"
@@ -31,6 +33,24 @@ const referenceFilters: Array<"Alle" | GruenewaldReferenceCategory> = [
   "Badsanierung",
   "Haus- & Wohnsanierung",
 ];
+
+const INITIAL_VISIBLE_REFERENCE_COUNT = 6;
+
+const gruenewaldReferenceCategoryPaths: Partial<
+  Record<GruenewaldReferenceCategory, string>
+> = {
+  Außengestaltung: "/gruenewaldgmbh/referenzen/aussengestaltung",
+  Badsanierung: "/gruenewaldgmbh/referenzen/badsanierung",
+  "Haus- & Wohnsanierung": "/gruenewaldgmbh/referenzen/haus-wohnsanierung",
+};
+
+function getReferencePathForProject(project: GruenewaldReference) {
+  const reference = references.find((entry) =>
+    entry.images.some((referenceImage) => referenceImage.src === project.cover.src)
+  );
+
+  return reference ? getReferencePath(reference) : null;
+}
 
 // Neue GmbH-Referenzen werden hier mit Cover und Galeriebildern ergänzt.
 const gruenewaldReferences: GruenewaldReference[] = [
@@ -622,6 +642,7 @@ export function GruenewaldReferencesSection() {
   const [selectedProject, setSelectedProject] =
     useState<GruenewaldReference | null>(null);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [showAllReferences, setShowAllReferences] = useState(false);
   const referencePreviewRef = useRef<HTMLDivElement | null>(null);
   const [referenceScrollProgress, setReferenceScrollProgress] = useState(0);
 
@@ -631,6 +652,12 @@ export function GruenewaldReferencesSection() {
       : gruenewaldReferences.filter(
           (reference) => reference.category === activeFilter
         );
+  const canToggleReferences =
+    visibleProjects.length > INITIAL_VISIBLE_REFERENCE_COUNT;
+  const displayedProjects =
+    canToggleReferences && !showAllReferences
+      ? visibleProjects.slice(0, INITIAL_VISIBLE_REFERENCE_COUNT)
+      : visibleProjects;
   const galleryImages = selectedProject
     ? [
         selectedProject.cover,
@@ -644,6 +671,7 @@ export function GruenewaldReferencesSection() {
   const closeGallery = () => {
     setSelectedProject(null);
     setActiveImageIndex(0);
+    pushUrlWithoutScroll("/gruenewaldgmbh/referenzen");
   };
 
   const showPreviousImage = () => {
@@ -681,6 +709,10 @@ export function GruenewaldReferencesSection() {
     };
   }, [selectedProject, galleryImages.length]);
 
+  useEffect(() => {
+    setShowAllReferences(false);
+  }, [activeFilter]);
+
   return (
     <SectionShell id="referenzen">
       <section className="section-card px-6 py-10 sm:px-9 lg:p-12">
@@ -705,7 +737,16 @@ export function GruenewaldReferencesSection() {
                 <button
                   key={filter}
                   type="button"
-                  onClick={() => setActiveFilter(filter)}
+                  onClick={(event) => {
+                    setActiveFilter(filter);
+                    pushUrlWithoutScroll(
+                      filter === "Alle"
+                        ? "/gruenewaldgmbh/referenzen"
+                        : gruenewaldReferenceCategoryPaths[filter] ??
+                            "/gruenewaldgmbh/referenzen",
+                      event.currentTarget
+                    );
+                  }}
                   className={[
                     "flex min-h-10 shrink-0 items-center justify-center rounded-full border px-4 py-2 text-center text-sm font-semibold transition-all duration-300 sm:min-h-0 sm:w-auto",
                     isActive
@@ -733,13 +774,17 @@ export function GruenewaldReferencesSection() {
             }}
             className="reference-preview-scroll mt-10 flex gap-5 overflow-x-scroll pb-4 scroll-smooth sm:grid sm:grid-cols-2 sm:gap-6 sm:overflow-visible sm:pb-0 xl:grid-cols-3"
           >
-            {visibleProjects.map((reference) => (
+            {displayedProjects.map((reference) => (
               <button
                 key={reference.cover.src}
                 type="button"
                 onClick={() => {
+                  const referencePath = getReferencePathForProject(reference);
                   setSelectedProject(reference);
                   setActiveImageIndex(0);
+                  if (referencePath) {
+                    pushUrlWithoutScroll(referencePath);
+                  }
                 }}
                 className="reference-card liquid-card group block w-[82vw] shrink-0 overflow-hidden text-left sm:w-full"
                 aria-label={`Projektgalerie öffnen: ${reference.title}`}
@@ -782,6 +827,18 @@ export function GruenewaldReferencesSection() {
                 transform: `translateX(${referenceScrollProgress * 300}%)`,
               }}
             />
+          </div>
+        ) : null}
+
+        {canToggleReferences ? (
+          <div className="mt-10 flex justify-center">
+            <button
+              type="button"
+              onClick={() => setShowAllReferences((current) => !current)}
+              className="show-more-primary-button liquid-card group inline-flex items-center gap-3 rounded-full px-6 py-3 text-sm font-semibold text-white transition-transform duration-300 hover:-translate-y-1 sm:px-7 sm:py-4 sm:text-base"
+            >
+              {showAllReferences ? "Weniger anzeigen" : "Mehr anzeigen"}
+            </button>
           </div>
         ) : null}
       </section>

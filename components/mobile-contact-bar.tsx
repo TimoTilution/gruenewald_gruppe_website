@@ -8,9 +8,16 @@ import { normalizeSitePathname } from "@/lib/site-path";
 
 const companyRoutes = new Set([
   "/tilution",
-  "/gruenewald",
+  "/gruenewaldgmbh",
   "/clay-construction",
 ]);
+
+function getContactPath(pathname: string) {
+  if (pathname.startsWith("/tilution")) return "/tilution/kontakt";
+  if (pathname.startsWith("/gruenewaldgmbh")) return "/gruenewaldgmbh/kontakt";
+  if (pathname.startsWith("/clay-construction")) return "/clay-construction/kontakt";
+  return "/kontakt";
+}
 
 export function MobileContactBar() {
   const pathname = normalizeSitePathname(usePathname());
@@ -32,7 +39,7 @@ export function MobileContactBar() {
 
   return (
     <Link
-      href="#kontakt"
+      href={getContactPath(pathname)}
       className={`mobile-contact-bar${isNearContact ? " mobile-contact-bar--hidden" : ""}`}
       aria-label="Zum Kontaktbereich"
     >

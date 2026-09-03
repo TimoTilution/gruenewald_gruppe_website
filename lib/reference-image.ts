@@ -6,6 +6,9 @@ export function getOptimizedReferenceSrc(src: string) {
   if (src === optimizedSprudelhofCover) {
     return withBasePath("/references-optimized/sprudelhof-therme/title-images/sprudelhof-therme-title-01.svg.webp");
   }
+  if (src.startsWith("/images/") && /\.(?:jpe?g|png)$/i.test(src)) {
+    return withBasePath(`${src.replace("/images/", "/images-optimized/")}.webp`);
+  }
   if (!src.startsWith("/references/") || !/\.(?:jpe?g|png)$/i.test(src)) return withBasePath(src);
   return withBasePath(`${src.replace("/references/", "/references-optimized/")}.webp`);
 }

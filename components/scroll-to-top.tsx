@@ -3,6 +3,10 @@
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 
+type WindowWithScrollPreservation = Window & {
+  __preserveScrollOnNextPathChange?: boolean;
+};
+
 export function ScrollToTop() {
   const pathname = usePathname();
 
@@ -19,7 +23,8 @@ export function ScrollToTop() {
   }, []);
 
   useEffect(() => {
-    if (window.location.hash) {
+    if ((window as WindowWithScrollPreservation).__preserveScrollOnNextPathChange) {
+      (window as WindowWithScrollPreservation).__preserveScrollOnNextPathChange = false;
       return;
     }
 

@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { SectionShell } from "@/components/section-shell";
+import { getOptimizedLogoSrc } from "@/lib/logo-image";
 import { withBasePath } from "@/lib/site-path";
 
 type CompanyCard = {
@@ -33,7 +34,7 @@ const companies: CompanyCard[] = [
     cardTone: "",
   },
   {
-    href: "/gruenewald",
+    href: "/gruenewaldgmbh",
     name: "Privatkunden & Wohnen",
     accentColor: "#3cabe2",
     text: "Hochwertige Fliesenarbeiten für Bad, Wohnen und Innenräume.",
@@ -152,7 +153,7 @@ export function HomeServicesSection() {
 
                 <div className={`${company.logoFrameClassName} shrink-0 ${isSupporting ? "-mt-1 -mb-2" : ""}`}>
                   <Image
-                    src={withBasePath(company.logoSrc)}
+                    src={getOptimizedLogoSrc(company.logoSrc)}
                     alt={`${company.name} Logo`}
                     width={company.logoWidth}
                     height={56}

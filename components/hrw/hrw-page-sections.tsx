@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Bath, Check, CookingPot, FileCheck2, Grid2X2, Mail, Medal, Phone, UsersRound, Waves } from "lucide-react";
 import { SectionShell } from "@/components/section-shell";
+import { getOptimizedSiteImageSrc } from "@/lib/site-image";
 import { withBasePath } from "@/lib/site-path";
 
 const services = [
@@ -20,7 +21,7 @@ export function HrwHeroSection() {
   return (
     <SectionShell id="hero">
       <section className="relative isolate min-h-[34rem] w-[calc(100vw-2.5rem)] max-w-full overflow-hidden rounded-[2.75rem] border border-white/10 px-6 py-12 text-white shadow-premium sm:w-full sm:px-9 lg:min-h-[39rem] lg:px-14 lg:py-20">
-        <Image src={withBasePath("/images/hrw/hrw-hero.png")} alt="Handwerker bohrt in eine massive Wand" fill priority sizes="(min-width: 1320px) 1240px, calc(100vw - 40px)" className="-z-20 object-cover object-center" />
+        <Image src={getOptimizedSiteImageSrc("/images/hrw/hrw-hero.png")} alt="Handwerker bohrt in eine massive Wand" fill priority sizes="(min-width: 1320px) 1240px, calc(100vw - 40px)" className="-z-20 object-cover object-center" />
         <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(25,25,25,0.84)_0%,rgba(25,25,25,0.6)_52%,rgba(25,25,25,0.2)_100%)]" />
         <div className="relative z-10 max-w-4xl">
           <p className="section-eyebrow">HRW GmbH</p>
@@ -66,7 +67,7 @@ export function HrwWhySection() {
       <figure className="relative mt-10 overflow-hidden rounded-[1.9rem] border border-[#f68712]/20 bg-[#272425] shadow-[0_24px_60px_rgba(79,76,77,0.16)]">
         <div className="relative aspect-[4/3] w-full sm:aspect-[16/9]">
           <Image
-            src={withBasePath("/images/hrw/hrw-mitarbeiter.png")}
+            src={getOptimizedSiteImageSrc("/images/hrw/hrw-mitarbeiter.png")}
             alt="Das HRW-Team auf einer Baustelle"
             fill
             sizes="(min-width: 1320px) 1144px, calc(100vw - 88px)"
@@ -99,7 +100,7 @@ export function HrwContactSection() {
     <SectionShell id="kontakt"><section className="section-card px-6 py-10 sm:px-9 lg:p-12">
       <p className="section-eyebrow">Kontakt</p><h2 className="section-heading">Direkt und unkompliziert erreichbar.</h2>
       <div className="mt-10 grid items-center gap-8 md:grid-cols-[minmax(0,22rem)_1fr]">
-        <div className="relative aspect-[4/5] overflow-hidden rounded-[1.75rem] bg-[#fff4e8]"><Image src={withBasePath("/images/hrw/norbert-bartholomaeus.png")} alt="Norbert Bartholomäus" fill sizes="(min-width: 768px) 352px, calc(100vw - 88px)" className="object-cover" /></div>
+        <div className="relative aspect-[4/5] overflow-hidden rounded-[1.75rem] bg-[#fff4e8]"><Image src={getOptimizedSiteImageSrc("/images/hrw/norbert-bartholomaeus.png")} alt="Norbert Bartholomäus" fill sizes="(min-width: 768px) 352px, calc(100vw - 88px)" className="object-cover" /></div>
         <div className="min-w-0"><p className="text-3xl font-semibold text-[#272425]">Norbert Bartholomäus</p><p className="mt-2 text-base font-semibold text-[#f68712]">Ansprechpartner der HRW GmbH</p><p className="mt-6 max-w-xl leading-7 text-[#6e696b]">Kontaktieren Sie uns gern, wenn Sie in unsere Registerkartei aufgenommen werden möchten oder ein Projekt besprechen wollen.</p>
           <div className="mt-7 grid max-w-[34rem] gap-4">
             <a href="tel:+4915172226537" className="liquid-card group flex h-24 min-w-0 items-center gap-4 px-5 py-4 text-white transition-transform duration-300 hover:-translate-y-1">

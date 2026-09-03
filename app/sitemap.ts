@@ -20,7 +20,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
-      url: `${siteBaseUrl}/gruenewald`,
+      url: `${siteBaseUrl}/gruenewaldgmbh`,
       lastModified,
       changeFrequency: "weekly",
       priority: 0.9,
@@ -42,6 +42,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified,
       changeFrequency: "weekly",
       priority: 0.8,
+    },
+    {
+      url: `${siteBaseUrl}/datenschutz`,
+      lastModified,
+      changeFrequency: "yearly",
+      priority: 0.4,
+    },
+    {
+      url: `${siteBaseUrl}/impressum`,
+      lastModified,
+      changeFrequency: "yearly",
+      priority: 0.4,
     },
     ...getAllSeoPaths().map((path) => ({
       url: `${siteBaseUrl}${path}`,

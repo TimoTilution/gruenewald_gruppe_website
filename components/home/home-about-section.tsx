@@ -4,12 +4,13 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { ArrowRight, HardHat, SwatchBook, Wrench, X } from "lucide-react";
+import { ArrowRight, HardHat, Play, SwatchBook, Wrench, X } from "lucide-react";
 import {
   CompanyMilestoneInline,
   CompanyMilestoneRail,
 } from "@/components/home/company-milestone-rail";
 import { SectionShell } from "@/components/section-shell";
+import { getOptimizedSiteImageSrc } from "@/lib/site-image";
 import { normalizeSitePathname, withBasePath } from "@/lib/site-path";
 
 const groupUsps = [
@@ -87,15 +88,20 @@ export function HomeAboutSection() {
   const pathname = normalizeSitePathname(usePathname());
   const [isMapOpen, setIsMapOpen] = useState(false);
   const [isClayImageOpen, setIsClayImageOpen] = useState(false);
+  const [isTilutionVideoActive, setIsTilutionVideoActive] = useState(false);
+  const [isGruenewaldVideoActive, setIsGruenewaldVideoActive] = useState(false);
   const [activeUspIndex, setActiveUspIndex] = useState<number | null>(null);
   const [showFloatingMilestones, setShowFloatingMilestones] = useState(
     getInitialFloatingMilestoneMode
   );
   const uspTrackRef = useRef<HTMLDivElement>(null);
   const shouldSyncUspScrollRef = useRef(false);
-  const isTilutionPage = pathname === "/tilution";
-  const isGruenewaldPage = pathname === "/gruenewald";
-  const isClayPage = pathname === "/clay-construction";
+  const isTilutionPage = pathname === "/tilution" || pathname.startsWith("/tilution/");
+  const isGruenewaldPage =
+    pathname === "/gruenewaldgmbh" || pathname.startsWith("/gruenewaldgmbh/");
+  const isClayPage =
+    pathname === "/clay-construction" || pathname.startsWith("/clay-construction/");
+  const isCompanyPage = isTilutionPage || isGruenewaldPage || isClayPage;
 
   useEffect(() => {
     const mediaQuery = window.matchMedia(floatingMilestonesQuery);
@@ -222,17 +228,37 @@ export function HomeAboutSection() {
     return (
       <SectionShell id="gruppe" innerClassName="relative overflow-visible">
         <section className="company-video-container overflow-hidden p-0">
-          <video
-            className="block aspect-video w-full object-cover"
-            src={withBasePath("/videos/tilution-bad-nauheim.mp4")}
-            autoPlay
-            muted
-            loop
-            playsInline
-            controls
-            preload="metadata"
-            aria-label="Tilution Bad Nauheim Projektvideo"
-          />
+          {isTilutionVideoActive ? (
+            <video
+              className="block aspect-video w-full object-cover"
+              src={withBasePath("/videos/tilution-bad-nauheim.mp4")}
+              autoPlay
+              muted
+              loop
+              playsInline
+              controls
+              preload="auto"
+              aria-label="Tilution Bad Nauheim Projektvideo"
+            />
+          ) : (
+            <button
+              type="button"
+              className="company-video-poster group"
+              aria-label="Video Einblick in die Sprudelhof Therme Bad Nauheim abspielen"
+              onClick={() => setIsTilutionVideoActive(true)}
+            >
+              <Image
+                src={withBasePath("/images/tilution/sprudelhof-therme-video-poster.webp")}
+                alt="Einblick in die Sprudelhof Therme Bad Nauheim"
+                fill
+                sizes="(min-width: 1320px) 1240px, calc(100vw - 40px)"
+                className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.015]"
+              />
+              <span className="company-video-poster__play" aria-hidden="true">
+                <Play className="h-7 w-7 fill-white text-white sm:h-9 sm:w-9" />
+              </span>
+            </button>
+          )}
         </section>
       </SectionShell>
     );
@@ -242,17 +268,37 @@ export function HomeAboutSection() {
     return (
       <SectionShell id="gruppe" innerClassName="relative overflow-visible">
         <section className="company-video-container overflow-hidden p-0">
-          <video
-            className="block h-auto w-full"
-            src={withBasePath("/videos/gruenewald-schreib-uns-jetzt.mp4")}
-            autoPlay
-            muted
-            loop
-            playsInline
-            controls
-            preload="metadata"
-            aria-label="Einblicke bei der Grünewald GmbH"
-          />
+          {isGruenewaldVideoActive ? (
+            <video
+              className="block aspect-video w-full object-cover"
+              src={withBasePath("/videos/gruenewald-schreib-uns-jetzt.mp4")}
+              autoPlay
+              muted
+              loop
+              playsInline
+              controls
+              preload="auto"
+              aria-label="Einblicke bei der Grünewald GmbH"
+            />
+          ) : (
+            <button
+              type="button"
+              className="company-video-poster group"
+              aria-label="Video Einblicke bei der Grünewald GmbH abspielen"
+              onClick={() => setIsGruenewaldVideoActive(true)}
+            >
+              <Image
+                src={withBasePath("/images/gruenewald-video-poster.webp")}
+                alt="Einblicke bei der Grünewald GmbH"
+                fill
+                sizes="(min-width: 1320px) 1240px, calc(100vw - 40px)"
+                className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.015]"
+              />
+              <span className="company-video-poster__play" aria-hidden="true">
+                <Play className="h-7 w-7 fill-white text-white sm:h-9 sm:w-9" />
+              </span>
+            </button>
+          )}
         </section>
       </SectionShell>
     );
@@ -311,7 +357,7 @@ export function HomeAboutSection() {
                   aria-label="ArgillaTherm Aufbau in Großansicht öffnen"
                 >
                   <Image
-                    src={withBasePath("/images/clay/argillatherm-aufbau.png")}
+                    src={getOptimizedSiteImageSrc("/images/clay/argillatherm-aufbau.png")}
                     alt="Schematischer Aufbau eines ArgillaTherm Lehmklimasystems"
                     width={2048}
                     height={667}
@@ -359,7 +405,7 @@ export function HomeAboutSection() {
 
                 <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-white shadow-2xl">
                   <Image
-                    src={withBasePath("/images/clay/argillatherm-aufbau.png")}
+                    src={getOptimizedSiteImageSrc("/images/clay/argillatherm-aufbau.png")}
                     alt="Schematischer Aufbau eines ArgillaTherm Lehmklimasystems im Großformat"
                     width={2048}
                     height={667}
@@ -440,7 +486,7 @@ export function HomeAboutSection() {
               aria-label="Deutschlandkarte im Großformat öffnen"
             >
               <Image
-                src={withBasePath("/deutschland-karte.png")}
+                src={getOptimizedSiteImageSrc("/deutschland-karte.png")}
                 alt="Deutschlandkarte"
                 width={1080}
                 height={1536}
@@ -580,7 +626,7 @@ export function HomeAboutSection() {
 
               <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 shadow-2xl">
                 <Image
-                  src={withBasePath("/deutschland-karte.png")}
+                  src={getOptimizedSiteImageSrc("/deutschland-karte.png")}
                   alt="Deutschlandkarte im Großformat"
                   width={1080}
                   height={1536}
@@ -592,7 +638,7 @@ export function HomeAboutSection() {
           </div>
         ), document.body) : null}
       </section>
-      {isGruenewaldPage || !showFloatingMilestones ? null : (
+      {isCompanyPage || !showFloatingMilestones ? null : (
         <CompanyMilestoneRail />
       )}
     </SectionShell>

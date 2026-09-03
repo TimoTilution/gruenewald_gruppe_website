@@ -1,8 +1,11 @@
+"use client";
+
 import Image from "next/image";
-import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { SectionShell } from "@/components/section-shell";
+import { getOptimizedSiteImageSrc } from "@/lib/site-image";
 import { withBasePath } from "@/lib/site-path";
+import { pushUrlState } from "@/lib/preserve-scroll-url";
 
 type ServiceArea = {
   title: string;
@@ -57,7 +60,7 @@ function ServiceCard({ area }: { area: ServiceArea }) {
   return (
     <article className="tilution-service-card group">
       <Image
-        src={withBasePath(area.image)}
+        src={getOptimizedSiteImageSrc(area.image)}
         alt={`${area.title} Beispielbild`}
         fill
         className="tilution-service-card__image"
@@ -99,6 +102,21 @@ function ServiceCard({ area }: { area: ServiceArea }) {
 }
 
 export function ClayServicesSection() {
+  const scrollToContact = () => {
+    const targetSection = document.getElementById("kontakt");
+    if (!targetSection) return;
+
+    const headerOffset = document.querySelector("header")?.getBoundingClientRect().height ?? 0;
+    const targetTop =
+      targetSection.getBoundingClientRect().top + window.scrollY - headerOffset - 16;
+
+    window.scrollTo({
+      top: Math.max(targetTop, 0),
+      behavior: "smooth",
+    });
+    pushUrlState("/clay-construction/kontakt");
+  };
+
   return (
     <SectionShell id="leistungen">
       <section className="tilution-services-section">
@@ -130,10 +148,14 @@ export function ClayServicesSection() {
             </p>
           </div>
 
-          <Link href="#kontakt" className="tilution-services-cta__button">
+          <button
+            type="button"
+            onClick={scrollToContact}
+            className="tilution-services-cta__button"
+          >
             <span>Projekt anfragen</span>
             <ArrowRight className="tilution-services-cta__button-icon" />
-          </Link>
+          </button>
         </div>
       </section>
     </SectionShell>

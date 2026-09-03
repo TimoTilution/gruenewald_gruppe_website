@@ -6,7 +6,6 @@ import { MobileContactBar } from "@/components/mobile-contact-bar";
 import { ScrollReveal } from "@/components/scroll-reveal";
 import { ScrollToTop } from "@/components/scroll-to-top";
 import { siteBaseUrl } from "@/data/site-architecture";
-import "leaflet/dist/leaflet.css";
 import "./globals.css";
 
 const isPreviewBuild = process.env.GITHUB_ACTIONS === "true";
