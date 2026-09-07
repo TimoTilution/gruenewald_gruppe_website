@@ -15,7 +15,7 @@ import { normalizeSitePathname, withBasePath } from "@/lib/site-path";
 
 const groupUsps = [
   {
-    title: "Technische Expertise",
+    title: "Leidenschaftliche Handwerker",
     description:
       "Unsere Projekte leben von Menschen, die ihr Handwerk verstehen. Mit erfahrenen Fachkräften, technischem Know-how und einem hohen Qualitätsanspruch finden wir auch für anspruchsvolle Aufgaben die passende Lösung. Dabei verbinden wir langjährige Erfahrung mit modernen Verfahren und einem Blick fürs Detail - von der Planung bis zur fachgerechten Umsetzung.",
     icon: HardHat,
@@ -27,7 +27,7 @@ const groupUsps = [
     icon: Wrench,
   },
   {
-    title: "Produktexpertise & Auswahl",
+    title: "Auswahl der besten Materialien",
     description:
       "Wir denken nicht vom Produkt, sondern vom Projekt aus. Dank unseres breiten Hersteller- und Lieferantennetzwerks können wir nahezu jedes benötigte Produkt beschaffen und unterschiedliche Systeme miteinander vergleichen. So empfehlen wir nicht das, was gerade verfügbar ist, sondern das, was technisch und wirtschaftlich am besten zum jeweiligen Projekt passt.",
     icon: SwatchBook,

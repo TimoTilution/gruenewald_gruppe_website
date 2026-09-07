@@ -9,6 +9,7 @@ import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 import { SectionShell } from "@/components/section-shell";
 import { MobileSnapGallery } from "@/components/mobile-snap-gallery";
+import { InteractiveScrollbar } from "@/components/interactive-scrollbar";
 import { getReferencePath, references } from "@/data/site-architecture";
 import { pushUrlWithoutScroll } from "@/lib/preserve-scroll-url";
 
@@ -114,7 +115,7 @@ const project: {
       hoverText:
         "Heart & Brain Universität, Göttingen | öffentlich | Tilution GmbH",
       alt: "Außenansicht der Heart & Brain Universität Göttingen",
-      category: "Öffentliche Einrichtungen",
+      category: "Kliniken & Pflegebereiche",
     },
     {
       src: "/references/leibniz-universitaet-hannover/title-images/leibniz-universitaet-hannover-title-01.jpg",
@@ -193,6 +194,18 @@ const project: {
       hoverText: "Feuerwehr, Duderstadt | öffentlich | Tilution GmbH",
       alt: "Visualisierung des Feuerwehrzentrums Duderstadt",
       category: "Öffentliche Einrichtungen",
+    },
+    {
+      src: "/references/polizeirevier-kassel-ost/title-images/polizeirevier-kassel-ost-title-01.png",
+      hoverText: "Polizeirevier Kassel-Ost | öffentlich | Tilution GmbH",
+      alt: "Visualisierung des Polizeireviers Kassel-Ost mit heller Fassade und dunklem Klinkersockel",
+      category: "Fassaden",
+    },
+    {
+      src: "/references/quartier-im-reitstall-goettingen/title-images/quartier-im-reitstall-title-01.png",
+      hoverText: "Quartier im Reitstall, Göttingen | gewerblich | Tilution GmbH",
+      alt: "Außenansicht des Quartiers im Reitstall in Göttingen",
+      category: "Wohnungsbau",
     },
   ],
   images: [
@@ -456,6 +469,17 @@ const heartBrainOverlayImages = [
   },
 ];
 
+const polizeirevierKasselOstOverlayImages = [
+  {
+    src: "/references/polizeirevier-kassel-ost/overlay/polizeirevier-kassel-ost-overlay-02.png",
+    alt: "Seitliche Fassadenansicht des Polizeireviers Kassel-Ost mit dunklem Klinker und hellen Oberflächen",
+  },
+  {
+    src: "/references/polizeirevier-kassel-ost/overlay/polizeirevier-kassel-ost-overlay-03.png",
+    alt: "Detailansicht der Klinkerfassade am Polizeirevier Kassel-Ost",
+  },
+];
+
 const leibnizUniversitaetOverlayImages = [
   {
     src: "/references/leibniz-universitaet-hannover/overlay/leibniz-universitaet-hannover-overlay-02.png",
@@ -517,6 +541,8 @@ function getReferenceOverlayImages(
       return [selectedPreviewImage, ...fischersHotelOverlayImages];
     case "/references/heart-brain-universitaet-goettingen/title-images/heart-brain-title-01.png":
       return [selectedPreviewImage, ...heartBrainOverlayImages];
+    case "/references/polizeirevier-kassel-ost/title-images/polizeirevier-kassel-ost-title-01.png":
+      return [selectedPreviewImage, ...polizeirevierKasselOstOverlayImages];
     case "/references/leibniz-universitaet-hannover/title-images/leibniz-universitaet-hannover-title-01.jpg":
       return [selectedPreviewImage, ...leibnizUniversitaetOverlayImages];
     case "/references/sprudelhof-therme/title-images/fraunhofer-iff-title.png":
@@ -684,7 +710,6 @@ export function HomeReferencesSection() {
   const referenceFilterRef = useRef<HTMLDivElement | null>(null);
   const referencePreviewRef = useRef<HTMLDivElement | null>(null);
   const referenceFilterButtonRefs = useRef<Array<HTMLButtonElement | null>>([]);
-  const [referenceScrollProgress, setReferenceScrollProgress] = useState(0);
 
   const selectedPreviewImage = project.previewImages[selectedPreviewIndex];
   const previewEntries = project.previewImages.map((image, index) => ({
@@ -719,10 +744,7 @@ export function HomeReferencesSection() {
   const canToggleReferences =
     (isGroupPage || isTilutionPage || isClayPage) &&
     visiblePreviewEntries.length > INITIAL_VISIBLE_REFERENCE_COUNT;
-  const displayedPreviewEntries =
-    canToggleReferences && !showAllReferences && !isTilutionPage
-      ? visiblePreviewEntries.slice(0, INITIAL_VISIBLE_REFERENCE_COUNT)
-      : visiblePreviewEntries;
+  const displayedPreviewEntries = visiblePreviewEntries;
   const overlayImages = getReferenceOverlayImages(selectedPreviewImage);
   const activeImage = overlayImages[activeImageIndex];
   const selectedReferenceDescription =
@@ -858,16 +880,15 @@ export function HomeReferencesSection() {
                 );
               })}
             </div>
+            <InteractiveScrollbar
+              scrollRef={referenceFilterRef}
+              ariaLabel="Position in den Referenzkategorien"
+            />
           </div>
         ) : null}
 
         <div
           ref={referencePreviewRef}
-          onScroll={(event) => {
-            const target = event.currentTarget;
-            const maxScroll = target.scrollWidth - target.clientWidth;
-            setReferenceScrollProgress(maxScroll > 0 ? target.scrollLeft / maxScroll : 0);
-          }}
           className="reference-preview-scroll mt-12 flex gap-5 overflow-x-scroll pb-4 scroll-smooth sm:grid sm:gap-6 sm:overflow-visible sm:pb-0 sm:grid-cols-2 xl:grid-cols-3"
         >
           {displayedPreviewEntries.map(({ image, index }, displayedIndex) => (
@@ -875,7 +896,7 @@ export function HomeReferencesSection() {
               key={image.src}
               type="button"
               onClick={() => openGallery(index)}
-              className={`reference-card liquid-card group block w-[82vw] shrink-0 text-left sm:w-full${image.src === "/references/sprudelhof-therme/title-images/sprudelhof-therme-title-01.svg" ? " reference-card--mobile-first" : ""}${isTilutionPage && !showAllReferences && displayedIndex >= INITIAL_VISIBLE_REFERENCE_COUNT ? " sm:hidden" : ""}`}
+              className={`reference-card liquid-card group block w-[82vw] shrink-0 text-left sm:w-full${image.src === "/references/sprudelhof-therme/title-images/sprudelhof-therme-title-01.svg" ? " reference-card--mobile-first" : ""}${canToggleReferences && !showAllReferences && displayedIndex >= INITIAL_VISIBLE_REFERENCE_COUNT ? " sm:hidden" : ""}`}
               aria-label={`Projektgalerie öffnen: ${project.title}`}
             >
               <div className="relative aspect-[4/3] w-full overflow-hidden lg:aspect-[16/11]">
@@ -898,14 +919,11 @@ export function HomeReferencesSection() {
             </button>
           ))}
         </div>
-
         {visiblePreviewEntries.length > 1 ? (
-          <div className="reference-scroll-track" aria-hidden="true">
-            <span
-              className="reference-scroll-track__thumb"
-              style={{ transform: `translateX(${referenceScrollProgress * 300}%)` }}
-            />
-          </div>
+          <InteractiveScrollbar
+            scrollRef={referencePreviewRef}
+            ariaLabel="Position in den Referenzen"
+          />
         ) : null}
 
         {visiblePreviewEntries.length === 0 ? (
@@ -918,7 +936,7 @@ export function HomeReferencesSection() {
         ) : null}
 
         {canToggleReferences ? (
-          <div className={`mt-10 justify-center ${isTilutionPage ? "hidden sm:flex" : "flex"}`}>
+          <div className="mt-10 hidden justify-center sm:flex">
             <button
               type="button"
               onClick={() => setShowAllReferences((current) => !current)}

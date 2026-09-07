@@ -7,6 +7,7 @@ import { createPortal } from "react-dom";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { SectionShell } from "@/components/section-shell";
 import { MobileSnapGallery } from "@/components/mobile-snap-gallery";
+import { InteractiveScrollbar } from "@/components/interactive-scrollbar";
 import { getReferencePath, references } from "@/data/site-architecture";
 import { pushUrlWithoutScroll } from "@/lib/preserve-scroll-url";
 
@@ -643,8 +644,8 @@ export function GruenewaldReferencesSection() {
     useState<GruenewaldReference | null>(null);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [showAllReferences, setShowAllReferences] = useState(false);
+  const referenceFilterRef = useRef<HTMLDivElement | null>(null);
   const referencePreviewRef = useRef<HTMLDivElement | null>(null);
-  const [referenceScrollProgress, setReferenceScrollProgress] = useState(0);
 
   const visibleProjects =
     activeFilter === "Alle"
@@ -654,10 +655,7 @@ export function GruenewaldReferencesSection() {
         );
   const canToggleReferences =
     visibleProjects.length > INITIAL_VISIBLE_REFERENCE_COUNT;
-  const displayedProjects =
-    canToggleReferences && !showAllReferences
-      ? visibleProjects.slice(0, INITIAL_VISIBLE_REFERENCE_COUNT)
-      : visibleProjects;
+  const displayedProjects = visibleProjects;
   const galleryImages = selectedProject
     ? [
         selectedProject.cover,
@@ -727,6 +725,7 @@ export function GruenewaldReferencesSection() {
 
         <div className="relative mt-8">
           <div
+            ref={referenceFilterRef}
             className="reference-mobile-scrollbar flex items-center gap-2.5 overflow-x-auto pb-3 scroll-smooth sm:flex-wrap sm:overflow-visible sm:pb-0 sm:[scrollbar-width:none] sm:[&::-webkit-scrollbar]:hidden"
             aria-label="Referenzen nach Leistung filtern"
           >
@@ -760,21 +759,19 @@ export function GruenewaldReferencesSection() {
               );
             })}
           </div>
+          <InteractiveScrollbar
+            scrollRef={referenceFilterRef}
+            ariaLabel="Position in den Referenzkategorien"
+          />
         </div>
 
         {visibleProjects.length > 0 ? (
-          <div
-            ref={referencePreviewRef}
-            onScroll={(event) => {
-              const target = event.currentTarget;
-              const maxScroll = target.scrollWidth - target.clientWidth;
-              setReferenceScrollProgress(
-                maxScroll > 0 ? target.scrollLeft / maxScroll : 0
-              );
-            }}
-            className="reference-preview-scroll mt-10 flex gap-5 overflow-x-scroll pb-4 scroll-smooth sm:grid sm:grid-cols-2 sm:gap-6 sm:overflow-visible sm:pb-0 xl:grid-cols-3"
-          >
-            {displayedProjects.map((reference) => (
+          <>
+            <div
+              ref={referencePreviewRef}
+              className="reference-preview-scroll mt-10 flex gap-5 overflow-x-scroll pb-4 scroll-smooth sm:grid sm:grid-cols-2 sm:gap-6 sm:overflow-visible sm:pb-0 xl:grid-cols-3"
+            >
+            {displayedProjects.map((reference, displayedIndex) => (
               <button
                 key={reference.cover.src}
                 type="button"
@@ -786,7 +783,7 @@ export function GruenewaldReferencesSection() {
                     pushUrlWithoutScroll(referencePath);
                   }
                 }}
-                className="reference-card liquid-card group block w-[82vw] shrink-0 overflow-hidden text-left sm:w-full"
+                className={`reference-card liquid-card group block w-[82vw] shrink-0 overflow-hidden text-left sm:w-full${canToggleReferences && !showAllReferences && displayedIndex >= INITIAL_VISIBLE_REFERENCE_COUNT ? " sm:hidden" : ""}`}
                 aria-label={`Projektgalerie öffnen: ${reference.title}`}
               >
                 <div className="relative aspect-[4/3] w-full overflow-hidden lg:aspect-[16/11]">
@@ -810,7 +807,12 @@ export function GruenewaldReferencesSection() {
                 </div>
               </button>
             ))}
-          </div>
+            </div>
+            <InteractiveScrollbar
+              scrollRef={referencePreviewRef}
+              ariaLabel="Position in den Referenzen"
+            />
+          </>
         ) : (
           <div className="mt-10 rounded-[1.25rem] border border-[#009ca6]/20 bg-[#e8f7f8] px-5 py-5">
             <p className="text-sm font-semibold text-[#182956]">
@@ -819,19 +821,8 @@ export function GruenewaldReferencesSection() {
           </div>
         )}
 
-        {visibleProjects.length > 1 ? (
-          <div className="reference-scroll-track" aria-hidden="true">
-            <span
-              className="reference-scroll-track__thumb"
-              style={{
-                transform: `translateX(${referenceScrollProgress * 300}%)`,
-              }}
-            />
-          </div>
-        ) : null}
-
         {canToggleReferences ? (
-          <div className="mt-10 flex justify-center">
+          <div className="gruenewald-references-toggle mt-10 justify-center">
             <button
               type="button"
               onClick={() => setShowAllReferences((current) => !current)}

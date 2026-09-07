@@ -79,13 +79,13 @@ const teamMembers: TeamMember[] = [
   },
   {
     name: "Qendrim Jashari",
-    role: "Produktionsleiter/Projektleiter",
+    role: "Produktionsleiter / Projektleiter",
     categoryId: "produktion",
     imageSrc: "/images/team/qendrim-jashari.png",
   },
   {
     name: "Christoph Stolze",
-    role: "Projektleiter/Technischer Leiter",
+    role: "Projektleiter / Technischer Leiter",
     categoryId: "produktion",
     imageSrc: "/images/team/christoph-stolze.png",
   },
@@ -146,7 +146,7 @@ const teamMembers: TeamMember[] = [
   },
   {
     name: "Annie Dinh",
-    role: "Assistenz der Projektleitung",
+    role: "Projektleiterin",
     categoryId: "produktion",
     imageSrc: "/images/team/annie-dinh.png",
   },
@@ -191,12 +191,6 @@ const teamMembers: TeamMember[] = [
     role: "Manager für Marketing & Unternehmensprozesse",
     categoryId: "marketing",
     imageSrc: "/images/team/timo-scharf.png",
-  },
-  {
-    name: "Torsten Sure",
-    role: "Leitung Fuhrpark, Maschinen, F&E",
-    categoryId: "zentrale-dienste",
-    imageSrc: "/images/team/torsten-sure.png",
   },
   {
     name: "Eric Dreyer",
