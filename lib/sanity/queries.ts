@@ -17,7 +17,7 @@ export const visibleTeamMembersQuery = `*[_type == "teamMember" && isVisible != 
   "department": department->{title, "slug": slug.current}
 }`;
 
-export const visibleReferencesQuery = `*[_type == "reference" && isVisible != false] | order(sortOrder asc, title asc) {
+export const visibleReferencesQuery = `*[_type == "projectReference" && isVisible != false] | order(sortOrder asc, title asc) {
   _id,
   title,
   "slug": slug.current,
@@ -31,4 +31,22 @@ export const visibleReferencesQuery = `*[_type == "reference" && isVisible != fa
   gallery,
   "company": company->{title, "slug": slug.current},
   "category": category->{title, "slug": slug.current}
+}`;
+
+export const visibleWebsitePagesQuery = `*[_type == "websitePage" && isVisible != false] | order(sortOrder asc, title asc) {
+  _id,
+  pageKey,
+  title,
+  eyebrow,
+  heroTitle,
+  heroText,
+  primaryCtaLabel,
+  primaryCtaHref,
+  secondaryCtaLabel,
+  secondaryCtaHref,
+  introTitle,
+  introText,
+  heroImage,
+  heroImageAlt,
+  sortOrder
 }`;

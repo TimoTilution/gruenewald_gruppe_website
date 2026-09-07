@@ -159,3 +159,4 @@ source-assets/
 .next-stale-before-gu-height/
 public/verify-header.html
 snapshots/
+.sanity-seed/
