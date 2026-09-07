@@ -17,7 +17,9 @@ $logFile = Join-Path $logDir ("sync-" + (Get-Date -Format "yyyy-MM") + ".log")
 $excludedDirs = @(
   "node_modules",
   ".next",
-  ".git"
+  ".git",
+  "dist",
+  ".sanity"
 )
 
 function Invoke-SafeRobocopy {
