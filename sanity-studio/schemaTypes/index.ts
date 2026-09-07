@@ -4,6 +4,7 @@ import {teamDepartmentType} from './teamDepartment'
 import {teamMemberType} from './teamMember'
 import {referenceType} from './reference'
 import {websitePageType} from './websitePage'
+import {groupPageConfigType} from './groupPageConfig'
 
 export const schemaTypes = [
   companyType,
@@ -12,5 +13,6 @@ export const schemaTypes = [
   teamMemberType,
   referenceType,
   websitePageType,
+  groupPageConfigType,
 ]
 

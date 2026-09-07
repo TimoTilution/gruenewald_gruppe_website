@@ -50,3 +50,19 @@ export const visibleWebsitePagesQuery = `*[_type == "websitePage" && isVisible !
   heroImageAlt,
   sortOrder
 }`;
+
+export const groupPageConfigQuery = `*[_type == "groupPageConfig" && isVisible != false][0] {
+  _id,
+  title,
+  heroCards,
+  aboutEyebrow,
+  aboutTitle,
+  aboutText,
+  uspEyebrow,
+  uspCards,
+  highlights,
+  referencesEyebrow,
+  referencesTitle,
+  referencesText,
+  showReferenceToggleOnDesktop
+}`;
