@@ -1,6 +1,6 @@
 import type { NextConfig } from "next";
 
-const isGithubActions = process.env.GITHUB_ACTIONS === "true";
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH;
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
@@ -15,8 +15,8 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  basePath: isGithubActions ? "/gruenewald_gruppe_website" : undefined,
-  assetPrefix: isGithubActions ? "/gruenewald_gruppe_website/" : undefined,
+  basePath,
+  assetPrefix: basePath ? `${basePath}/` : undefined,
 };
 
 export default nextConfig;

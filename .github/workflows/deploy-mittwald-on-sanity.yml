@@ -1,0 +1,65 @@
+name: Deploy Mittwald on Sanity publish
+
+on:
+  workflow_dispatch:
+  repository_dispatch:
+    types:
+      - sanity-publish
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mittwald-production
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    env:
+      NEXT_PUBLIC_SANITY_PROJECT_ID: qnxqpqp1
+      NEXT_PUBLIC_SANITY_DATASET: production
+      NEXT_PUBLIC_SANITY_API_VERSION: "2026-09-07"
+      SANITY_API_READ_TOKEN: ${{ secrets.SANITY_API_READ_TOKEN }}
+      MITTWALD_SFTP_HOST: ${{ secrets.MITTWALD_SFTP_HOST }}
+      MITTWALD_SFTP_PORT: ${{ secrets.MITTWALD_SFTP_PORT || '22' }}
+      MITTWALD_SFTP_USER: ${{ secrets.MITTWALD_SFTP_USER }}
+      MITTWALD_SFTP_PASSWORD: ${{ secrets.MITTWALD_SFTP_PASSWORD }}
+      MITTWALD_REMOTE_PATH: ${{ secrets.MITTWALD_REMOTE_PATH }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build static site from Sanity
+        run: npm run build
+
+      - name: Install lftp
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y lftp
+
+      - name: Deploy out folder to Mittwald
+        run: |
+          test -n "$SANITY_API_READ_TOKEN"
+          test -n "$MITTWALD_SFTP_HOST"
+          test -n "$MITTWALD_SFTP_USER"
+          test -n "$MITTWALD_SFTP_PASSWORD"
+          test -n "$MITTWALD_REMOTE_PATH"
+
+          lftp -u "$MITTWALD_SFTP_USER","$MITTWALD_SFTP_PASSWORD" "sftp://$MITTWALD_SFTP_HOST:$MITTWALD_SFTP_PORT" <<EOF
+          set sftp:auto-confirm yes
+          set net:max-retries 2
+          set net:timeout 30
+          mirror --reverse --delete --verbose ./out "$MITTWALD_REMOTE_PATH"
+          bye
+          EOF
