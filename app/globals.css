@@ -262,7 +262,7 @@
     min-width: 0;
     align-items: center;
     gap: 0.42rem;
-    color: #ffffff;
+    color: #0b1220;
     font-size: 0.62rem;
     font-weight: 750;
     line-height: 1.2;
@@ -1262,7 +1262,7 @@ body {
     background:
       radial-gradient(circle at 28% 24%, rgba(255, 255, 255, 0.32), transparent 44%),
       linear-gradient(145deg, rgba(255, 255, 255, 0.18), rgba(20, 35, 75, 0.36));
-    color: #ffffff;
+    color: #0b1220;
     font-size: 2rem;
     font-weight: 800;
     letter-spacing: 0.04em;
@@ -1298,7 +1298,7 @@ body {
     align-items: center;
     gap: 0.42rem;
     border-radius: 999px;
-    color: #ffffff;
+    color: #0b1220;
     font-size: 0.62rem;
     font-weight: 750;
     line-height: 1.2;
@@ -1310,7 +1310,7 @@ body {
 
   .team-member-contact-link:hover,
   .team-member-contact-link:focus-visible {
-    color: #ffffff;
+    color: #0b1220;
   }
 
   .team-member-contact-link svg {
