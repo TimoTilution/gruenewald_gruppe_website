@@ -262,7 +262,7 @@
     min-width: 0;
     align-items: center;
     gap: 0.42rem;
-    color: rgba(255, 255, 255, 0.88);
+    color: #ffffff;
     font-size: 0.62rem;
     font-weight: 750;
     line-height: 1.2;
@@ -1298,7 +1298,7 @@ body {
     align-items: center;
     gap: 0.42rem;
     border-radius: 999px;
-    color: rgba(255, 255, 255, 0.88);
+    color: #ffffff;
     font-size: 0.62rem;
     font-weight: 750;
     line-height: 1.2;
