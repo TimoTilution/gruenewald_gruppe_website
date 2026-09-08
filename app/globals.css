@@ -239,18 +239,18 @@
   }
 
   .team-member-meta {
-    min-height: 4.25rem;
+    min-height: 3.45rem;
     flex: 0 0 auto;
     justify-content: flex-start;
-    padding: 0.85rem 0.85rem 0.35rem;
+    padding: 0.85rem 0.85rem 0.15rem;
   }
 
   .team-member-contact {
     display: flex;
-    min-height: 3.15rem;
+    min-height: 3.35rem;
     flex-direction: column;
-    justify-content: center;
-    padding: 0 0.85rem 0.65rem;
+    justify-content: flex-start;
+    padding: 0.35rem 0.85rem 0.85rem;
   }
 
   .team-member-contact-icons {
@@ -1305,18 +1305,18 @@ body {
 
   .team-member-meta {
     display: flex;
-    min-height: 4.15rem;
+    min-height: 3.45rem;
     flex: 0 0 auto;
     flex-direction: column;
-    padding: 0.7rem 0.65rem 0.3rem;
+    padding: 0.7rem 0.65rem 0.15rem;
   }
 
   .team-member-contact {
     display: flex;
-    min-height: 3.05rem;
+    min-height: 3.35rem;
     flex-direction: column;
-    justify-content: center;
-    padding: 0 0.65rem 0.65rem;
+    justify-content: flex-start;
+    padding: 0.35rem 0.65rem 0.85rem;
   }
 
   .team-member-contact-icons {
