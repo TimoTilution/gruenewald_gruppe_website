@@ -60,6 +60,8 @@ const teamMembers: TeamMember[] = [
     role: "Assistenz der Geschäftsführung",
     categoryId: "geschaeftsfuehrung",
     imageSrc: "/images/team/melanie-montua.png",
+    email: "montua@tilution.de",
+    phone: "0170 9160495",
   },
   {
     name: "Jürgen Gatzemeier",

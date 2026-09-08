@@ -45,7 +45,7 @@ const departments = [
 
 const members = [
   { company: "tilution", department: "geschaeftsfuehrung", name: "Jan Grünewald", degree: "Dipl. Bau-Ing.", role: "Geschäftsführung", imageSrc: "/images/team/jan-gruenewald.png" },
-  { company: "tilution", department: "geschaeftsfuehrung", name: "Melanie Montua", role: "Assistenz der Geschäftsführung", imageSrc: "/images/team/melanie-montua.png" },
+  { company: "tilution", department: "geschaeftsfuehrung", name: "Melanie Montua", role: "Assistenz der Geschäftsführung", imageSrc: "/images/team/melanie-montua.png", email: "montua@tilution.de", phone: "0170 9160495" },
   { company: "tilution", department: "vertrieb", name: "Jürgen Gatzemeier", role: "Vertriebsleiter", imageSrc: "/images/team/juergen-gatzemeier.png", email: "gatzemeier@tilution.de", phone: "0151 54909563" },
   { company: "tilution", department: "vertrieb", name: "Rainer Wienken", degree: "Dipl.-Ing.", role: "Vertrieb", imageSrc: "/images/team/rainer-wienken.png" },
   { company: "tilution", department: "vertrieb", name: "Peter Rüngeling", role: "Kalkulator", imageSrc: "/images/team/peter-ruengeling.png" },
