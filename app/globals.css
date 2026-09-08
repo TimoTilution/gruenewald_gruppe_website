@@ -3345,8 +3345,17 @@ body:has(.clay-theme) footer .liquid-card-dark::after {
     opacity: 1 !important;
   }
 
+  .team-member-card > .team-member-contact {
+    margin-top: -0.7rem;
+    min-height: 2.45rem;
+    padding: 0 0.85rem 0.45rem;
+  }
+
   .team-member-contact-icons {
     display: flex !important;
+    min-height: 2.35rem;
+    align-items: flex-start;
+    justify-content: center;
   }
 
   .team-member-contact-link {
