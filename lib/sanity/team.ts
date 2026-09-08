@@ -109,6 +109,18 @@ function normalizeKey(value?: string) {
     .replace(/^-+|-+$/g, "");
 }
 
+function getRole(member: SanityTeamMember, variant: "tilution" | "clay" | "group" | "verwaltung") {
+  if (
+    variant === "group" &&
+    member.company?.slug === "hrw" &&
+    normalizeKey(member.name) === "norbert-bartholomaus"
+  ) {
+    return "Geschäftsführer";
+  }
+
+  return cleanText(member.role) ?? "";
+}
+
 function bySortAndLabel(
   left: { sortOrder?: number; label?: string; name?: string },
   right: { sortOrder?: number; label?: string; name?: string },
@@ -221,7 +233,7 @@ export async function getCmsTeamData(
       .map<CmsTeamMember>((member) => ({
         name: cleanText(member.name) ?? "",
         degree: cleanText(member.degree),
-        role: cleanText(member.role) ?? "",
+        role: getRole(member, variant),
         categoryId: getCategoryId(member, variant),
         imageSrc: getImageSrc(member),
         email: cleanText(member.email),
