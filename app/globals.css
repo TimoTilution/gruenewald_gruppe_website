@@ -282,6 +282,11 @@
     cursor: pointer;
   }
 
+  .team-member-contact--visible {
+    visibility: visible;
+    opacity: 1;
+  }
+
   .team-member-contact--empty {
     visibility: hidden;
   }
@@ -1140,10 +1145,7 @@ body {
 
   .team-member-card {
     width: 100%;
-    height: auto !important;
-    min-height: 0;
     min-width: 0;
-    align-self: start;
     cursor: default;
   }
 
@@ -1152,7 +1154,6 @@ body {
   }
 
   .team-member-main {
-    flex: 0 0 auto !important;
     min-width: 0;
     color: inherit;
   }
@@ -1351,6 +1352,11 @@ body {
 
   .team-member-contact-icon {
     cursor: pointer;
+  }
+
+  .team-member-contact--visible {
+    visibility: visible;
+    opacity: 1;
   }
 
   .team-member-contact--empty {
@@ -3319,5 +3325,59 @@ body:has(.clay-theme) footer .liquid-card-dark::after {
 @media (min-width: 1280px) {
   .clay-services-grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 639px) {
+  .team-member-card {
+    height: auto !important;
+    min-height: 0 !important;
+    align-self: start;
+  }
+
+  .team-member-main {
+    flex: 0 0 auto !important;
+  }
+
+  .team-member-contact--visible {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  .team-member-contact-icons {
+    display: flex !important;
+  }
+
+  .team-member-contact-link {
+    display: none !important;
+  }
+}
+
+@media (min-width: 640px) {
+  .team-member-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .team-member-main {
+    flex: 0 0 auto;
+  }
+
+  .team-member-contact--visible {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  .team-member-contact-icons,
+  .team-member-contact-icon,
+  .team-member-contact-icon-placeholder {
+    display: none !important;
+  }
+
+  .team-member-contact-link {
+    display: flex !important;
   }
 }
