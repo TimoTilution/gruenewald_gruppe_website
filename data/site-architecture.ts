@@ -33,6 +33,8 @@ export type TeamMemberEntry = {
   departmentSlug: string;
   departmentTitle: string;
   role: string;
+  email?: string;
+  phone?: string;
   imageSrc?: string;
 };
 
@@ -397,7 +399,7 @@ export const references: ReferenceEntry[] = [
 export const teamMembers: TeamMemberEntry[] = [
   { company: "tilution", departmentSlug: "geschaeftsfuehrung", departmentTitle: "Geschaeftsfuehrung", slug: "jan-gruenewald", name: "Jan Gruenewald", role: "Geschaeftsfuehrung", imageSrc: "/images/team/jan-gruenewald.png" },
   { company: "tilution", departmentSlug: "geschaeftsfuehrung", departmentTitle: "Geschaeftsfuehrung", slug: "melanie-montua", name: "Melanie Montua", role: "Assistenz der Geschaeftsfuehrung", imageSrc: "/images/team/melanie-montua.png" },
-  { company: "tilution", departmentSlug: "vertrieb", departmentTitle: "Vertrieb", slug: "juergen-gatzemeier", name: "Juergen Gatzemeier", role: "Vertriebsleiter", imageSrc: "/images/team/juergen-gatzemeier.png" },
+  { company: "tilution", departmentSlug: "vertrieb", departmentTitle: "Vertrieb", slug: "juergen-gatzemeier", name: "Juergen Gatzemeier", role: "Vertriebsleiter", email: "gatzemeier@tilution.de", phone: "0151 54909563", imageSrc: "/images/team/juergen-gatzemeier.png" },
   { company: "tilution", departmentSlug: "produktion", departmentTitle: "Produktion", slug: "qendrim-jashari", name: "Qendrim Jashari", role: "Produktionsleiter/Projektleiter", imageSrc: "/images/team/qendrim-jashari.png" },
   { company: "tilution", departmentSlug: "marketing", departmentTitle: "Marketing", slug: "timo-scharf", name: "Timo Scharf", role: "Manager fuer Marketing & Unternehmensprozesse", imageSrc: "/images/team/timo-scharf.png" },
   { company: "clay-construction", departmentSlug: "geschaeftsfuehrung", departmentTitle: "Geschaeftsfuehrung", slug: "jan-gruenewald", name: "Jan Gruenewald", role: "Geschaeftsfuehrung", imageSrc: "/images/team/jan-gruenewald.png" },

@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
-import { X } from "lucide-react";
+import { Mail, Phone, X } from "lucide-react";
 import { SectionShell } from "@/components/section-shell";
 import { getOptimizedSiteImageSrc } from "@/lib/site-image";
 
@@ -22,6 +22,8 @@ type TeamMember = {
   categoryId: string;
   imageSrc?: string;
   imagePosition?: string;
+  email?: string;
+  phone?: string;
 };
 
 const teamCategories: TeamCategory[] = [
@@ -57,6 +59,8 @@ const teamMembers: TeamMember[] = [
     role: "Vertriebsleiter",
     categoryId: "vertrieb",
     imageSrc: "/images/team/juergen-gatzemeier.png",
+    email: "gatzemeier@tilution.de",
+    phone: "0151 54909563",
   },
   {
     name: "Rainer Wienken",
@@ -233,6 +237,54 @@ const groupTeamMembers: TeamMember[] = [
   },
 ];
 
+function getPhoneHref(phone?: string) {
+  if (!phone) return "";
+
+  const normalizedPhone = phone.replace(/[^\d+]/g, "");
+  return normalizedPhone.startsWith("+")
+    ? `tel:${normalizedPhone}`
+    : `tel:+49${normalizedPhone.replace(/^0/, "")}`;
+}
+
+function TeamMemberContactLinks({ member }: { member: TeamMember }) {
+  const hasContact = Boolean(member.email || member.phone);
+
+  return (
+    <div
+      className={[
+        "team-member-contact",
+        hasContact ? "team-member-contact--visible" : "team-member-contact--empty",
+      ].join(" ")}
+      aria-hidden={!hasContact}
+    >
+      {member.email ? (
+        <a
+          className="team-member-contact-link"
+          href={`mailto:${member.email}`}
+          aria-label={`E-Mail an ${member.name} senden`}
+        >
+          <Mail className="h-3.5 w-3.5" aria-hidden="true" />
+          <span>{member.email}</span>
+        </a>
+      ) : (
+        <span className="team-member-contact-placeholder" />
+      )}
+      {member.phone ? (
+        <a
+          className="team-member-contact-link"
+          href={getPhoneHref(member.phone)}
+          aria-label={`${member.name} telefonisch kontaktieren`}
+        >
+          <Phone className="h-3.5 w-3.5" aria-hidden="true" />
+          <span>{member.phone}</span>
+        </a>
+      ) : (
+        <span className="team-member-contact-placeholder" />
+      )}
+    </div>
+  );
+}
+
 export function HomeTeamSection({ variant = "company" }: { variant?: "company" | "group" | "verwaltung" }) {
   const categories =
     variant === "verwaltung"
@@ -336,14 +388,8 @@ export function HomeTeamSection({ variant = "company" }: { variant?: "company" |
           {visibleMembers.length > 0 ? (
             <div className="team-member-grid">
               {displayedMembers.map((member, memberIndex) => (
-                <button
+                <article
                   key={member.name}
-                  type="button"
-                  onClick={() => {
-                    if (member.imageSrc) {
-                      setSelectedMember(member);
-                    }
-                  }}
                   className={`liquid-card team-member-card group flex h-full flex-col overflow-hidden p-0 text-left ${
                     !showAllMembers && memberIndex >= initialVisibleMobileTeamMemberCount
                       ? "team-member-card--mobile-collapsed"
@@ -353,50 +399,61 @@ export function HomeTeamSection({ variant = "company" }: { variant?: "company" |
                       ? "team-member-card--desktop-collapsed"
                       : ""
                   }`}
-                  aria-label={
-                    member.imageSrc
-                      ? `Großansicht von ${member.name} öffnen`
-                      : `${member.name}, ${member.role}`
-                  }
                 >
-                  <div className="team-member-photo">
-                    {member.imageSrc ? (
-                      <Image
-                        src={getOptimizedSiteImageSrc(member.imageSrc)}
-                        alt={`${member.name}, ${member.role}`}
-                        fill
-                        className="object-cover object-center transition-transform duration-500 group-hover:scale-[1.03]"
-                        style={{ objectPosition: member.imagePosition ?? "center" }}
-                        sizes="(min-width: 1024px) 18rem, (min-width: 640px) 45vw, 50vw"
-                      />
-                    ) : (
-                      <span className="team-member-placeholder" aria-hidden="true">
-                        {member.name
-                          .split(" ")
-                          .map((part) => part[0])
-                          .join("")}
-                      </span>
-                    )}
-                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (member.imageSrc) {
+                        setSelectedMember(member);
+                      }
+                    }}
+                    className="team-member-main group flex flex-1 flex-col text-left"
+                    aria-label={
+                      member.imageSrc
+                        ? `Großansicht von ${member.name} öffnen`
+                        : `${member.name}, ${member.role}`
+                    }
+                  >
+                    <div className="team-member-photo">
+                      {member.imageSrc ? (
+                        <Image
+                          src={getOptimizedSiteImageSrc(member.imageSrc)}
+                          alt={`${member.name}, ${member.role}`}
+                          fill
+                          className="object-cover object-center transition-transform duration-500 group-hover:scale-[1.03]"
+                          style={{ objectPosition: member.imagePosition ?? "center" }}
+                          sizes="(min-width: 1024px) 18rem, (min-width: 640px) 45vw, 50vw"
+                        />
+                      ) : (
+                        <span className="team-member-placeholder" aria-hidden="true">
+                          {member.name
+                            .split(" ")
+                            .map((part) => part[0])
+                            .join("")}
+                        </span>
+                      )}
+                    </div>
 
-                  <div className="team-member-meta">
-                    <p
-                      className={[
-                        "team-member-degree",
-                        member.degree ? "text-forest-100/62" : "text-transparent",
-                      ].join(" ")}
-                      aria-hidden={!member.degree}
-                    >
-                      {member.degree ?? ""}
-                    </p>
-                    <h3 className="team-member-name">
-                      {member.name}
-                    </h3>
-                    <p className="team-member-role">
-                      {member.role}
-                    </p>
-                  </div>
-                </button>
+                    <div className="team-member-meta">
+                      <p
+                        className={[
+                          "team-member-degree",
+                          member.degree ? "text-forest-100/62" : "text-transparent",
+                        ].join(" ")}
+                        aria-hidden={!member.degree}
+                      >
+                        {member.degree ?? ""}
+                      </p>
+                      <h3 className="team-member-name">
+                        {member.name}
+                      </h3>
+                      <p className="team-member-role">
+                        {member.role}
+                      </p>
+                    </div>
+                  </button>
+                  <TeamMemberContactLinks member={member} />
+                </article>
               ))}
             </div>
           ) : (
@@ -469,6 +526,7 @@ export function HomeTeamSection({ variant = "company" }: { variant?: "company" |
                 <p className="team-overlay-role mt-1 text-sm font-extrabold">
                   {selectedMember.role}
                 </p>
+                <TeamMemberContactLinks member={selectedMember} />
               </div>
             </div>
           </div>

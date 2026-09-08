@@ -8,6 +8,8 @@ export const teamMemberType = defineType({
     defineField({name: 'name', title: 'Name', type: 'string', validation: (Rule) => Rule.required()}),
     defineField({name: 'role', title: 'Berufsbezeichnung', type: 'string', validation: (Rule) => Rule.required()}),
     defineField({name: 'degree', title: 'Titel / Zusatz', type: 'string'}),
+    defineField({name: 'email', title: 'E-Mail-Adresse', type: 'string'}),
+    defineField({name: 'phone', title: 'Handynummer', type: 'string'}),
     defineField({name: 'company', title: 'Unternehmen', type: 'reference', to: [{type: 'company'}]}),
     defineField({name: 'department', title: 'Team-Bereich', type: 'reference', to: [{type: 'teamDepartment'}], validation: (Rule) => Rule.required()}),
     defineField({name: 'photo', title: 'Foto', type: 'image', options: {hotspot: true}}),

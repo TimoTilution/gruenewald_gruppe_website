@@ -10,6 +10,8 @@ export const visibleTeamMembersQuery = `*[_type == "teamMember" && isVisible != 
   name,
   role,
   degree,
+  email,
+  phone,
   sortOrder,
   imageAlt,
   photo,
