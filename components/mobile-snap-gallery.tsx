@@ -4,7 +4,12 @@ import Image from "next/image";
 import { useEffect, useRef } from "react";
 import { getOptimizedReferenceSrc } from "@/lib/reference-image";
 
-type GalleryImage = { src: string; alt: string; isSvg?: boolean };
+type GalleryImage = {
+  src: string;
+  alt: string;
+  isSvg?: boolean;
+  objectPosition?: string;
+};
 
 type MobileGalleryIntro = {
   eyebrow?: string;
@@ -151,6 +156,7 @@ export function MobileSnapGallery({
               quality={68}
               sizes="100vw"
               className="object-contain"
+              style={{ objectPosition: image.objectPosition ?? "center" }}
             />
           </div>
         ))}

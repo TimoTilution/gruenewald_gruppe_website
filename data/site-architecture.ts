@@ -23,7 +23,7 @@ export type ReferenceEntry = {
   categorySlug?: string;
   categoryTitle?: string;
   description: string;
-  images: Array<{ src: string; alt: string; isSvg?: boolean }>;
+  images: Array<{ src: string; alt: string; isSvg?: boolean; objectPosition?: string }>;
 };
 
 export type TeamMemberEntry = {
@@ -341,7 +341,7 @@ export const references: ReferenceEntry[] = [
     images: [
       { src: "/references/polizeirevier-kassel-ost/title-images/polizeirevier-kassel-ost-title-01.png", alt: "Visualisierung des Polizeireviers Kassel-Ost mit heller Fassade und dunklem Klinkersockel" },
       { src: "/references/polizeirevier-kassel-ost/overlay/polizeirevier-kassel-ost-overlay-02.png", alt: "Seitliche Fassadenansicht des Polizeireviers Kassel-Ost mit dunklem Klinker und hellen Oberflächen" },
-      { src: "/references/polizeirevier-kassel-ost/overlay/polizeirevier-kassel-ost-overlay-03.png", alt: "Detailansicht der Klinkerfassade am Polizeirevier Kassel-Ost" },
+      { src: "/references/polizeirevier-kassel-ost/overlay/polizeirevier-kassel-ost-overlay-03.png", alt: "Detailansicht der Klinkerfassade am Polizeirevier Kassel-Ost", objectPosition: "center bottom" },
     ],
   },
   {

@@ -28,6 +28,7 @@ type ReferenceImage = {
   alt: string;
   hoverText?: string;
   isSvg?: boolean;
+  objectPosition?: string;
   category?: ReferenceCategory;
 };
 
@@ -477,6 +478,7 @@ const polizeirevierKasselOstOverlayImages = [
   {
     src: "/references/polizeirevier-kassel-ost/overlay/polizeirevier-kassel-ost-overlay-03.png",
     alt: "Detailansicht der Klinkerfassade am Polizeirevier Kassel-Ost",
+    objectPosition: "center bottom",
   },
 ];
 
@@ -1002,6 +1004,7 @@ export function HomeReferencesSection() {
                       quality={76}
                       sizes="(min-width: 1024px) 75vw, 100vw"
                       className="object-cover"
+                      style={{ objectPosition: activeImage.objectPosition ?? "center" }}
                     />
                   </div>
 
@@ -1045,6 +1048,7 @@ export function HomeReferencesSection() {
                             fill
                             unoptimized={image.isSvg}
                             className="object-cover"
+                            style={{ objectPosition: image.objectPosition ?? "center" }}
                           />
                         </div>
                       </button>

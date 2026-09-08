@@ -115,7 +115,7 @@ function ProjectPage({
   title: string;
   eyebrow: string;
   description: string;
-  images: Array<{ src: string; alt: string; isSvg?: boolean }>;
+  images: Array<{ src: string; alt: string; isSvg?: boolean; objectPosition?: string }>;
 }) {
   return (
     <>
@@ -138,6 +138,7 @@ function ProjectPage({
                   priority={index === 0}
                   unoptimized={image.isSvg}
                   className="object-cover"
+                  style={{ objectPosition: image.objectPosition ?? "center" }}
                   sizes={index === 0 ? "(min-width: 1024px) 62vw, 100vw" : "(min-width: 1024px) 28vw, 100vw"}
                 />
               </div>
