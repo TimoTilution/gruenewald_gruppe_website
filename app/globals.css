@@ -3330,13 +3330,14 @@ body:has(.clay-theme) footer .liquid-card-dark::after {
 
 @media (max-width: 639px) {
   .team-member-card {
-    height: auto !important;
-    min-height: 0 !important;
-    align-self: start;
+    height: 100% !important;
+    min-height: 22rem !important;
+    align-self: stretch;
   }
 
   .team-member-main {
-    flex: 0 0 auto !important;
+    flex: 1 1 auto !important;
+    min-height: 0;
   }
 
   .team-member-contact--visible {
@@ -3346,15 +3347,15 @@ body:has(.clay-theme) footer .liquid-card-dark::after {
   }
 
   .team-member-card > .team-member-contact {
-    margin-top: -0.7rem;
-    min-height: 2.45rem;
-    padding: 0 0.85rem 0.45rem;
+    margin-top: 0;
+    min-height: 3.45rem;
+    padding: 0 0.85rem 0.85rem;
   }
 
   .team-member-contact-icons {
     display: flex !important;
-    min-height: 2.35rem;
-    align-items: flex-start;
+    min-height: 2.6rem;
+    align-items: center;
     justify-content: center;
   }
 
