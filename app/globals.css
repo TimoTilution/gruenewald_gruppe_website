@@ -253,6 +253,32 @@
     padding: 0 0.85rem 0.85rem;
   }
 
+  .team-member-contact-icons {
+    display: flex;
+    min-height: 2.5rem;
+    align-items: center;
+    gap: 0.65rem;
+  }
+
+  .team-member-contact-icon,
+  .team-member-contact-icon-placeholder {
+    display: inline-flex;
+    width: 2.35rem;
+    height: 2.35rem;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(11, 18, 32, 0.16);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.88);
+    color: #0b1220;
+    box-shadow: 0 8px 20px rgba(7, 18, 48, 0.14);
+  }
+
+  .team-member-contact-icon {
+    cursor: pointer;
+  }
+
   .team-member-contact--empty {
     visibility: hidden;
   }
@@ -260,7 +286,7 @@
   .team-member-contact-link {
     position: relative;
     z-index: 3;
-    display: flex;
+    display: none;
     width: 100%;
     min-width: 0;
     min-height: 1.25rem;
@@ -1294,6 +1320,33 @@ body {
     padding: 0 0.65rem 0.8rem;
   }
 
+  .team-member-contact-icons {
+    display: flex;
+    min-height: 2.5rem;
+    align-items: center;
+    justify-content: center;
+    gap: 0.65rem;
+  }
+
+  .team-member-contact-icon,
+  .team-member-contact-icon-placeholder {
+    display: inline-flex;
+    width: 2.35rem;
+    height: 2.35rem;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(11, 18, 32, 0.16);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.88);
+    color: #0b1220;
+    box-shadow: 0 8px 20px rgba(7, 18, 48, 0.14);
+  }
+
+  .team-member-contact-icon {
+    cursor: pointer;
+  }
+
   .team-member-contact--empty {
     visibility: hidden;
   }
@@ -1301,7 +1354,7 @@ body {
   .team-member-contact-link {
     position: relative;
     z-index: 3;
-    display: flex;
+    display: none;
     width: 100%;
     min-width: 0;
     min-height: 1.25rem;
@@ -1387,9 +1440,16 @@ body {
       padding: 0 1.15rem 1.25rem;
     }
 
+    .team-member-contact-icons,
+    .team-member-contact-icon,
+    .team-member-contact-icon-placeholder {
+      display: none;
+    }
+
     .team-member-contact-link {
       gap: 0.5rem;
       font-size: 0.78rem;
+      display: flex;
     }
 
     .team-member-contact-placeholder {

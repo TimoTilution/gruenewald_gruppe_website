@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
-import { Mail, Phone, X } from "lucide-react";
+import { Copy, ExternalLink, Mail, Phone, X } from "lucide-react";
 import { SectionShell } from "@/components/section-shell";
 import { getOptimizedSiteImageSrc } from "@/lib/site-image";
 
@@ -24,6 +24,13 @@ type TeamMember = {
   imagePosition?: string;
   email?: string;
   phone?: string;
+};
+
+type ContactAction = {
+  memberName: string;
+  type: "email" | "phone";
+  value: string;
+  href: string;
 };
 
 const teamCategories: TeamCategory[] = [
@@ -246,8 +253,30 @@ function getPhoneHref(phone?: string) {
     : `tel:+49${normalizedPhone.replace(/^0/, "")}`;
 }
 
-function TeamMemberContactLinks({ member }: { member: TeamMember }) {
+function TeamMemberContactLinks({
+  member,
+  onMobileContactClick,
+}: {
+  member: TeamMember;
+  onMobileContactClick?: (contactAction: ContactAction) => void;
+}) {
   const hasContact = Boolean(member.email || member.phone);
+  const emailAction = member.email
+    ? {
+        memberName: member.name,
+        type: "email" as const,
+        value: member.email,
+        href: `mailto:${member.email}`,
+      }
+    : null;
+  const phoneAction = member.phone
+    ? {
+        memberName: member.name,
+        type: "phone" as const,
+        value: member.phone,
+        href: getPhoneHref(member.phone),
+      }
+    : null;
 
   return (
     <div
@@ -257,30 +286,145 @@ function TeamMemberContactLinks({ member }: { member: TeamMember }) {
       ].join(" ")}
       aria-hidden={!hasContact}
     >
-      {member.email ? (
+      <div className="team-member-contact-icons">
+        {emailAction ? (
+          <button
+            type="button"
+            className="team-member-contact-icon"
+            onClick={() => onMobileContactClick?.(emailAction)}
+            aria-label={`E-Mail-Adresse von ${member.name} öffnen`}
+          >
+            <Mail className="h-4 w-4" aria-hidden="true" />
+          </button>
+        ) : (
+          <span className="team-member-contact-icon-placeholder" />
+        )}
+        {phoneAction ? (
+          <button
+            type="button"
+            className="team-member-contact-icon"
+            onClick={() => onMobileContactClick?.(phoneAction)}
+            aria-label={`Telefonnummer von ${member.name} öffnen`}
+          >
+            <Phone className="h-4 w-4" aria-hidden="true" />
+          </button>
+        ) : (
+          <span className="team-member-contact-icon-placeholder" />
+        )}
+      </div>
+
+      {emailAction ? (
         <a
           className="team-member-contact-link"
-          href={`mailto:${member.email}`}
+          href={emailAction.href}
           aria-label={`E-Mail an ${member.name} senden`}
         >
           <Mail className="h-3.5 w-3.5" aria-hidden="true" />
-          <span>{member.email}</span>
+          <span>{emailAction.value}</span>
         </a>
       ) : (
         <span className="team-member-contact-placeholder" />
       )}
-      {member.phone ? (
+      {phoneAction ? (
         <a
           className="team-member-contact-link"
-          href={getPhoneHref(member.phone)}
+          href={phoneAction.href}
           aria-label={`${member.name} telefonisch kontaktieren`}
         >
           <Phone className="h-3.5 w-3.5" aria-hidden="true" />
-          <span>{member.phone}</span>
+          <span>{phoneAction.value}</span>
         </a>
       ) : (
         <span className="team-member-contact-placeholder" />
       )}
+    </div>
+  );
+}
+
+function TeamContactOverlay({
+  contactAction,
+  onClose,
+}: {
+  contactAction: ContactAction;
+  onClose: () => void;
+}) {
+  const [copyLabel, setCopyLabel] = useState("Kopieren");
+  const isEmail = contactAction.type === "email";
+
+  const copyToClipboard = async () => {
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(contactAction.value);
+      } else {
+        const textarea = document.createElement("textarea");
+        textarea.value = contactAction.value;
+        textarea.setAttribute("readonly", "");
+        textarea.style.position = "fixed";
+        textarea.style.left = "-9999px";
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textarea);
+      }
+      setCopyLabel("Kopiert");
+    } catch {
+      setCopyLabel("Bitte manuell kopieren");
+    }
+  };
+
+  return (
+    <div
+      className="mobile-viewport-overlay fixed inset-0 z-[2147483100] flex items-end justify-center bg-forest-900/72 px-4 py-5 backdrop-blur-md sm:items-center sm:px-8"
+      role="dialog"
+      aria-modal="true"
+      aria-label={`${isEmail ? "E-Mail-Adresse" : "Telefonnummer"} von ${contactAction.memberName}`}
+      onClick={onClose}
+    >
+      <div
+        className="team-contact-overlay-panel mobile-viewport-overlay__panel w-full max-w-[25rem] rounded-[1.75rem] border border-white/18 bg-white p-5 text-ink shadow-2xl"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-forest-100/68">
+              {isEmail ? "E-Mail" : "Telefon"}
+            </p>
+            <h3 className="mt-2 text-xl font-semibold leading-tight text-ink">
+              {contactAction.memberName}
+            </h3>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white text-ink"
+            aria-label="Kontaktfenster schließen"
+          >
+            <X className="h-5 w-5" />
+          </button>
+        </div>
+
+        <p className="mt-5 break-all rounded-[1rem] bg-slate-100 px-4 py-3 text-base font-semibold text-ink">
+          {contactAction.value}
+        </p>
+
+        <div className="mt-5 grid gap-3">
+          <button
+            type="button"
+            onClick={copyToClipboard}
+            className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-forest-900 px-5 py-3 text-sm font-bold text-white"
+          >
+            <Copy className="h-4 w-4" aria-hidden="true" />
+            {copyLabel}
+          </button>
+          <a
+            href={contactAction.href}
+            className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-ink"
+          >
+            <ExternalLink className="h-4 w-4" aria-hidden="true" />
+            {isEmail ? "E-Mail schreiben" : "Direkt anrufen"}
+          </a>
+        </div>
+      </div>
     </div>
   );
 }
@@ -300,6 +444,8 @@ export function HomeTeamSection({ variant = "company" }: { variant?: "company" |
         : teamMembers;
   const [activeCategoryId, setActiveCategoryId] = useState(categories[0].id);
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
+  const [activeContactAction, setActiveContactAction] =
+    useState<ContactAction | null>(null);
   const [showAllMembers, setShowAllMembers] = useState(false);
   const activeCategory = categories.find(
     (category) => category.id === activeCategoryId,
@@ -312,13 +458,14 @@ export function HomeTeamSection({ variant = "company" }: { variant?: "company" |
   const displayedMembers = visibleMembers;
 
   useEffect(() => {
-    if (!selectedMember) {
+    if (!selectedMember && !activeContactAction) {
       return;
     }
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setSelectedMember(null);
+        setActiveContactAction(null);
       }
     };
 
@@ -332,7 +479,7 @@ export function HomeTeamSection({ variant = "company" }: { variant?: "company" |
       document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [selectedMember]);
+  }, [selectedMember, activeContactAction]);
 
   return (
     <SectionShell id="team">
@@ -452,7 +599,10 @@ export function HomeTeamSection({ variant = "company" }: { variant?: "company" |
                       </p>
                     </div>
                   </button>
-                  <TeamMemberContactLinks member={member} />
+                  <TeamMemberContactLinks
+                    member={member}
+                    onMobileContactClick={setActiveContactAction}
+                  />
                 </article>
               ))}
             </div>
@@ -526,11 +676,20 @@ export function HomeTeamSection({ variant = "company" }: { variant?: "company" |
                 <p className="team-overlay-role mt-1 text-sm font-extrabold">
                   {selectedMember.role}
                 </p>
-                <TeamMemberContactLinks member={selectedMember} />
+                <TeamMemberContactLinks
+                  member={selectedMember}
+                  onMobileContactClick={setActiveContactAction}
+                />
               </div>
             </div>
           </div>
         </div>
+      ), document.body) : null}
+      {activeContactAction ? createPortal((
+        <TeamContactOverlay
+          contactAction={activeContactAction}
+          onClose={() => setActiveContactAction(null)}
+        />
       ), document.body) : null}
     </SectionShell>
   );
