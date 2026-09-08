@@ -12,7 +12,7 @@ $zBasePath = Join-Path -Path (Join-Path -Path "Z:\01" -ChildPath $zCompanyFolder
 $websiteTarget = Join-Path -Path $zBasePath -ChildPath "New project - laufender Spiegel"
 $studioTarget = Join-Path -Path $zBasePath -ChildPath "studio-webseite-redaktion - laufender Spiegel"
 $logDir = Join-Path -Path $zBasePath -ChildPath "sync-logs"
-$logFile = Join-Path $logDir ("sync-" + (Get-Date -Format "yyyy-MM") + ".log")
+$logFile = Join-Path $logDir ("sync-" + (Get-Date -Format "yyyy-MM-dd-HHmmss") + ".log")
 
 $excludedDirs = @(
   "node_modules",
