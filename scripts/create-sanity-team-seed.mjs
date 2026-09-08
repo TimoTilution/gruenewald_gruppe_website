@@ -87,7 +87,7 @@ const members = [
   { company: "verwaltung", department: "it", name: "Shqiprim Salihu", role: "Sachbearbeiter IT", imageSrc: "/images/verwaltung/team-shqiprim-salihu.png" },
   { company: "verwaltung", department: "personalwesen", name: "Brigitte Marx", role: "Lohnbuchhaltung", imageSrc: "/images/verwaltung/team-brigitte-marx.png" },
   { company: "verwaltung", department: "personalwesen", name: "Theresa Janke", role: "Auszubildende", imageSrc: "/images/verwaltung/team-theresa-janke.png" },
-  { company: "hrw", department: "fachkraefteverwaltung", name: "Norbert Bartholomäus", role: "Ansprechpartner der HRW GmbH", imageSrc: "/images/hrw/norbert-bartholomaeus.png" },
+  { company: "hrw", department: "fachkraefteverwaltung", name: "Norbert Bartholomäus", role: "Geschäftsführer der HRW GmbH", imageSrc: "/images/hrw/norbert-bartholomaeus.png" },
   { company: "clay-construction", department: "geschaeftsfuehrung", name: "Jan Grünewald", degree: "Dipl. Bau-Ing.", role: "Geschäftsführung", imageSrc: "/images/team/jan-gruenewald.png" },
 ];
 

@@ -53,6 +53,16 @@ type SanityTeamMember = {
   };
 };
 
+const groupCategories: CmsTeamCategory[] = [
+  { id: "geschaeftsfuehrung", label: "Geschäftsführung" },
+  { id: "vertrieb", label: "Vertrieb" },
+  { id: "produktion", label: "Produktion" },
+  { id: "marketing", label: "Marketing" },
+  { id: "zentrale-dienste", label: "Zentrale Dienste" },
+  { id: "verwaltung", label: "Verwaltung" },
+  { id: "fachkraefteverwaltung", label: "Fachkräfteverwaltung" },
+];
+
 const groupCompanySlugs = new Set<CompanySlug>([
   "tilution",
   "gruenewald",
@@ -79,6 +89,24 @@ function getImageSrc(member: SanityTeamMember) {
   }
 
   return cleanText(member.legacyImagePath);
+}
+
+function getCategoryId(member: SanityTeamMember, variant: "tilution" | "clay" | "group" | "verwaltung") {
+  if (variant === "group") {
+    if (member.company?.slug === "verwaltung") return "verwaltung";
+    if (member.company?.slug === "hrw") return "fachkraefteverwaltung";
+  }
+
+  return member.department?.slug ?? "";
+}
+
+function normalizeKey(value?: string) {
+  return (value ?? "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
 }
 
 function bySortAndLabel(
@@ -124,12 +152,35 @@ export async function getCmsTeamData(
       return null;
     }
 
+    const uniqueMembers = Array.from(
+      relevantMembers
+        .sort((left, right) => bySortAndLabel(left, right))
+        .reduce((membersByKey, member) => {
+          const categoryId = getCategoryId(member, variant);
+          const companyScope = variant === "group" ? "group" : member.company?.slug;
+          const key = [
+            companyScope,
+            categoryId,
+            normalizeKey(member.name),
+          ].join(":");
+
+          if (!membersByKey.has(key)) {
+            membersByKey.set(key, member);
+          }
+
+          return membersByKey;
+        }, new Map<string, SanityTeamMember>())
+        .values(),
+    );
+
     const categoryMap = new Map<
       string,
       CmsTeamCategory & { sortOrder?: number }
     >();
 
-    relevantMembers.forEach((member) => {
+    uniqueMembers.forEach((member) => {
+      if (variant === "group") return;
+
       const departmentSlug = member.department?.slug;
       const departmentTitle = cleanText(member.department?.title);
       if (!departmentSlug || !departmentTitle) return;
@@ -155,17 +206,23 @@ export async function getCmsTeamData(
       }
     });
 
-    const categories = Array.from(categoryMap.values())
-      .sort(bySortAndLabel)
-      .map(({ id, label }) => ({ id, label }));
+    const categories = variant === "group"
+      ? groupCategories.filter((category) =>
+          uniqueMembers.some(
+            (member) => getCategoryId(member, variant) === category.id,
+          ),
+        )
+      : Array.from(categoryMap.values())
+          .sort(bySortAndLabel)
+          .map(({ id, label }) => ({ id, label }));
 
-    const members = relevantMembers
+    const members = uniqueMembers
       .sort((left, right) => bySortAndLabel(left, right))
       .map<CmsTeamMember>((member) => ({
         name: cleanText(member.name) ?? "",
         degree: cleanText(member.degree),
         role: cleanText(member.role) ?? "",
-        categoryId: member.department?.slug ?? "",
+        categoryId: getCategoryId(member, variant),
         imageSrc: getImageSrc(member),
         email: cleanText(member.email),
         phone: cleanText(member.phone),
