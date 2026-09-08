@@ -253,7 +253,7 @@
     min-height: 3rem;
     flex-direction: column;
     justify-content: flex-start;
-    padding: 0.35rem 0.85rem;
+    padding: 0.72rem 0.85rem 0.04rem;
   }
 
   .team-member-contact-icons {
@@ -1323,7 +1323,7 @@ body {
     min-height: 3rem;
     flex-direction: column;
     justify-content: flex-start;
-    padding: 0.35rem 0.65rem;
+    padding: 0.72rem 0.65rem 0.04rem;
   }
 
   .team-member-contact-icons {
