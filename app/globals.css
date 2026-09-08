@@ -249,7 +249,7 @@
     min-height: 3.8rem;
     flex-direction: column;
     justify-content: flex-start;
-    gap: 0.38rem;
+    gap: 0.65rem;
     padding: 0 0.85rem 0.85rem;
   }
 
@@ -258,14 +258,20 @@
   }
 
   .team-member-contact-link {
+    position: relative;
+    z-index: 3;
     display: flex;
+    width: 100%;
     min-width: 0;
+    min-height: 1.25rem;
     align-items: center;
     gap: 0.42rem;
     color: #0b1220;
+    cursor: pointer;
     font-size: 0.62rem;
     font-weight: 750;
     line-height: 1.2;
+    pointer-events: auto;
     text-decoration: none;
   }
 
@@ -1284,7 +1290,7 @@ body {
     min-height: 3.9rem;
     flex-direction: column;
     justify-content: flex-start;
-    gap: 0.35rem;
+    gap: 0.65rem;
     padding: 0 0.65rem 0.8rem;
   }
 
@@ -1293,15 +1299,21 @@ body {
   }
 
   .team-member-contact-link {
+    position: relative;
+    z-index: 3;
     display: flex;
+    width: 100%;
     min-width: 0;
+    min-height: 1.25rem;
     align-items: center;
     gap: 0.42rem;
     border-radius: 999px;
     color: #0b1220;
+    cursor: pointer;
     font-size: 0.62rem;
     font-weight: 750;
     line-height: 1.2;
+    pointer-events: auto;
     text-decoration: none;
     transition:
       color 180ms ease,
@@ -1371,7 +1383,7 @@ body {
 
     .team-member-contact {
       min-height: 4.45rem;
-      gap: 0.48rem;
+      gap: 0.78rem;
       padding: 0 1.15rem 1.25rem;
     }
 
