@@ -26,10 +26,10 @@ export function HrwHeroSection() {
         <div className="relative z-10 max-w-4xl">
           <p className="section-eyebrow">HRW GmbH</p>
           <h1 className="mt-6 max-w-[18ch] text-4xl font-semibold leading-[1.04] tracking-[-0.045em] sm:text-5xl lg:text-6xl">Die Personalkraft hinter der Grünewald Gruppe.</h1>
-          <p className="mt-6 max-w-3xl text-base font-semibold leading-8 text-white/90 sm:text-lg">Die HRW GmbH ist der exklusive Personaldienstleister für die Unternehmen der Grünewald Gruppe. Wir bündeln qualifizierte Fachkräfte, stellen bedarfsgerechte Teams zusammen und schaffen die personellen Kapazitäten für eine zuverlässige Umsetzung anspruchsvoller Bauprojekte.</p>
+          <p className="mt-6 max-w-3xl text-base font-semibold leading-8 text-white/90 sm:text-lg">Die HRW GmbH ist der Personaldienstleister für die Unternehmen der Grünewald Gruppe. Wir bündeln qualifizierte Fachkräfte, stellen bedarfsgerechte Teams zusammen und schaffen die personellen Kapazitäten für eine zuverlässige Umsetzung anspruchsvoller Bauprojekte.</p>
         </div>
         <div className="relative z-10 mt-12 grid gap-4 sm:grid-cols-3">
-          {["Exklusiv für die Gruppe", "Flexible Kapazitäten", "Erfahrene Fachkräfte"].map((point) => (
+          {["Für die Gruppe", "Flexible Kapazitäten", "Erfahrene Fachkräfte"].map((point) => (
             <div key={point} className="liquid-card-dark flex min-h-20 items-center justify-center gap-3 rounded-[1.35rem] px-5 py-4 text-center text-white">
               <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/35 bg-white/20"><Check className="h-4 w-4 stroke-[2.4]" /></span>
               <span className="text-base font-semibold sm:text-lg">{point}</span>
@@ -101,7 +101,7 @@ export function HrwContactSection() {
       <p className="section-eyebrow">Kontakt</p><h2 className="section-heading">Direkt und unkompliziert erreichbar.</h2>
       <div className="mt-10 grid items-center gap-8 md:grid-cols-[minmax(0,22rem)_1fr]">
         <div className="relative aspect-[4/5] overflow-hidden rounded-[1.75rem] bg-[#fff4e8]"><Image src={getOptimizedSiteImageSrc("/images/hrw/norbert-bartholomaeus.png")} alt="Norbert Bartholomäus" fill sizes="(min-width: 768px) 352px, calc(100vw - 88px)" className="object-cover" /></div>
-        <div className="min-w-0"><p className="text-3xl font-semibold text-[#272425]">Norbert Bartholomäus</p><p className="mt-2 text-base font-semibold text-[#f68712]">Ansprechpartner der HRW GmbH</p><p className="mt-6 max-w-xl leading-7 text-[#6e696b]">Kontaktieren Sie uns gern, wenn Sie in unsere Registerkartei aufgenommen werden möchten oder ein Projekt besprechen wollen.</p>
+        <div className="min-w-0"><p className="text-3xl font-semibold text-[#272425]">Norbert Bartholomäus</p><p className="mt-2 text-base font-semibold text-[#f68712]">Geschäftsführer der HRW GmbH</p><p className="mt-6 max-w-xl leading-7 text-[#6e696b]">Kontaktieren Sie uns gern, wenn Sie in unsere Registerkartei aufgenommen werden möchten oder ein Projekt besprechen wollen.</p>
           <div className="mt-7 grid max-w-[34rem] gap-4">
             <a href="tel:+4915172226537" className="liquid-card group flex h-24 min-w-0 items-center gap-4 px-5 py-4 text-white transition-transform duration-300 hover:-translate-y-1">
               <span className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-white/35 bg-white/18 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.45)] backdrop-blur-md"><Phone className="h-5 w-5 stroke-[2]" /></span>
