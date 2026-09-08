@@ -222,10 +222,13 @@
 
   .team-member-card {
     display: flex;
+    height: auto !important;
     min-height: 100%;
+    align-self: start;
   }
 
   .team-member-main {
+    flex: 0 0 auto !important;
     min-width: 0;
     color: inherit;
   }
@@ -1137,7 +1140,10 @@ body {
 
   .team-member-card {
     width: 100%;
+    height: auto !important;
+    min-height: 0;
     min-width: 0;
+    align-self: start;
     cursor: default;
   }
 
@@ -1146,6 +1152,7 @@ body {
   }
 
   .team-member-main {
+    flex: 0 0 auto !important;
     min-width: 0;
     color: inherit;
   }
