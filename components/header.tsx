@@ -63,6 +63,7 @@ const hrwSecondaryNavigation = [
   { href: "/hrw", sectionId: "hero", label: "Start" },
   { href: "/hrw/leistungen", sectionId: "leistungen", label: "Leistungen" },
   { href: "/hrw/warum-hrw", sectionId: "warum-hrw", label: "Warum HRW" },
+  { href: "/hrw/karriere", sectionId: "karriere", label: "Karriere" },
   { href: "/hrw/kontakt", sectionId: "kontakt", label: "Kontakt" },
 ];
 

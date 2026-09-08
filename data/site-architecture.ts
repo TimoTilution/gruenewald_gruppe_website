@@ -153,6 +153,7 @@ export const companySectionPages = [
   ["verwaltung", "kontakt", "Kontakt", "Kontakt zur Verwaltung"],
   ["hrw", "leistungen", "Leistungen", "Leistungen der HRW GmbH"],
   ["hrw", "warum-hrw", "Warum HRW", "Warum HRW GmbH"],
+  ["hrw", "karriere", "Karriere", "Karriere bei der HRW GmbH"],
   ["hrw", "kontakt", "Kontakt", "Kontakt zur HRW GmbH"],
 ] as const;
 

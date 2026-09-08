@@ -1,4 +1,5 @@
 import { HrwContactSection, HrwHeroSection, HrwServicesSection, HrwWhySection } from "@/components/hrw/hrw-page-sections";
+import { HomeCareerSection } from "@/components/home/home-career-section";
 
 export default function HrwPage() {
   return (
@@ -6,6 +7,7 @@ export default function HrwPage() {
       <HrwHeroSection />
       <HrwServicesSection />
       <HrwWhySection />
+      <HomeCareerSection />
       <HrwContactSection />
     </div>
   );

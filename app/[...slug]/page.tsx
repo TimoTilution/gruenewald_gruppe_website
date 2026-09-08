@@ -278,6 +278,7 @@ function getCompanySectionRoute(path: string, slug: string[]): RouteContent | nu
 
       if (company === "hrw" && section === "leistungen") return <HrwServicesSection />;
       if (company === "hrw" && section === "warum-hrw") return <HrwWhySection />;
+      if (company === "hrw" && section === "karriere") return <HomeCareerSection />;
       if (company === "hrw" && section === "kontakt") return <HrwContactSection />;
 
       return <PageHero eyebrow={eyebrow} title={title} description={description} />;
