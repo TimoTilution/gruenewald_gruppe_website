@@ -3411,6 +3411,22 @@ body:has(.clay-theme) footer .liquid-card-dark::after {
   height: 1rem;
 }
 
+.group-theme .team-member-contact-link,
+.group-theme .team-member-contact-link:hover,
+.group-theme .team-member-contact-link:focus-visible {
+  color: #ffffff !important;
+}
+
+.group-theme .team-member-contact-link svg {
+  color: #ffffff;
+}
+
+.group-theme .team-member-contact-icon {
+  border-color: rgba(255, 255, 255, 0.36);
+  background: rgba(24, 41, 86, 0.86);
+  color: #ffffff;
+}
+
 @media (max-width: 639px) {
   .team-overlay-meta .team-member-contact {
     margin-top: 1rem;

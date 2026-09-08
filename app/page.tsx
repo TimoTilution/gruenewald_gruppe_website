@@ -12,7 +12,7 @@ export default async function HomePage() {
   const teamData = await getCmsTeamData("group");
 
   return (
-    <>
+    <div className="group-theme contents">
       <HomeHeroSection />
       <HomeAboutSection />
       <HomeServicesSection />
@@ -21,6 +21,6 @@ export default async function HomePage() {
       <HomeTeamSection variant="group" teamData={teamData} />
       <HomeCareerSection />
       <HomeContactSection />
-    </>
+    </div>
   );
 }
