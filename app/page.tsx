@@ -6,8 +6,11 @@ import { HomeInnovationsSection } from "@/components/home/home-innovations-secti
 import { HomeReferencesSection } from "@/components/home/home-references-section";
 import { HomeServicesSection } from "@/components/home/home-services-section";
 import { HomeTeamSection } from "@/components/home/home-team-section";
+import { getCmsTeamData } from "@/lib/sanity/team";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const teamData = await getCmsTeamData("group");
+
   return (
     <>
       <HomeHeroSection />
@@ -15,7 +18,7 @@ export default function HomePage() {
       <HomeServicesSection />
       <HomeReferencesSection />
       <HomeInnovationsSection />
-      <HomeTeamSection variant="group" />
+      <HomeTeamSection variant="group" teamData={teamData} />
       <HomeCareerSection />
       <HomeContactSection />
     </>

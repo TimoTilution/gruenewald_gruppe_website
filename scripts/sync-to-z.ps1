@@ -22,6 +22,11 @@ $excludedDirs = @(
   ".sanity"
 )
 
+$excludedFiles = @(
+  ".env",
+  ".env.*"
+)
+
 function Invoke-SafeRobocopy {
   param(
     [Parameter(Mandatory = $true)][string]$Source,
@@ -38,7 +43,7 @@ function Invoke-SafeRobocopy {
 
   Add-Content -LiteralPath $logFile -Value "[$timestamp] START $Name"
 
-  & robocopy $Source $Target /E /XD $excludedDirs /R:1 /W:1 /NP /FFT /LOG+:$logFile
+  & robocopy $Source $Target /E /XD $excludedDirs /XF $excludedFiles /R:1 /W:1 /NP /FFT /LOG+:$logFile
   $code = $LASTEXITCODE
 
   if ($code -le 7) {

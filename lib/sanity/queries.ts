@@ -15,8 +15,9 @@ export const visibleTeamMembersQuery = `*[_type == "teamMember" && isVisible != 
   sortOrder,
   imageAlt,
   photo,
-  "company": company->{title, "slug": slug.current},
-  "department": department->{title, "slug": slug.current}
+  legacyImagePath,
+  "company": company->{title, "slug": slug.current, sortOrder},
+  "department": department->{title, "slug": slug.current, sortOrder}
 }`;
 
 export const visibleReferencesQuery = `*[_type == "projectReference" && isVisible != false] | order(sortOrder asc, title asc) {

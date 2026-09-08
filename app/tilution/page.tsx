@@ -6,8 +6,11 @@ import { HomeInnovationsSection } from "@/components/home/home-innovations-secti
 import { HomeReferencesSection } from "@/components/home/home-references-section";
 import { HomeTeamSection } from "@/components/home/home-team-section";
 import { TilutionServicesSection } from "@/components/tilution/tilution-services-section";
+import { getCmsTeamData } from "@/lib/sanity/team";
 
-export default function TilutionPage() {
+export default async function TilutionPage() {
+  const teamData = await getCmsTeamData("tilution");
+
   return (
     <div className="tilution-theme contents">
       <HomeHeroSection variant="tilution" />
@@ -15,7 +18,7 @@ export default function TilutionPage() {
       <HomeAboutSection />
       <HomeReferencesSection />
       <HomeInnovationsSection />
-      <HomeTeamSection />
+      <HomeTeamSection variant="tilution" teamData={teamData} />
       <HomeCareerSection />
       <HomeContactSection />
     </div>

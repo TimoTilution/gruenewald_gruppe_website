@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 const outputFile = path.join(process.cwd(), ".sanity-seed", "team-documents.json");
+const ndjsonOutputFile = path.join(process.cwd(), ".sanity-seed", "team-documents.ndjson");
 
 function slugify(value) {
   return value
@@ -27,6 +28,14 @@ function ref(id) {
     _ref: id,
   };
 }
+
+const companies = [
+  { slug: "tilution", title: "Tilution GmbH", sortOrder: 1 },
+  { slug: "gruenewald", title: "Gruenewald GmbH", sortOrder: 2 },
+  { slug: "clay-construction", title: "Clay Construction", sortOrder: 3 },
+  { slug: "verwaltung", title: "Gruenewald Verwaltung", sortOrder: 4 },
+  { slug: "hrw", title: "HRW GmbH", sortOrder: 5 },
+];
 
 const departments = [
   { company: "tilution", slug: "geschaeftsfuehrung", title: "Geschäftsführung", sortOrder: 1 },
@@ -83,6 +92,14 @@ const members = [
 ];
 
 const docs = [
+  ...companies.map((company) => ({
+    _id: `company.${company.slug}`,
+    _type: "company",
+    title: company.title,
+    slug: { _type: "slug", current: company.slug },
+    isVisible: true,
+    sortOrder: company.sortOrder,
+  })),
   ...departments.map((department) => ({
     _id: `teamDepartment.${department.company}.${department.slug}`,
     _type: "teamDepartment",
@@ -114,4 +131,6 @@ const docs = [
 
 fs.mkdirSync(path.dirname(outputFile), { recursive: true });
 fs.writeFileSync(outputFile, JSON.stringify(docs, null, 2));
+fs.writeFileSync(ndjsonOutputFile, docs.map((doc) => JSON.stringify(doc)).join("\n"));
 console.log(`Wrote ${docs.length} Sanity team documents to ${outputFile}`);
+console.log(`Wrote ${docs.length} Sanity team documents to ${ndjsonOutputFile}`);

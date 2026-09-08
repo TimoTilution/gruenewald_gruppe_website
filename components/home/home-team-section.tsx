@@ -10,12 +10,12 @@ import { getOptimizedSiteImageSrc } from "@/lib/site-image";
 const initialVisibleMobileTeamMemberCount = 2;
 const initialVisibleDesktopTeamMemberCount = 4;
 
-type TeamCategory = {
+export type TeamCategory = {
   id: string;
   label: string;
 };
 
-type TeamMember = {
+export type TeamMember = {
   name: string;
   degree?: string;
   role: string;
@@ -25,6 +25,13 @@ type TeamMember = {
   email?: string;
   phone?: string;
 };
+
+export type TeamData = {
+  categories: TeamCategory[];
+  members: TeamMember[];
+};
+
+type TeamSectionVariant = "tilution" | "clay" | "group" | "verwaltung";
 
 type ContactAction = {
   memberName: string;
@@ -431,19 +438,29 @@ function TeamContactOverlay({
   );
 }
 
-export function HomeTeamSection({ variant = "company" }: { variant?: "company" | "group" | "verwaltung" }) {
-  const categories =
+export function HomeTeamSection({
+  variant = "tilution",
+  teamData,
+}: {
+  variant?: TeamSectionVariant;
+  teamData?: TeamData | null;
+}) {
+  const fallbackCategories =
     variant === "verwaltung"
       ? verwaltungTeamCategories
       : variant === "group"
         ? groupTeamCategories
         : teamCategories;
-  const members =
+  const fallbackMembers =
     variant === "verwaltung"
       ? verwaltungTeamMembers
       : variant === "group"
         ? groupTeamMembers
         : teamMembers;
+  const categories = teamData?.categories.length
+    ? teamData.categories
+    : fallbackCategories;
+  const members = teamData?.members.length ? teamData.members : fallbackMembers;
   const [activeCategoryId, setActiveCategoryId] = useState(categories[0].id);
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
   const [activeContactAction, setActiveContactAction] =
