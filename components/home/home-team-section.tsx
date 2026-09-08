@@ -247,7 +247,7 @@ const groupTeamMembers: TeamMember[] = [
   })),
   {
     name: "Norbert Bartholomäus",
-    role: "Geschäftsführer",
+    role: "Geschäftsführer der HRW GmbH",
     categoryId: "fachkraefteverwaltung",
     imageSrc: "/images/hrw/norbert-bartholomaeus.png",
   },

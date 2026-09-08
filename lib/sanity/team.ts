@@ -115,7 +115,7 @@ function getRole(member: SanityTeamMember, variant: "tilution" | "clay" | "group
     member.company?.slug === "hrw" &&
     normalizeKey(member.name) === "norbert-bartholomaus"
   ) {
-    return "Geschäftsführer";
+    return "Geschäftsführer der HRW GmbH";
   }
 
   return cleanText(member.role) ?? "";
