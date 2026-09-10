@@ -264,10 +264,10 @@ function getPhoneHref(phone?: string) {
 
 function TeamMemberContactLinks({
   member,
-  onMobileContactClick,
+  onContactClick,
 }: {
   member: TeamMember;
-  onMobileContactClick?: (contactAction: ContactAction) => void;
+  onContactClick?: (contactAction: ContactAction) => void;
 }) {
   const hasContact = Boolean(member.email || member.phone);
   const emailAction = member.email
@@ -300,52 +300,23 @@ function TeamMemberContactLinks({
           <button
             type="button"
             className="team-member-contact-icon"
-            onClick={() => onMobileContactClick?.(emailAction)}
+            onClick={() => onContactClick?.(emailAction)}
             aria-label={`E-Mail-Adresse von ${member.name} öffnen`}
           >
             <Mail className="h-4 w-4" aria-hidden="true" />
           </button>
-        ) : (
-          <span className="team-member-contact-icon-placeholder" />
-        )}
+        ) : null}
         {phoneAction ? (
           <button
             type="button"
             className="team-member-contact-icon"
-            onClick={() => onMobileContactClick?.(phoneAction)}
+            onClick={() => onContactClick?.(phoneAction)}
             aria-label={`Telefonnummer von ${member.name} öffnen`}
           >
             <Phone className="h-4 w-4" aria-hidden="true" />
           </button>
-        ) : (
-          <span className="team-member-contact-icon-placeholder" />
-        )}
+        ) : null}
       </div>
-
-      {emailAction ? (
-        <a
-          className="team-member-contact-link"
-          href={emailAction.href}
-          aria-label={`E-Mail an ${member.name} senden`}
-        >
-          <Mail className="h-3.5 w-3.5" aria-hidden="true" />
-          <span>{emailAction.value}</span>
-        </a>
-      ) : (
-        <span className="team-member-contact-placeholder" />
-      )}
-      {phoneAction ? (
-        <a
-          className="team-member-contact-link"
-          href={phoneAction.href}
-          aria-label={`${member.name} telefonisch kontaktieren`}
-        >
-          <Phone className="h-3.5 w-3.5" aria-hidden="true" />
-          <span>{phoneAction.value}</span>
-        </a>
-      ) : (
-        <span className="team-member-contact-placeholder" />
-      )}
     </div>
   );
 }
@@ -425,13 +396,26 @@ function TeamContactOverlay({
             <Copy className="h-4 w-4" aria-hidden="true" />
             {copyLabel}
           </button>
-          <a
-            href={contactAction.href}
-            className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-ink"
-          >
-            <ExternalLink className="h-4 w-4" aria-hidden="true" />
-            {isEmail ? "E-Mail schreiben" : "Direkt anrufen"}
-          </a>
+          {isEmail ? (
+            <div className="team-contact-send-options">
+              <p className="team-contact-send-options__label">E-Mail versenden</p>
+              <a
+                href={contactAction.href}
+                className="team-contact-send-option"
+              >
+                <ExternalLink className="h-4 w-4" aria-hidden="true" />
+                Outlook
+              </a>
+            </div>
+          ) : (
+            <a
+              href={contactAction.href}
+              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-ink"
+            >
+              <ExternalLink className="h-4 w-4" aria-hidden="true" />
+              Direkt anrufen
+            </a>
+          )}
         </div>
       </div>
     </div>
@@ -620,7 +604,7 @@ export function HomeTeamSection({
                   </button>
                   <TeamMemberContactLinks
                     member={member}
-                    onMobileContactClick={setActiveContactAction}
+                    onContactClick={setActiveContactAction}
                   />
                 </article>
               ))}
@@ -697,7 +681,7 @@ export function HomeTeamSection({
                 </p>
                 <TeamMemberContactLinks
                   member={selectedMember}
-                  onMobileContactClick={setActiveContactAction}
+                  onContactClick={setActiveContactAction}
                 />
               </div>
             </div>

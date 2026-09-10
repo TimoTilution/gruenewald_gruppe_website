@@ -1448,19 +1448,10 @@ body {
 
     .team-member-contact {
       min-height: 4.45rem;
-      gap: 0.78rem;
       padding: 0 1.15rem 1.25rem;
     }
 
-    .team-member-contact-icons,
-    .team-member-contact-icon,
-    .team-member-contact-icon-placeholder {
-      display: none;
-    }
-
-    .team-member-contact-link {
-      gap: 0.5rem;
-      font-size: 0.78rem;
+    .team-member-contact-icons {
       display: flex;
     }
 
@@ -3331,7 +3322,7 @@ body:has(.clay-theme) footer .liquid-card-dark::after {
 @media (max-width: 639px) {
   .team-member-card {
     height: 100% !important;
-    min-height: 22rem !important;
+    min-height: 18rem !important;
     align-self: stretch;
   }
 
@@ -3382,33 +3373,55 @@ body:has(.clay-theme) footer .liquid-card-dark::after {
   }
 
   .team-member-contact-icons,
-  .team-member-contact-icon,
-  .team-member-contact-icon-placeholder {
-    display: none !important;
-  }
-
-  .team-member-contact-link {
+  .team-member-contact-icon {
     display: flex !important;
   }
 }
 
 .team-overlay-meta .team-member-contact {
   margin-top: 1.15rem;
-  gap: 0.9rem;
   min-height: auto;
   padding: 0.35rem 0 0.55rem;
 }
 
-.team-overlay-meta .team-member-contact-link {
-  min-height: 1.45rem;
-  gap: 0.58rem;
-  font-size: 0.92rem;
-  line-height: 1.35;
+.team-contact-send-options {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.65rem;
 }
 
-.team-overlay-meta .team-member-contact-link svg {
-  width: 1rem;
-  height: 1rem;
+.team-contact-send-options__label {
+  grid-column: 1 / -1;
+  margin: 0.1rem 0 0.15rem;
+  color: rgba(11, 18, 32, 0.68);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.team-contact-send-option {
+  display: inline-flex;
+  min-height: 3rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 999px;
+  background: #ffffff;
+  padding: 0.75rem 1rem;
+  color: #0b1220;
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+  transition: border-color 180ms ease, background-color 180ms ease;
+}
+
+.team-contact-send-option:hover,
+.team-contact-send-option:focus-visible {
+  border-color: rgba(11, 18, 32, 0.28);
+  background: #f8fafc;
 }
 
 .group-theme .team-member-contact-link,
