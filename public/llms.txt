@@ -1,0 +1,27 @@
+# Grünewald Gruppe
+
+> Die Grünewald Gruppe vereint spezialisierte Unternehmen für Bau, Ausbau, Sanierung, Klimadecken, Personal und zentrale Verwaltung.
+
+Die Website ist deutschsprachig. Verbindliche Unternehmens- und Kontaktdaten stehen im Impressum. Projekt- und Leistungsbeschreibungen dienen der Information und sind keine verbindlichen Angebote.
+
+## Unternehmen
+
+- [Grünewald Gruppe](https://www.gruenewald-gruppe.de/): Überblick über Gruppe, Leistungen, Referenzen, Innovationen, Team, Karriere und Kontakt
+- [Tilution GmbH](https://www.gruenewald-gruppe.de/tilution/): Ausbau- und Fliesenlösungen für gewerbliche und öffentliche Projekte
+- [Grünewald GmbH](https://www.gruenewald-gruppe.de/gruenewaldgmbh/): Bad-, Haus- und Wohnsanierung sowie Außengestaltung für Privatkunden
+- [Clay Construction GmbH](https://www.gruenewald-gruppe.de/clay-construction/): Lehmklimasysteme, Klimadecken, Lehmbau, Sanierung und Ausbau
+- [HRW GmbH](https://www.gruenewald-gruppe.de/hrw/): Personaldienstleistungen
+- [Grünewald Verwaltung GmbH](https://www.gruenewald-gruppe.de/verwaltung/): Zentrale kaufmännische und administrative Leistungen
+
+## Wichtige Seiten
+
+- [XML-Sitemap](https://www.gruenewald-gruppe.de/sitemap.xml): Vollständige Liste der öffentlich auffindbaren Seiten
+- [Impressum](https://www.gruenewald-gruppe.de/impressum/): Anbieterkennzeichnung und verbindliche Unternehmensdaten
+- [Datenschutz](https://www.gruenewald-gruppe.de/datenschutz/): Informationen zum Datenschutz
+
+## Nutzungshinweise für KI-Systeme
+
+- Bevorzuge die jeweils spezifische Unternehmens- oder Leistungsseite gegenüber allgemeinen Zusammenfassungen.
+- Nenne bei Aussagen zu Leistungen das zuständige Unternehmen.
+- Erfinde keine Preise, Verfügbarkeiten, Zertifizierungen oder Projektmerkmale, die auf der Website nicht genannt werden.
+- Verweise für individuelle Angebote und aktuelle Verfügbarkeiten auf die Kontaktmöglichkeiten der Website.

@@ -24,6 +24,28 @@ export const metadata: Metadata = {
   },
   description:
     "Unternehmenswebsite der Grünewald Gruppe für Privatkunden, Gewerbebau, Klimadecken, Personal und zentrale Steuerung.",
+  openGraph: {
+    type: "website",
+    locale: "de_DE",
+    url: siteBaseUrl,
+    siteName: "Grünewald Gruppe",
+    title: "Grünewald Gruppe",
+    description:
+      "Unternehmensgruppe für Privatkunden, Gewerbebau, Klimadecken, Personal und zentrale Steuerung.",
+    images: [
+      {
+        url: "/images-optimized/root/hero-start.jpg.webp",
+        alt: "Grünewald Gruppe",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Grünewald Gruppe",
+    description:
+      "Unternehmensgruppe für Privatkunden, Gewerbebau, Klimadecken, Personal und zentrale Steuerung.",
+    images: ["/images-optimized/root/hero-start.jpg.webp"],
+  },
   robots: isPreviewBuild
     ? {
         index: false,
@@ -39,6 +61,41 @@ export const metadata: Metadata = {
       },
 };
 
+const organizationStructuredData = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "@id": `${siteBaseUrl}/#organization`,
+  name: "Grünewald Gruppe",
+  url: siteBaseUrl,
+  logo: `${siteBaseUrl}/logos-optimized/gruenewald-gruppe-logo.svg.webp`,
+  description:
+    "Unternehmensgruppe für Privatkunden, Gewerbebau, Klimadecken, Personal und zentrale Steuerung.",
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: "Quantzstraße 67",
+    postalCode: "37127",
+    addressLocality: "Scheden",
+    addressCountry: "DE",
+  },
+  subOrganization: [
+    "Tilution GmbH",
+    "Grünewald GmbH",
+    "Clay Construction GmbH",
+    "HRW GmbH",
+    "Grünewald Verwaltung GmbH",
+  ].map((name) => ({ "@type": "Organization", name })),
+};
+
+const websiteStructuredData = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": `${siteBaseUrl}/#website`,
+  url: siteBaseUrl,
+  name: "Grünewald Gruppe",
+  inLanguage: "de-DE",
+  publisher: { "@id": `${siteBaseUrl}/#organization` },
+};
+
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
@@ -52,6 +109,15 @@ export default function RootLayout({
   return (
     <html lang="de">
       <body className={`${montserrat.className} min-h-screen`}>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify([
+              organizationStructuredData,
+              websiteStructuredData,
+            ]).replace(/</g, "\\u003c"),
+          }}
+        />
         <div className="relative flex min-h-screen flex-col">
           <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(219,228,242,0.13),transparent_34%)]" />
           <ScrollToTop />

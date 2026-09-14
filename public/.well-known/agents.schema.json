@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://www.gruenewald-gruppe.de/.well-known/agents.schema.json",
+  "title": "Grünewald Gruppe AI discovery metadata",
+  "type": "object",
+  "required": ["name", "description", "url", "language", "llms_txt", "sitemap"],
+  "properties": {
+    "name": { "type": "string" },
+    "description": { "type": "string" },
+    "url": { "type": "string", "format": "uri" },
+    "language": { "type": "string" },
+    "llms_txt": { "type": "string", "format": "uri" },
+    "sitemap": { "type": "string", "format": "uri" },
+    "contact": { "type": "string", "format": "uri" },
+    "policies": { "type": "object" },
+    "capabilities": { "type": "array", "items": { "type": "string" } }
+  },
+  "additionalProperties": true
+}

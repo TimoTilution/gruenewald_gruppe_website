@@ -1,0 +1,20 @@
+{
+  "$schema": "https://www.gruenewald-gruppe.de/.well-known/agents.schema.json",
+  "name": "Grünewald Gruppe",
+  "description": "Unternehmensgruppe für Privatkunden, Gewerbebau, Klimadecken, Personal und zentrale Steuerung.",
+  "url": "https://www.gruenewald-gruppe.de/",
+  "language": "de-DE",
+  "llms_txt": "https://www.gruenewald-gruppe.de/llms.txt",
+  "sitemap": "https://www.gruenewald-gruppe.de/sitemap.xml",
+  "contact": "https://www.gruenewald-gruppe.de/#kontakt",
+  "policies": {
+    "privacy": "https://www.gruenewald-gruppe.de/datenschutz/",
+    "legal": "https://www.gruenewald-gruppe.de/impressum/"
+  },
+  "capabilities": [
+    "public-content-discovery",
+    "company-information",
+    "service-information",
+    "project-reference-discovery"
+  ]
+}
