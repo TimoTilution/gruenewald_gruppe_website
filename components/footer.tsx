@@ -28,6 +28,12 @@ export function Footer() {
         </p>
 
         <div className="flex flex-wrap items-center gap-3 text-sm font-semibold text-white">
+          <a
+            href="#CCM.openWidget"
+            className="rounded-full border border-white/16 bg-white/[0.06] px-4 py-2 transition-colors duration-200 hover:bg-white/[0.12] focus:outline-none focus:ring-2 focus:ring-white/40"
+          >
+            Cookie-Einstellungen
+          </a>
           <Link
             href={getLegalHref("/datenschutz", pathname)}
             onClick={rememberLegalReturnPath}

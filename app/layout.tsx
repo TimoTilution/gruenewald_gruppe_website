@@ -3,6 +3,7 @@ import { Montserrat } from "next/font/google";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import { MobileContactBar } from "@/components/mobile-contact-bar";
+import { ConsentedGoogleAnalytics } from "@/components/consented-google-analytics";
 import { ScrollReveal } from "@/components/scroll-reveal";
 import { ScrollToTop } from "@/components/scroll-to-top";
 import { siteBaseUrl } from "@/data/site-architecture";
@@ -108,7 +109,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="de">
+      <head>
+        <script
+          src="https://cloud.ccm19.de/app.js?apiKey=5c7838d376411fdd99afcb2424de80386c0118570cddf93d&domain=6aa9102e46f2de558501da42"
+          referrerPolicy="origin"
+        />
+      </head>
       <body className={`${montserrat.className} min-h-screen`}>
+        <ConsentedGoogleAnalytics />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
