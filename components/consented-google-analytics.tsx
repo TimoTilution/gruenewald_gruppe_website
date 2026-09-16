@@ -14,7 +14,7 @@ declare global {
     CCM?: {
       acceptedEmbeddings?: CcmEmbedding[];
     };
-    dataLayer?: unknown[];
+    dataLayer?: IArguments[];
     gtag?: (...args: unknown[]) => void;
   }
 }
@@ -39,6 +39,16 @@ export function ConsentedGoogleAnalytics() {
         ),
       );
 
+    const initializeGtag = () => {
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function gtag() {
+        window.dataLayer?.push(arguments);
+      };
+      window.gtag("js", new Date());
+      window.gtag("config", measurementId, { send_page_view: true });
+      document.documentElement.dataset.analyticsReady = "true";
+    };
+
     const loadAnalytics = (consentConfirmed = false) => {
       if (
         loaded.current ||
@@ -46,11 +56,7 @@ export function ConsentedGoogleAnalytics() {
       ) return;
 
       loaded.current = true;
-      window.dataLayer = window.dataLayer || [];
-      window.gtag = (...args: unknown[]) => window.dataLayer?.push(args);
-      window.gtag("js", new Date());
-      window.gtag("config", measurementId);
-      document.documentElement.dataset.analyticsReady = "true";
+      initializeGtag();
 
       if (hasAnalyticsScript()) return;
 
@@ -83,6 +89,9 @@ export function ConsentedGoogleAnalytics() {
     window.addEventListener("ccm19EmbeddingAccepted", handleEmbeddingAccepted);
     window.addEventListener("ccm19WidgetLoaded", handleWidgetLoaded);
     window.addEventListener("ccm19WidgetClosed", handleWidgetClosed);
+    document.addEventListener("ccm19EmbeddingAccepted", handleEmbeddingAccepted);
+    document.addEventListener("ccm19WidgetLoaded", handleWidgetLoaded);
+    document.addEventListener("ccm19WidgetClosed", handleWidgetClosed);
     analyticsScriptObserver.observe(document.head, { childList: true });
     loadAnalytics();
 
@@ -90,6 +99,9 @@ export function ConsentedGoogleAnalytics() {
       window.removeEventListener("ccm19EmbeddingAccepted", handleEmbeddingAccepted);
       window.removeEventListener("ccm19WidgetLoaded", handleWidgetLoaded);
       window.removeEventListener("ccm19WidgetClosed", handleWidgetClosed);
+      document.removeEventListener("ccm19EmbeddingAccepted", handleEmbeddingAccepted);
+      document.removeEventListener("ccm19WidgetLoaded", handleWidgetLoaded);
+      document.removeEventListener("ccm19WidgetClosed", handleWidgetClosed);
       analyticsScriptObserver.disconnect();
     };
   }, []);
