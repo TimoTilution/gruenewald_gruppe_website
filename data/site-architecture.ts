@@ -158,6 +158,14 @@ export const companySectionPages = [
 ] as const;
 
 export const services: ServiceEntry[] = [
+  { company: "tilution", slug: "schwimmbaeder-thermen", title: "Schwimmbäder & Thermen", description: "Keramische Beläge für Schwimmbäder und Thermen – technisch sicher, langlebig und präzise ausgeführt." },
+  { company: "tilution", slug: "hotels-wellness", title: "Hotels & Wellness", description: "Fliesen- und Plattenarbeiten für hochwertige Hotel- und Wellnessbereiche." },
+  { company: "tilution", slug: "oeffentliche-einrichtungen", title: "Öffentliche Einrichtungen", description: "Langlebige und sichere Flächen für stark genutzte öffentliche Einrichtungen." },
+  { company: "tilution", slug: "kliniken-pflegebereiche", title: "Kliniken & Pflegebereiche", description: "Hygienische, sichere und widerstandsfähige Oberflächen für Kliniken und Pflegeeinrichtungen." },
+  { company: "tilution", slug: "grosskuechen", title: "Großküchen", description: "Robuste Boden- und Wandflächen für höchste Beanspruchung in Großküchen." },
+  { company: "tilution", slug: "retail-grossflaechen", title: "Retail & Großflächen", description: "Belastbare und präzise ausgeführte Bodenflächen für großflächige Gewerbeobjekte." },
+  { company: "tilution", slug: "wohnungsbau", title: "Wohnungsbau", description: "Wirtschaftliche und verlässlich ausgeführte Fliesenarbeiten für den Wohnungsbau." },
+  { company: "tilution", slug: "fassaden", title: "Fassaden", description: "Langlebige und witterungsbeständige Fassaden mit Klinker, Riemchen und Keramik." },
   { company: "gruenewald", slug: "aussengestaltung", title: "Aussengestaltung", description: "Terrassen, Wege und Außenbereiche hochwertig geplant und umgesetzt." },
   { company: "gruenewald", slug: "badsanierung", title: "Badsanierung", description: "Komplette Badmodernisierung mit klarer Planung und präziser Ausführung." },
   { company: "gruenewald", slug: "haus-wohnsanierung", title: "Haus- & Wohnsanierung", description: "Sanierungen und Modernisierungen für private Wohnräume." },

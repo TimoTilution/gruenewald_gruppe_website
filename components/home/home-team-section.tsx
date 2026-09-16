@@ -5,7 +5,10 @@ import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { Copy, ExternalLink, Mail, Phone, X } from "lucide-react";
 import { SectionShell } from "@/components/section-shell";
+import { pushUrlWithoutScroll, replaceUrlWithoutScroll } from "@/lib/preserve-scroll-url";
 import { getOptimizedSiteImageSrc } from "@/lib/site-image";
+import { getTeamMemberSlug } from "@/lib/team-member-path";
+import { trackAnalyticsEvent } from "@/lib/analytics";
 
 const initialVisibleMobileTeamMemberCount = 2;
 const initialVisibleDesktopTeamMemberCount = 4;
@@ -39,6 +42,17 @@ type ContactAction = {
   value: string;
   href: string;
 };
+
+function getTeamOverviewPath(variant: TeamSectionVariant) {
+  if (variant === "group") return "/team";
+  if (variant === "clay") return "/clay-construction/team";
+  if (variant === "verwaltung") return "/verwaltung/team";
+  return "/tilution/team";
+}
+
+function getTeamMemberOverlayPath(variant: TeamSectionVariant, member: TeamMember) {
+  return `${getTeamOverviewPath(variant)}/${getTeamMemberSlug(member.name)}`;
+}
 
 const teamCategories: TeamCategory[] = [
   { id: "geschaeftsfuehrung", label: "Geschäftsführung" },
@@ -300,6 +314,9 @@ function TeamMemberContactLinks({
           <button
             type="button"
             className="team-member-contact-icon"
+            data-analytics-event="contact_overlay_open"
+            data-analytics-section="team"
+            data-analytics-category="email"
             onClick={() => onContactClick?.(emailAction)}
             aria-label={`E-Mail-Adresse von ${member.name} öffnen`}
           >
@@ -310,6 +327,9 @@ function TeamMemberContactLinks({
           <button
             type="button"
             className="team-member-contact-icon"
+            data-analytics-event="contact_overlay_open"
+            data-analytics-section="team"
+            data-analytics-category="phone"
             onClick={() => onContactClick?.(phoneAction)}
             aria-label={`Telefonnummer von ${member.name} öffnen`}
           >
@@ -347,8 +367,18 @@ function TeamContactOverlay({
         document.body.removeChild(textarea);
       }
       setCopyLabel("Kopiert");
+      trackAnalyticsEvent("contact_copy", {
+        section: "team",
+        contact_type: contactAction.type,
+        result: "success",
+      });
     } catch {
       setCopyLabel("Bitte manuell kopieren");
+      trackAnalyticsEvent("contact_copy", {
+        section: "team",
+        contact_type: contactAction.type,
+        result: "failed",
+      });
     }
   };
 
@@ -460,6 +490,12 @@ export function HomeTeamSection({
   );
   const displayedMembers = visibleMembers;
 
+  const closeMemberOverlay = () => {
+    trackAnalyticsEvent("team_member_close", { section: "team" });
+    setSelectedMember(null);
+    replaceUrlWithoutScroll(getTeamOverviewPath(variant));
+  };
+
   useEffect(() => {
     if (!selectedMember && !activeContactAction) {
       return;
@@ -467,7 +503,9 @@ export function HomeTeamSection({
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        setSelectedMember(null);
+        if (selectedMember) {
+          closeMemberOverlay();
+        }
         setActiveContactAction(null);
       }
     };
@@ -483,6 +521,14 @@ export function HomeTeamSection({
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [selectedMember, activeContactAction]);
+
+  useEffect(() => {
+    if (!selectedMember) return;
+
+    const handlePopState = () => setSelectedMember(null);
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, [selectedMember]);
 
   return (
     <SectionShell id="team">
@@ -520,6 +566,10 @@ export function HomeTeamSection({
                 onClick={() => {
                   setActiveCategoryId(category.id);
                   setShowAllMembers(false);
+                  trackAnalyticsEvent("team_category_select", {
+                    section: "team",
+                    item_id: category.id,
+                  });
                 }}
                 className={[
                   "shrink-0 rounded-full border px-4 py-2.5 text-sm font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-white/45 focus:ring-offset-2 focus:ring-offset-forest-900",
@@ -554,7 +604,12 @@ export function HomeTeamSection({
                     type="button"
                     onClick={() => {
                       if (member.imageSrc) {
+                        trackAnalyticsEvent("team_member_open", {
+                          section: "team",
+                          item_category: member.categoryId,
+                        });
                         setSelectedMember(member);
+                        pushUrlWithoutScroll(getTeamMemberOverlayPath(variant, member));
                       }
                     }}
                     className="team-member-main group flex flex-1 flex-col text-left"
@@ -625,6 +680,9 @@ export function HomeTeamSection({
               <button
                 type="button"
                 className="show-more-primary-button liquid-card group inline-flex items-center gap-3 rounded-full px-6 py-3 text-sm font-semibold text-white transition-transform duration-300 hover:-translate-y-1 sm:px-7 sm:py-4 sm:text-base"
+                data-analytics-event="content_toggle"
+                data-analytics-section="team"
+                data-analytics-item={showAllMembers ? "collapse" : "expand"}
                 aria-expanded={showAllMembers}
                 onClick={() => setShowAllMembers((current) => !current)}
               >
@@ -641,7 +699,7 @@ export function HomeTeamSection({
           role="dialog"
           aria-modal="true"
           aria-label={`${selectedMember.name} in Großansicht`}
-          onClick={() => setSelectedMember(null)}
+          onClick={closeMemberOverlay}
         >
           <div
             className="team-overlay-panel mobile-viewport-overlay__panel relative w-full max-w-[54rem]"
@@ -649,7 +707,7 @@ export function HomeTeamSection({
           >
             <button
               type="button"
-              onClick={() => setSelectedMember(null)}
+              onClick={closeMemberOverlay}
               className="team-overlay-close absolute right-3 top-3 z-10 inline-flex h-11 w-11 items-center justify-center rounded-full border bg-white/95 transition-colors duration-200"
               aria-label="Großansicht schließen"
             >

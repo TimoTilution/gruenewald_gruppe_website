@@ -4,6 +4,7 @@ import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import { MobileContactBar } from "@/components/mobile-contact-bar";
 import { ConsentedGoogleAnalytics } from "@/components/consented-google-analytics";
+import { AnalyticsInteractionTracker } from "@/components/analytics-interaction-tracker";
 import { ScrollReveal } from "@/components/scroll-reveal";
 import { ScrollToTop } from "@/components/scroll-to-top";
 import { siteBaseUrl } from "@/data/site-architecture";
@@ -117,6 +118,7 @@ export default function RootLayout({
       </head>
       <body className={`${montserrat.className} min-h-screen`}>
         <ConsentedGoogleAnalytics />
+        <AnalyticsInteractionTracker />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

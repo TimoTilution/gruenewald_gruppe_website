@@ -646,6 +646,22 @@ export function GruenewaldReferencesSection() {
   const [showAllReferences, setShowAllReferences] = useState(false);
   const referenceFilterRef = useRef<HTMLDivElement | null>(null);
   const referencePreviewRef = useRef<HTMLDivElement | null>(null);
+  const referenceFilterButtonRefs = useRef<Array<HTMLButtonElement | null>>([]);
+
+  const scrollActiveFilterIntoView = (index: number) => {
+    const scrollElement = referenceFilterRef.current;
+    const filterButton = referenceFilterButtonRefs.current[index];
+    if (!scrollElement || !filterButton) return;
+
+    const centeredScrollLeft =
+      filterButton.offsetLeft -
+      (scrollElement.clientWidth - filterButton.offsetWidth) / 2;
+
+    scrollElement.scrollTo({
+      left: Math.max(0, centeredScrollLeft),
+      behavior: "smooth",
+    });
+  };
 
   const visibleProjects =
     activeFilter === "Alle"
@@ -729,15 +745,22 @@ export function GruenewaldReferencesSection() {
             className="reference-mobile-scrollbar flex items-center gap-2.5 overflow-x-auto pb-3 scroll-smooth sm:flex-wrap sm:overflow-visible sm:pb-0 sm:[scrollbar-width:none] sm:[&::-webkit-scrollbar]:hidden"
             aria-label="Referenzen nach Leistung filtern"
           >
-            {referenceFilters.map((filter) => {
+            {referenceFilters.map((filter, index) => {
               const isActive = filter === activeFilter;
 
               return (
                 <button
                   key={filter}
+                  ref={(element) => {
+                    referenceFilterButtonRefs.current[index] = element;
+                  }}
                   type="button"
+                  data-analytics-event="reference_category_select"
+                  data-analytics-section="references"
+                  data-analytics-item={filter === "Alle" ? "all" : gruenewaldReferenceCategoryPaths[filter]?.split("/").pop()}
                   onClick={(event) => {
                     setActiveFilter(filter);
+                    scrollActiveFilterIntoView(index);
                     pushUrlWithoutScroll(
                       filter === "Alle"
                         ? "/gruenewaldgmbh/referenzen"
@@ -775,6 +798,9 @@ export function GruenewaldReferencesSection() {
               <button
                 key={reference.cover.src}
                 type="button"
+                data-analytics-event="reference_open"
+                data-analytics-section="references"
+                data-analytics-category={gruenewaldReferenceCategoryPaths[reference.category]?.split("/").pop()}
                 onClick={() => {
                   const referencePath = getReferencePathForProject(reference);
                   setSelectedProject(reference);
@@ -826,6 +852,9 @@ export function GruenewaldReferencesSection() {
             <button
               type="button"
               onClick={() => setShowAllReferences((current) => !current)}
+              data-analytics-event="content_toggle"
+              data-analytics-section="references"
+              data-analytics-item={showAllReferences ? "collapse" : "expand"}
               className="show-more-primary-button liquid-card group inline-flex items-center gap-3 rounded-full px-6 py-3 text-sm font-semibold text-white transition-transform duration-300 hover:-translate-y-1 sm:px-7 sm:py-4 sm:text-base"
             >
               {showAllReferences ? "Weniger anzeigen" : "Mehr anzeigen"}
@@ -848,6 +877,8 @@ export function GruenewaldReferencesSection() {
             <button
               type="button"
               onClick={closeGallery}
+              data-analytics-event="reference_close"
+              data-analytics-section="references"
               className="reference-gallery-close absolute right-3 top-3 z-20 grid h-11 w-11 place-items-center rounded-full border border-[#009ca6]/25 bg-white/95 text-[#182956] shadow-lg transition hover:bg-[#009ca6] hover:text-white lg:-right-16 lg:-top-14"
               aria-label="Projektgalerie schließen"
               autoFocus
@@ -890,6 +921,10 @@ export function GruenewaldReferencesSection() {
                   <button
                     type="button"
                     onClick={showPreviousImage}
+                    data-analytics-event="reference_image_navigate"
+                    data-analytics-section="references"
+                    data-analytics-method="arrow"
+                    data-analytics-item="previous"
                     className="absolute left-3 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full border border-white/70 bg-[#009ca6]/95 text-white shadow-lg"
                     aria-label="Vorheriges Projektbild"
                   >
@@ -898,6 +933,10 @@ export function GruenewaldReferencesSection() {
                   <button
                     type="button"
                     onClick={showNextImage}
+                    data-analytics-event="reference_image_navigate"
+                    data-analytics-section="references"
+                    data-analytics-method="arrow"
+                    data-analytics-item="next"
                     className="absolute right-3 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full border border-white/70 bg-[#009ca6]/95 text-white shadow-lg"
                     aria-label="Nächstes Projektbild"
                   >
@@ -914,6 +953,9 @@ export function GruenewaldReferencesSection() {
                       key={`${image.src}-${index}`}
                       type="button"
                       onClick={() => setActiveImageIndex(index)}
+                      data-analytics-event="reference_image_select"
+                      data-analytics-section="references"
+                      data-analytics-item={String(index + 1)}
                       className={`relative h-14 w-20 shrink-0 overflow-hidden rounded-lg border-2 sm:h-16 sm:w-24 lg:aspect-video lg:h-auto lg:w-full ${
                         index === activeImageIndex
                           ? "border-[#009ca6]"

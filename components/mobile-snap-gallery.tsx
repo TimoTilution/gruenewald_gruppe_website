@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useEffect, useRef } from "react";
 import { getOptimizedReferenceSrc } from "@/lib/reference-image";
+import { trackAnalyticsEvent } from "@/lib/analytics";
 
 type GalleryImage = {
   src: string;
@@ -141,6 +142,12 @@ export function MobileSnapGallery({
           const track = event.currentTarget;
           const nextIndex = Math.round(track.scrollLeft / Math.max(track.clientWidth, 1));
           if (nextIndex !== activeIndex && nextIndex >= 0 && nextIndex < images.length) {
+            trackAnalyticsEvent("reference_image_navigate", {
+              section: "references",
+              interaction_method: "swipe",
+              item_id: String(nextIndex + 1),
+              navigation_direction: nextIndex > activeIndex ? "next" : "previous",
+            });
             onActiveIndexChange(nextIndex);
           }
         }}

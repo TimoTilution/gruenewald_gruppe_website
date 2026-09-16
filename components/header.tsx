@@ -458,6 +458,9 @@ export function Header() {
               ) : activeBranding ? (
                 <Link
                   href="/"
+                  data-analytics-event="company_navigation_click"
+                  data-analytics-section="header"
+                  data-analytics-item="group"
                   className={cn(
                     "absolute left-0 top-1/2 z-10 inline-flex min-h-7 -translate-y-1/2 items-center gap-1.5 rounded-full px-2 py-1 text-xs font-semibold shadow-[0_10px_22px_rgba(24,41,86,0.1)] backdrop-blur-md transition-colors duration-200 sm:min-h-8 sm:gap-2 sm:px-4 sm:py-2 sm:text-base",
                     "border border-[#182956] bg-[#182956] text-white hover:bg-[#101d3f]"
@@ -470,6 +473,8 @@ export function Header() {
               ) : null}
               <Link
                 href={activeLogoHref}
+                data-analytics-event="logo_click"
+                data-analytics-section="header"
                 onClick={handleLogoClick}
                 aria-label={activeBranding?.logoAriaLabel ?? "Grünewald Gruppe"}
                 className={cn(
@@ -548,6 +553,9 @@ export function Header() {
                           secondaryItemRefs.current[sectionId] = element;
                         }}
                         type="button"
+                        data-analytics-event="navigation_click"
+                        data-analytics-section="header"
+                        data-analytics-item={sectionId}
                         aria-current={isActive ? "location" : undefined}
                         onClick={(event) => handleSectionClick(event, sectionId, item.href)}
                         className={itemClassName}
@@ -564,6 +572,9 @@ export function Header() {
                         secondaryItemRefs.current[sectionId] = element;
                       }}
                       href={item.href}
+                      data-analytics-event="navigation_click"
+                      data-analytics-section="header"
+                      data-analytics-item={sectionId}
                       className={itemClassName}
                     >
                       {item.label}

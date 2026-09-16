@@ -2942,6 +2942,10 @@ body:has(.gruenewald-theme) {
   left: 0.15rem;
 }
 
+.service-modal__mobile-progress {
+  display: none;
+}
+
 @media (max-width: 760px) {
   .gruenewald-service-modal {
     height: 100dvh;
@@ -2957,6 +2961,46 @@ body:has(.gruenewald-theme) {
     max-height: none;
     padding-top: 4rem;
     border-radius: 1.35rem;
+  }
+
+  .service-swipe-modal .gruenewald-service-modal__panel {
+    padding-bottom: 3.25rem;
+    touch-action: pan-y;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  .service-swipe-modal .gruenewald-service-modal__nav {
+    display: none;
+  }
+
+  .service-modal__mobile-progress {
+    position: absolute;
+    right: 1.15rem;
+    bottom: 0.85rem;
+    left: 1.15rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: #182956;
+    font-size: 0.72rem;
+    font-weight: 700;
+  }
+
+  .service-modal__mobile-progress > div {
+    display: grid;
+    flex: 1;
+    gap: 0.25rem;
+  }
+
+  .service-modal__mobile-progress i {
+    height: 0.22rem;
+    border-radius: 999px;
+    background: rgba(24, 41, 86, 0.18);
+  }
+
+  .service-modal__mobile-progress i.is-active {
+    background: var(--company-primary, #f25c05);
   }
 
   .gruenewald-service-modal__close {

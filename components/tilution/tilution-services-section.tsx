@@ -1,12 +1,17 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { ArrowRight, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, X } from "lucide-react";
 import { SectionShell } from "@/components/section-shell";
+import {
+  tilutionServiceDetails,
+  tilutionServiceDetailsByTitle,
+} from "@/data/tilution-service-details";
 import { getOptimizedSiteImageSrc } from "@/lib/site-image";
 import { pushUrlState, pushUrlWithoutScroll } from "@/lib/preserve-scroll-url";
+import { trackAnalyticsEvent } from "@/lib/analytics";
 
 type ServiceArea = {
   title: string;
@@ -75,7 +80,7 @@ const serviceAreas: ServiceArea[] = [
     },
   },
   {
-    title: "Retail & Gewerbeflächen",
+    title: "Retail & Großflächen",
     attributes: ["Großformate", "Rüttelboden", "Ebenheit"],
     image: "/images/tilution/retail-ki-bild.png",
     overlay: {
@@ -368,6 +373,13 @@ function getGruenewaldServicePath(title: string, detailTitle?: string) {
     : `/gruenewaldgmbh/leistungen/${serviceSlug}`;
 }
 
+function getTilutionServicePath(title: string) {
+  const serviceSlug = tilutionServiceDetailsByTitle[title]?.slug;
+  return serviceSlug
+    ? `/tilution/leistungen/${serviceSlug}`
+    : "/tilution/leistungen";
+}
+
 function ServiceCard({ area, onOpen }: { area: ServiceArea; onOpen?: () => void }) {
   const card = (
     <article className="tilution-service-card group">
@@ -444,11 +456,15 @@ export function TilutionServicesSection({ variant = "tilution" }: { variant?: "t
   const [activeServiceTitle, setActiveServiceTitle] = useState<string | null>(null);
   const [activeServiceDetailIndex, setActiveServiceDetailIndex] = useState(0);
   const [showAllServices, setShowAllServices] = useState(false);
+  const touchStart = useRef<{ x: number; y: number } | null>(null);
+  const activeServiceMap = isGruenewald ? gruenewaldServiceDetails : tilutionServiceDetailsByTitle;
   const activeServiceSequence = activeServiceTitle
-    ? [
-        gruenewaldServiceDetails[activeServiceTitle],
-        ...(gruenewaldServiceSubcategories[activeServiceTitle] ?? emptyServiceSubcategories),
-      ].filter((detail): detail is GruenewaldServiceDetail => Boolean(detail))
+    ? isGruenewald
+      ? [
+          activeServiceMap[activeServiceTitle],
+          ...(gruenewaldServiceSubcategories[activeServiceTitle] ?? emptyServiceSubcategories),
+        ].filter((detail): detail is GruenewaldServiceDetail => Boolean(detail))
+      : tilutionServiceDetails
     : emptyServiceSubcategories;
   const activeServiceDetails = activeServiceSequence[activeServiceDetailIndex];
   const contactPath = isGruenewald ? "/gruenewaldgmbh/kontakt" : "/tilution/kontakt";
@@ -469,20 +485,40 @@ export function TilutionServicesSection({ variant = "tilution" }: { variant?: "t
   };
 
   const openService = (title: string) => {
+    trackAnalyticsEvent("service_open", {
+      section: "services",
+      item_id: title,
+      item_category: isGruenewald ? "private" : "commercial",
+    });
     setActiveServiceTitle(title);
-    setActiveServiceDetailIndex(0);
-    pushUrlWithoutScroll(getGruenewaldServicePath(title));
+    setActiveServiceDetailIndex(
+      isGruenewald
+        ? 0
+        : Math.max(tilutionServiceDetails.findIndex((detail) => detail.title === title), 0)
+    );
+    pushUrlWithoutScroll(
+      isGruenewald ? getGruenewaldServicePath(title) : getTilutionServicePath(title)
+    );
   };
 
   const closeService = () => {
+    trackAnalyticsEvent("service_close", {
+      section: "services",
+      item_id: activeServiceDetails?.title ?? activeServiceTitle ?? undefined,
+    });
     setActiveServiceTitle(null);
     setActiveServiceDetailIndex(0);
     if (isGruenewald) {
       pushUrlWithoutScroll("/gruenewaldgmbh/leistungen");
+    } else if (!isVerwaltung) {
+      pushUrlWithoutScroll("/tilution/leistungen");
     }
   };
 
-  const switchServiceDetail = (direction: -1 | 1) => {
+  const switchServiceDetail = (
+    direction: -1 | 1,
+    interactionMethod: "arrow" | "swipe" | "keyboard" = "arrow",
+  ) => {
     setActiveServiceDetailIndex((current) => {
       const nextIndex = current + direction;
       if (nextIndex < 0 || nextIndex >= activeServiceSequence.length) {
@@ -491,12 +527,24 @@ export function TilutionServicesSection({ variant = "tilution" }: { variant?: "t
 
       const nextDetail = activeServiceSequence[nextIndex];
       if (activeServiceTitle && nextDetail) {
-        pushUrlWithoutScroll(
-          getGruenewaldServicePath(
-            activeServiceTitle,
-            nextIndex > 0 ? nextDetail.title : undefined
-          )
-        );
+        trackAnalyticsEvent("service_navigate", {
+          section: "services",
+          item_id: nextDetail.title,
+          item_category: activeServiceTitle,
+          interaction_method: interactionMethod,
+          navigation_direction: direction < 0 ? "previous" : "next",
+        });
+        if (isGruenewald) {
+          pushUrlWithoutScroll(
+            getGruenewaldServicePath(
+              activeServiceTitle,
+              nextIndex > 0 ? nextDetail.title : undefined
+            )
+          );
+        } else {
+          setActiveServiceTitle(nextDetail.title);
+          pushUrlWithoutScroll(getTilutionServicePath(nextDetail.title));
+        }
       }
 
       return nextIndex;
@@ -512,6 +560,10 @@ export function TilutionServicesSection({ variant = "tilution" }: { variant?: "t
     const closeOnEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         closeService();
+      } else if (!isGruenewald && event.key === "ArrowLeft") {
+        switchServiceDetail(-1, "keyboard");
+      } else if (!isGruenewald && event.key === "ArrowRight") {
+        switchServiceDetail(1, "keyboard");
       }
     };
     window.addEventListener("keydown", closeOnEscape);
@@ -546,7 +598,7 @@ export function TilutionServicesSection({ variant = "tilution" }: { variant?: "t
             >
               <ServiceCard
                 area={area}
-                onOpen={isGruenewald && gruenewaldServiceDetails[area.title] ? () => openService(area.title) : undefined}
+                onOpen={activeServiceMap[area.title] ? () => openService(area.title) : undefined}
               />
             </div>
           ))}
@@ -556,6 +608,9 @@ export function TilutionServicesSection({ variant = "tilution" }: { variant?: "t
           <button
             type="button"
             className="mobile-services-toggle"
+            data-analytics-event="content_toggle"
+            data-analytics-section="services"
+            data-analytics-item={showAllServices ? "collapse" : "expand"}
             aria-expanded={showAllServices}
             onClick={() => setShowAllServices((current) => !current)}
           >
@@ -586,6 +641,8 @@ export function TilutionServicesSection({ variant = "tilution" }: { variant?: "t
             <button
               type="button"
               onClick={scrollToContact}
+              data-analytics-event="project_inquiry_click"
+              data-analytics-section="services"
               className="tilution-services-cta__button"
             >
               <span>Projekt anfragen</span>
@@ -597,7 +654,7 @@ export function TilutionServicesSection({ variant = "tilution" }: { variant?: "t
 
       {activeServiceTitle && activeServiceDetails ? createPortal((
         <div
-          className="gruenewald-service-modal"
+          className={`gruenewald-service-modal service-swipe-modal${!isGruenewald ? " tilution-service-modal" : ""}`}
           role="dialog"
           aria-modal="true"
           aria-labelledby="service-modal-title"
@@ -605,7 +662,20 @@ export function TilutionServicesSection({ variant = "tilution" }: { variant?: "t
             if (event.target === event.currentTarget) closeService();
           }}
         >
-          <div className="gruenewald-service-modal__panel">
+          <div
+            className="gruenewald-service-modal__panel"
+            onPointerDown={(event) => {
+              touchStart.current = { x: event.clientX, y: event.clientY };
+            }}
+            onPointerUp={(event) => {
+              if (!touchStart.current) return;
+              const deltaX = event.clientX - touchStart.current.x;
+              const deltaY = event.clientY - touchStart.current.y;
+              touchStart.current = null;
+              if (Math.abs(deltaX) < 55 || Math.abs(deltaX) <= Math.abs(deltaY) * 1.2) return;
+              switchServiceDetail(deltaX < 0 ? 1 : -1, "swipe");
+            }}
+          >
             <button
               type="button"
               className="gruenewald-service-modal__close"
@@ -620,7 +690,7 @@ export function TilutionServicesSection({ variant = "tilution" }: { variant?: "t
               <button
                 type="button"
                 className="gruenewald-service-modal__nav gruenewald-service-modal__nav--previous"
-                onClick={() => switchServiceDetail(-1)}
+                onClick={() => switchServiceDetail(-1, "arrow")}
                 aria-label="Vorherigen Inhalt anzeigen"
               >
                 <ChevronLeft aria-hidden="true" />
@@ -630,7 +700,7 @@ export function TilutionServicesSection({ variant = "tilution" }: { variant?: "t
               <button
                 type="button"
                 className="gruenewald-service-modal__nav gruenewald-service-modal__nav--next"
-                onClick={() => switchServiceDetail(1)}
+                onClick={() => switchServiceDetail(1, "arrow")}
                 aria-label="Nächste Unterkategorie anzeigen"
               >
                 <ChevronRight aria-hidden="true" />
@@ -649,7 +719,7 @@ export function TilutionServicesSection({ variant = "tilution" }: { variant?: "t
             </div>
 
             <div className={`gruenewald-service-modal__content${activeServiceDetails.highlights ? " gruenewald-service-modal__content--with-highlights" : ""}`}>
-              {activeServiceDetailIndex > 0 ? (
+              {isGruenewald && activeServiceDetailIndex > 0 ? (
                 <p className="gruenewald-service-modal__eyebrow">
                   {activeServiceTitle}
                 </p>
@@ -678,6 +748,26 @@ export function TilutionServicesSection({ variant = "tilution" }: { variant?: "t
                 </ul>
               ) : null}
             </div>
+
+            {activeServiceSequence.length > 1 ? (
+              <div
+                className="service-modal__mobile-progress"
+                aria-label={`Leistung ${activeServiceDetailIndex + 1} von ${activeServiceSequence.length}`}
+              >
+                <span>{activeServiceDetailIndex + 1} / {activeServiceSequence.length}</span>
+                <div
+                  aria-hidden="true"
+                  style={{ gridTemplateColumns: `repeat(${activeServiceSequence.length}, minmax(0, 1fr))` }}
+                >
+                  {activeServiceSequence.map((detail, index) => (
+                    <i
+                      key={detail.title}
+                      className={index === activeServiceDetailIndex ? "is-active" : undefined}
+                    />
+                  ))}
+                </div>
+              </div>
+            ) : null}
           </div>
         </div>
       ), document.body) : null}

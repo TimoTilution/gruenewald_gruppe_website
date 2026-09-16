@@ -11,7 +11,8 @@ import { SectionShell } from "@/components/section-shell";
 import { MobileSnapGallery } from "@/components/mobile-snap-gallery";
 import { InteractiveScrollbar } from "@/components/interactive-scrollbar";
 import { getReferencePath, references } from "@/data/site-architecture";
-import { pushUrlWithoutScroll } from "@/lib/preserve-scroll-url";
+import { pushUrlWithoutScroll, replaceUrlWithoutScroll } from "@/lib/preserve-scroll-url";
+import { trackAnalyticsEvent } from "@/lib/analytics";
 
 type ReferenceCategory =
   | "Schwimmbäder & Thermen"
@@ -764,30 +765,53 @@ export function HomeReferencesSection() {
   const openGallery = (index: number) => {
     const referencePath = getReferencePathForPreview(project.previewImages[index]);
 
+    trackAnalyticsEvent("reference_open", {
+      section: "references",
+      item_id: referencePath?.split("/").pop(),
+      item_category: project.previewImages[index].category,
+    });
+
     setSelectedPreviewIndex(index);
     setActiveImageIndex(0);
     setIsOpen(true);
 
-    if ((isTilutionPage || isClayPage) && referencePath) {
+    if (referencePath) {
       pushUrlWithoutScroll(referencePath);
     }
   };
 
   const closeGallery = () => {
+    trackAnalyticsEvent("reference_close", { section: "references" });
     setIsOpen(false);
 
-    if (isTilutionPage || isClayPage) {
-      pushUrlWithoutScroll(referenceOverviewPath);
-    }
+    replaceUrlWithoutScroll(referenceOverviewPath);
   };
 
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handlePopState = () => setIsOpen(false);
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, [isOpen]);
+
   const showPrevious = () => {
+    trackAnalyticsEvent("reference_image_navigate", {
+      section: "references",
+      interaction_method: "arrow",
+      navigation_direction: "previous",
+    });
     setActiveImageIndex((current) =>
       current === 0 ? overlayImages.length - 1 : current - 1
     );
   };
 
   const showNext = () => {
+    trackAnalyticsEvent("reference_image_navigate", {
+      section: "references",
+      interaction_method: "arrow",
+      navigation_direction: "next",
+    });
     setActiveImageIndex((current) =>
       current === overlayImages.length - 1 ? 0 : current + 1
     );
@@ -858,6 +882,9 @@ export function HomeReferencesSection() {
                       referenceFilterButtonRefs.current[index] = element;
                     }}
                     type="button"
+                    data-analytics-event="reference_category_select"
+                    data-analytics-section="references"
+                    data-analytics-item={filter === "Alle" ? "all" : tilutionReferenceCategoryPaths[filter]?.split("/").pop()}
                     onClick={(event) => {
                       setActiveFilter(filter);
                       if (isTilutionPage) {
@@ -942,6 +969,9 @@ export function HomeReferencesSection() {
             <button
               type="button"
               onClick={() => setShowAllReferences((current) => !current)}
+              data-analytics-event="content_toggle"
+              data-analytics-section="references"
+              data-analytics-item={showAllReferences ? "collapse" : "expand"}
               className="show-more-primary-button liquid-card group inline-flex items-center gap-3 rounded-full px-6 py-3 text-sm font-semibold text-white transition-transform duration-300 hover:-translate-y-1 sm:px-7 sm:py-4 sm:text-base"
             >
               {showAllReferences ? "Weniger anzeigen" : "Mehr anzeigen"}
@@ -1035,6 +1065,9 @@ export function HomeReferencesSection() {
                         key={image.src}
                         type="button"
                         onClick={() => setActiveImageIndex(index)}
+                        data-analytics-event="reference_image_select"
+                        data-analytics-section="references"
+                        data-analytics-item={String(index + 1)}
                         className={`overflow-hidden rounded-[1rem] border transition ${
                           isActive
                             ? "border-white/60 ring-2 ring-white/20"

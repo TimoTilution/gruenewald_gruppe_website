@@ -18,6 +18,10 @@ import { HrwContactSection, HrwServicesSection, HrwWhySection } from "@/componen
 import { PageHero } from "@/components/page-hero";
 import { SectionShell } from "@/components/section-shell";
 import { TilutionServicesSection } from "@/components/tilution/tilution-services-section";
+import {
+  tilutionServiceDetailsBySlug,
+  type TilutionServiceDetail,
+} from "@/data/tilution-service-details";
 import { getOptimizedReferenceSrc } from "@/lib/reference-image";
 import { getOptimizedSiteImageSrc } from "@/lib/site-image";
 import {
@@ -143,6 +147,46 @@ function ProjectPage({
                 />
               </div>
             ))}
+          </div>
+        </section>
+      </SectionShell>
+    </>
+  );
+}
+
+function TilutionServiceDetailPage({ detail }: { detail: TilutionServiceDetail }) {
+  return (
+    <>
+      <PageHero
+        eyebrow="Leistung"
+        title={detail.title}
+        description={detail.lead}
+      />
+      <SectionShell>
+        <section className="section-card grid gap-8 px-6 py-8 sm:px-9 lg:grid-cols-[minmax(20rem,1fr)_minmax(20rem,0.9fr)] lg:p-12">
+          <div className="relative min-h-[20rem] overflow-hidden rounded-[1.5rem] border border-white/15 sm:min-h-[28rem]">
+            <Image
+              src={getOptimizedSiteImageSrc(detail.image)}
+              alt={detail.alt}
+              fill
+              priority
+              sizes="(min-width: 1024px) 50vw, 90vw"
+              className="object-cover"
+            />
+          </div>
+          <div className="flex flex-col justify-center text-white">
+            <h2 className="text-2xl font-semibold leading-tight sm:text-3xl">
+              {detail.lead}
+            </h2>
+            <p className="mt-6 text-base leading-8 text-white/82">
+              {detail.paragraphs[0]}
+            </p>
+            <p className="mt-4 text-base leading-8 text-white/82">
+              {detail.paragraphs[1]}
+            </p>
+            <p className="mt-6 text-lg font-semibold leading-8 text-white">
+              {detail.closing}
+            </p>
           </div>
         </section>
       </SectionShell>
@@ -436,12 +480,30 @@ function getTeamRoute(path: string, slug: string[]): RouteContent | null {
 function getServiceRoute(path: string, slug: string[]): RouteContent | null {
   const [companySegment, section, serviceSlug, serviceDetailSlug] = slug;
   const company = getCompanySlugFromPathSegment(companySegment);
-  if (company !== "gruenewald" || section !== "leistungen" || !serviceSlug) return null;
+  if (
+    (company !== "gruenewald" && company !== "tilution") ||
+    section !== "leistungen" ||
+    !serviceSlug
+  ) return null;
 
   const service = services.find(
-    (entry) => entry.company === "gruenewald" && entry.slug === serviceSlug
+    (entry) => entry.company === company && entry.slug === serviceSlug
   );
   if (!service) return null;
+
+  if (company === "tilution") {
+    if (serviceDetailSlug) return null;
+    const detail = tilutionServiceDetailsBySlug[serviceSlug];
+    if (!detail) return null;
+
+    return {
+      path,
+      title: service.title,
+      eyebrow: "Leistung",
+      description: service.description,
+      render: () => <TilutionServiceDetailPage detail={detail} />,
+    };
+  }
 
   if (serviceDetailSlug) {
     const serviceDetail = serviceDetails.find(

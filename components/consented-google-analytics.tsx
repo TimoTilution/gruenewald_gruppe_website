@@ -32,14 +32,27 @@ export function ConsentedGoogleAnalytics() {
         isGoogleAnalytics(embedding.name),
       ) ?? false;
 
-    const loadAnalytics = () => {
-      if (loaded.current || !hasAnalyticsConsent()) return;
+    const hasAnalyticsScript = () =>
+      Boolean(
+        document.querySelector(
+          `script[src*="googletagmanager.com/gtag/js?id=${measurementId}"]`,
+        ),
+      );
+
+    const loadAnalytics = (consentConfirmed = false) => {
+      if (
+        loaded.current ||
+        (!consentConfirmed && !hasAnalyticsConsent() && !hasAnalyticsScript())
+      ) return;
 
       loaded.current = true;
       window.dataLayer = window.dataLayer || [];
       window.gtag = (...args: unknown[]) => window.dataLayer?.push(args);
       window.gtag("js", new Date());
       window.gtag("config", measurementId);
+      document.documentElement.dataset.analyticsReady = "true";
+
+      if (hasAnalyticsScript()) return;
 
       const script = document.createElement("script");
       script.id = "google-analytics";
@@ -51,9 +64,13 @@ export function ConsentedGoogleAnalytics() {
     const handleEmbeddingAccepted = (event: Event) => {
       const detail = (event as CustomEvent<{ name?: string; code?: string }>).detail;
       if (isGoogleAnalytics(detail?.name) || isGoogleAnalytics(detail?.code)) {
-        loadAnalytics();
+        loadAnalytics(true);
       }
     };
+
+    const analyticsScriptObserver = new MutationObserver(() => {
+      if (hasAnalyticsScript()) loadAnalytics(true);
+    });
 
     const handleWidgetClosed = () => {
       if (loaded.current && !hasAnalyticsConsent()) {
@@ -61,15 +78,19 @@ export function ConsentedGoogleAnalytics() {
       }
     };
 
+    const handleWidgetLoaded = () => loadAnalytics();
+
     window.addEventListener("ccm19EmbeddingAccepted", handleEmbeddingAccepted);
-    window.addEventListener("ccm19WidgetLoaded", loadAnalytics);
+    window.addEventListener("ccm19WidgetLoaded", handleWidgetLoaded);
     window.addEventListener("ccm19WidgetClosed", handleWidgetClosed);
+    analyticsScriptObserver.observe(document.head, { childList: true });
     loadAnalytics();
 
     return () => {
       window.removeEventListener("ccm19EmbeddingAccepted", handleEmbeddingAccepted);
-      window.removeEventListener("ccm19WidgetLoaded", loadAnalytics);
+      window.removeEventListener("ccm19WidgetLoaded", handleWidgetLoaded);
       window.removeEventListener("ccm19WidgetClosed", handleWidgetClosed);
+      analyticsScriptObserver.disconnect();
     };
   }, []);
 
