@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Montserrat } from "next/font/google";
+import Script from "next/script";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import { MobileContactBar } from "@/components/mobile-contact-bar";
@@ -111,9 +112,10 @@ export default function RootLayout({
   return (
     <html lang="de">
       <head>
-        <script
+        <Script
           src="https://cloud.ccm19.de/app.js?apiKey=5c7838d376411fdd99afcb2424de80386c0118570cddf93d&domain=6aa9102e46f2de558501da42"
           referrerPolicy="origin"
+          strategy="afterInteractive"
         />
       </head>
       <body className={`${montserrat.className} min-h-screen`}>

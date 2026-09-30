@@ -7,8 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { type MouseEvent, useLayoutEffect, useRef, useState } from "react";
 import { getLegalReturnPath, readStoredLegalReturnPath } from "@/lib/legal-return-path";
 import { getOptimizedLogoSrc } from "@/lib/logo-image";
-import { pushUrlState } from "@/lib/preserve-scroll-url";
-import { normalizeSitePathname, withBasePath } from "@/lib/site-path";
+import { normalizeSitePathname, withBasePath, withTrailingSlash } from "@/lib/site-path";
 
 const defaultSecondaryNavigation = [
   { href: "/", sectionId: "hero", label: "Start" },
@@ -370,41 +369,6 @@ export function Header() {
     };
   }, [pathname, secondaryNavigation.length]);
 
-  const handleSectionClick = (
-    event: MouseEvent<SecondaryTriggerElement>,
-    sectionId: string,
-    href: string
-  ) => {
-    sectionClickLockRef.current = Date.now() + 900;
-    setActiveSection(sectionId);
-
-    if (!isLocalOnepager) {
-      return;
-    }
-
-    event.preventDefault();
-
-    const targetSection = document.getElementById(sectionId);
-
-    if (!targetSection) {
-      router.push(href);
-      return;
-    }
-
-    const headerOffset = headerRef.current?.offsetHeight ?? 0;
-    const targetTop =
-      targetSection.getBoundingClientRect().top +
-      window.scrollY -
-      headerOffset -
-      16;
-
-    window.scrollTo({
-      top: Math.max(targetTop, 0),
-      behavior: "smooth",
-    });
-    pushUrlState(href);
-  };
-
   const handleSecondaryNavScroll = (direction: "left" | "right") => {
     const navElement = secondaryNavRef.current;
 
@@ -545,33 +509,13 @@ export function Header() {
                       : "font-semibold text-white/88"
                   );
 
-                  if (isLocalOnepager) {
-                    return (
-                      <button
-                        key={item.href}
-                        ref={(element) => {
-                          secondaryItemRefs.current[sectionId] = element;
-                        }}
-                        type="button"
-                        data-analytics-event="navigation_click"
-                        data-analytics-section="header"
-                        data-analytics-item={sectionId}
-                        aria-current={isActive ? "location" : undefined}
-                        onClick={(event) => handleSectionClick(event, sectionId, item.href)}
-                        className={itemClassName}
-                      >
-                        {item.label}
-                      </button>
-                    );
-                  }
-
                   return (
                     <Link
                       key={item.href}
                       ref={(element) => {
                         secondaryItemRefs.current[sectionId] = element;
                       }}
-                      href={item.href}
+                      href={withTrailingSlash(item.href)}
                       data-analytics-event="navigation_click"
                       data-analytics-section="header"
                       data-analytics-item={sectionId}

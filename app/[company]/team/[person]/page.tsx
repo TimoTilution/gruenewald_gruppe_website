@@ -4,6 +4,7 @@ import { TeamMemberDetailPage } from "@/components/team-member-detail-page";
 import { siteBaseUrl } from "@/data/site-architecture";
 import { getCmsTeamData } from "@/lib/sanity/team";
 import { getTeamMemberSlug } from "@/lib/team-member-path";
+import { withTrailingSlash } from "@/lib/site-path";
 
 type CompanyRoute = "tilution" | "clay-construction" | "verwaltung";
 
@@ -44,7 +45,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { company, person } = await params;
   const result = await getMember(company, person);
   if (!result) return {};
-  const canonical = `${siteBaseUrl}/${company}/team/${person}`;
+  const canonical = `${siteBaseUrl}${withTrailingSlash(`/${company}/team/${person}`)}`;
   const description = `${result.member.name} – ${result.member.role} bei ${result.companyTitle}.`;
   return {
     title: result.member.name,

@@ -8,6 +8,24 @@ export function withBasePath(path: string) {
   return `${basePath}${path}`;
 }
 
+export function withTrailingSlash(url: string) {
+  if (
+    !url ||
+    url === "/" ||
+    url.startsWith("#") ||
+    url.startsWith("//") ||
+    /^[a-z][a-z\d+.-]*:/i.test(url)
+  ) {
+    return url;
+  }
+
+  const match = url.match(/^([^?#]*)(.*)$/);
+  const pathname = match?.[1] ?? url;
+  const suffix = match?.[2] ?? "";
+
+  return `${pathname.endsWith("/") ? pathname : `${pathname}/`}${suffix}`;
+}
+
 export function normalizeSitePathname(pathname: string) {
   const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
   let normalizedPathname = pathname || "/";

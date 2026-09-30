@@ -7,14 +7,18 @@ import { normalizeSitePathname } from "@/lib/site-path";
 
 export function HomeContactSection() {
   const pathname = normalizeSitePathname(usePathname());
-  const isHrwPage = pathname === "/hrw";
-  const isVerwaltungPage = pathname === "/verwaltung";
+  const isHrwPage = pathname === "/hrw" || pathname.startsWith("/hrw/");
+  const isVerwaltungPage =
+    pathname === "/verwaltung" || pathname.startsWith("/verwaltung/");
+  const isClayPage =
+    pathname === "/clay-construction" ||
+    pathname.startsWith("/clay-construction/");
   const email =
     isHrwPage
       ? "bartholomaeus@hrw-gmbh.com"
       : isVerwaltungPage
-      ? "info@verwaltung-gruenewald.de"
-      : pathname === "/clay-construction"
+      ? "post@gruenewald-verwaltung.de"
+      : isClayPage
       ? "info@clay-construction.de"
       : "info@tilution.de";
   const phoneHref = isHrwPage ? "tel:+4915172226537" : "tel:+495546608";

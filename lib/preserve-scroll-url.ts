@@ -1,3 +1,5 @@
+import { withTrailingSlash } from "@/lib/site-path";
+
 type WindowWithScrollPreservation = Window & {
   __preserveScrollOnNextPathChange?: boolean;
 };
@@ -21,7 +23,7 @@ export function pushUrlWithoutScroll(url: string, anchorElement?: Element | null
   window.history.pushState(
     { __NA: true, source: "gruenewald-seo-state" } satisfies SeoHistoryState,
     "",
-    url
+    withTrailingSlash(url)
   );
   notifyAnalyticsPathChange();
 
@@ -55,7 +57,7 @@ export function replaceUrlWithoutScroll(url: string, anchorElement?: Element | n
   window.history.replaceState(
     { __NA: true, source: "gruenewald-seo-state" } satisfies SeoHistoryState,
     "",
-    url
+    withTrailingSlash(url)
   );
   notifyAnalyticsPathChange();
 
@@ -84,7 +86,7 @@ export function pushUrlState(url: string) {
   window.history.pushState(
     { __NA: true, source: "gruenewald-seo-state" } satisfies SeoHistoryState,
     "",
-    url
+    withTrailingSlash(url)
   );
   notifyAnalyticsPathChange();
 }

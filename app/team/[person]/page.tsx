@@ -4,6 +4,7 @@ import { TeamMemberDetailPage } from "@/components/team-member-detail-page";
 import { siteBaseUrl } from "@/data/site-architecture";
 import { getCmsTeamData } from "@/lib/sanity/team";
 import { getTeamMemberSlug } from "@/lib/team-member-path";
+import { withTrailingSlash } from "@/lib/site-path";
 
 type PageProps = { params: Promise<{ person: string }> };
 
@@ -24,7 +25,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { person } = await params;
   const result = await getMember(person);
   if (!result) return {};
-  const canonical = `${siteBaseUrl}/team/${person}`;
+  const canonical = `${siteBaseUrl}${withTrailingSlash(`/team/${person}`)}`;
   const description = `${result.member.name} – ${result.member.role} bei der Grünewald Gruppe.`;
   return {
     title: result.member.name,

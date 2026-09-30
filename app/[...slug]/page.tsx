@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { withTrailingSlash } from "@/lib/site-path";
 import { ArrowRight } from "lucide-react";
 import { ClayServicesSection } from "@/components/clay/clay-services-section";
 import { GruenewaldContactSection } from "@/components/gruenewald/gruenewald-contact-section";
@@ -571,7 +572,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     return {};
   }
 
-  const canonical = `${siteBaseUrl}${route.path}`;
+  const canonical = `${siteBaseUrl}${withTrailingSlash(route.path)}`;
 
   return {
     title: route.title,

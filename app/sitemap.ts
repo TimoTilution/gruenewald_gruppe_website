@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { getAllSeoPaths, siteBaseUrl } from "@/data/site-architecture";
+import { withTrailingSlash } from "@/lib/site-path";
 
 export const dynamic = "force-static";
 
@@ -14,49 +15,49 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     {
-      url: `${siteBaseUrl}/tilution`,
+      url: `${siteBaseUrl}/tilution/`,
       lastModified,
       changeFrequency: "weekly",
       priority: 0.9,
     },
     {
-      url: `${siteBaseUrl}/gruenewaldgmbh`,
+      url: `${siteBaseUrl}/gruenewaldgmbh/`,
       lastModified,
       changeFrequency: "weekly",
       priority: 0.9,
     },
     {
-      url: `${siteBaseUrl}/clay-construction`,
+      url: `${siteBaseUrl}/clay-construction/`,
       lastModified,
       changeFrequency: "weekly",
       priority: 0.9,
     },
     {
-      url: `${siteBaseUrl}/hrw`,
+      url: `${siteBaseUrl}/hrw/`,
       lastModified,
       changeFrequency: "weekly",
       priority: 0.8,
     },
     {
-      url: `${siteBaseUrl}/verwaltung`,
+      url: `${siteBaseUrl}/verwaltung/`,
       lastModified,
       changeFrequency: "weekly",
       priority: 0.8,
     },
     {
-      url: `${siteBaseUrl}/datenschutz`,
+      url: `${siteBaseUrl}/datenschutz/`,
       lastModified,
       changeFrequency: "yearly",
       priority: 0.4,
     },
     {
-      url: `${siteBaseUrl}/impressum`,
+      url: `${siteBaseUrl}/impressum/`,
       lastModified,
       changeFrequency: "yearly",
       priority: 0.4,
     },
     ...getAllSeoPaths().map((path) => ({
-      url: `${siteBaseUrl}${path}`,
+      url: `${siteBaseUrl}${withTrailingSlash(path)}`,
       lastModified,
       changeFrequency: "monthly" as const,
       priority: path.split("/").length > 4 ? 0.55 : 0.7,
