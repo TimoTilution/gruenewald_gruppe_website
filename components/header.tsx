@@ -172,7 +172,6 @@ export function Header() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
   const isVerwaltungPage = pathname === "/verwaltung" || pathname === "/hrw";
-  const isLocalOnepager = pathname === "/" || pathname === activeLogoHref;
   const showSecondaryNavigation = !isLegalPage;
   const secondaryNavigation = isCurrentPath(pathname, "/hrw")
     ? hrwSecondaryNavigation
@@ -185,6 +184,10 @@ export function Header() {
     : activeBranding
       ? tilutionSecondaryNavigation
       : defaultSecondaryNavigation;
+  const isLocalOnepager =
+    pathname === "/" ||
+    pathname === activeLogoHref ||
+    secondaryNavigation.some((item) => pathname === item.href);
   const router = useRouter();
   const handleLegalBack = () => {
     const queryReturnPath = new URLSearchParams(window.location.search).get("zurueck");
