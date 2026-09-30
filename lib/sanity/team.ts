@@ -1,6 +1,9 @@
 import { sanityClient } from "@/lib/sanity/client";
 import { urlForSanityImage } from "@/lib/sanity/image";
-import { visibleTeamMembersQuery } from "@/lib/sanity/queries";
+import {
+  visibleGroupTeamDepartmentsQuery,
+  visibleTeamMembersQuery,
+} from "@/lib/sanity/queries";
 
 type CompanySlug =
   | "tilution"
@@ -38,6 +41,11 @@ type SanityTeamMember = {
   email?: string;
   phone?: string;
   groupDepartment?: string;
+  groupDepartmentRef?: {
+    title?: string;
+    slug?: string;
+    sortOrder?: number;
+  };
   sortOrder?: number;
   imageAlt?: string;
   photo?: unknown;
@@ -54,7 +62,14 @@ type SanityTeamMember = {
   };
 };
 
-const groupCategories: CmsTeamCategory[] = [
+type SanityGroupDepartment = {
+  _id: string;
+  title?: string;
+  slug?: string;
+  sortOrder?: number;
+};
+
+const fallbackGroupCategories: CmsTeamCategory[] = [
   { id: "geschaeftsfuehrung", label: "Geschäftsführung" },
   { id: "vertrieb", label: "Vertrieb" },
   { id: "produktion", label: "Produktion" },
@@ -63,8 +78,6 @@ const groupCategories: CmsTeamCategory[] = [
   { id: "verwaltung", label: "Verwaltung" },
   { id: "fachkraefteverwaltung", label: "Fachkräfteverwaltung" },
 ];
-
-const groupCategoryIds = new Set(groupCategories.map((category) => category.id));
 
 const groupCompanySlugs = new Set<CompanySlug>([
   "tilution",
@@ -96,10 +109,11 @@ function getImageSrc(member: SanityTeamMember) {
 
 function getCategoryId(member: SanityTeamMember, variant: "tilution" | "clay" | "group" | "verwaltung") {
   if (variant === "group") {
+    const referencedGroupDepartment = cleanText(member.groupDepartmentRef?.slug);
+    if (referencedGroupDepartment) return referencedGroupDepartment;
+
     const selectedGroupDepartment = cleanText(member.groupDepartment);
-    if (selectedGroupDepartment && groupCategoryIds.has(selectedGroupDepartment)) {
-      return selectedGroupDepartment;
-    }
+    if (selectedGroupDepartment) return selectedGroupDepartment;
 
     if (member.company?.slug === "verwaltung") return "verwaltung";
     if (member.company?.slug === "hrw") return "fachkraefteverwaltung";
@@ -151,11 +165,20 @@ export async function getCmsTeamData(
 ): Promise<CmsTeamData | null> {
   try {
     const companySlugs = companySlugsByVariant[variant];
-    const sanityMembers = await sanityClient.fetch<SanityTeamMember[]>(
-      visibleTeamMembersQuery,
-      {},
-      { next: { revalidate: 60 } },
-    );
+    const [sanityMembers, sanityGroupDepartments] = await Promise.all([
+      sanityClient.fetch<SanityTeamMember[]>(
+        visibleTeamMembersQuery,
+        {},
+        { next: { revalidate: 60 } },
+      ),
+      variant === "group"
+        ? sanityClient.fetch<SanityGroupDepartment[]>(
+            visibleGroupTeamDepartmentsQuery,
+            {},
+            { next: { revalidate: 60 } },
+          )
+        : Promise.resolve([]),
+    ]);
 
     const relevantMembers = sanityMembers.filter((member) => {
       const companySlug = member.company?.slug;
@@ -226,8 +249,22 @@ export async function getCmsTeamData(
       }
     });
 
+    const configuredGroupCategories = sanityGroupDepartments
+      .filter((department) => cleanText(department.slug) && cleanText(department.title))
+      .map((department) => ({
+        id: cleanText(department.slug) ?? "",
+        label: cleanText(department.title) ?? "",
+        sortOrder: department.sortOrder,
+      }))
+      .sort(bySortAndLabel)
+      .map(({ id, label }) => ({ id, label }));
+
+    const availableGroupCategories = configuredGroupCategories.length > 0
+      ? configuredGroupCategories
+      : fallbackGroupCategories;
+
     const categories = variant === "group"
-      ? groupCategories.filter((category) =>
+      ? availableGroupCategories.filter((category) =>
           uniqueMembers.some(
             (member) => getCategoryId(member, variant) === category.id,
           ),

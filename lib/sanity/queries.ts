@@ -13,12 +13,20 @@ export const visibleTeamMembersQuery = `*[_type == "teamMember" && isVisible != 
   email,
   phone,
   groupDepartment,
+  "groupDepartmentRef": groupDepartmentRef->{title, "slug": slug.current, sortOrder},
   sortOrder,
   imageAlt,
   photo,
   legacyImagePath,
   "company": company->{title, "slug": slug.current, sortOrder},
   "department": department->{title, "slug": slug.current, sortOrder}
+}`;
+
+export const visibleGroupTeamDepartmentsQuery = `*[_type == "groupTeamDepartment" && isVisible != false] | order(sortOrder asc, title asc) {
+  _id,
+  title,
+  "slug": slug.current,
+  sortOrder
 }`;
 
 export const visibleReferencesQuery = `*[_type == "projectReference" && isVisible != false] | order(sortOrder asc, title asc) {
