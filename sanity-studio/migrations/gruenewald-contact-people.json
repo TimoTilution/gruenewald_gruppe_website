@@ -24,7 +24,7 @@
     "imageAlt": "Sven Schulze, Projekt- & Bauleiter",
     "legacyImagePath": "/images/gruenewald/sven-schulze.png",
     "isVisible": true,
-    "sortOrder": 2
+    "sortOrder": 1
   },
   {
     "_id": "drafts.5b11fe95-5f5b-4bb9-8c53-74efa7b76e95",
@@ -42,7 +42,7 @@
     "imageAlt": "Sven Schulze, Projekt- & Bauleiter",
     "legacyImagePath": "/images/gruenewald/sven-schulze.png",
     "isVisible": true,
-    "sortOrder": 2
+    "sortOrder": 1
   },
   {
     "_id": "teamMember.gruenewald.myroslava-golovach",
@@ -58,6 +58,6 @@
     "imageAlt": "Myroslava Golovach, Backoffice Managerin",
     "legacyImagePath": "/images/gruenewald/myroslava-golovach.png",
     "isVisible": true,
-    "sortOrder": 1
+    "sortOrder": 2
   }
 ]

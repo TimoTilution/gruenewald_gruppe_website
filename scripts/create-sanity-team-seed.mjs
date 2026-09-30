@@ -90,8 +90,8 @@ const members = [
   { company: "verwaltung", department: "personalwesen", name: "Theresa Janke", role: "Auszubildende", imageSrc: "/images/verwaltung/team-theresa-janke.png" },
   { company: "hrw", department: "fachkraefteverwaltung", name: "Norbert Bartholomäus", role: "Geschäftsführer der HRW GmbH", imageSrc: "/images/hrw/norbert-bartholomaeus.png" },
   { company: "clay-construction", department: "geschaeftsfuehrung", name: "Jan Grünewald", degree: "Dipl. Bau-Ing.", role: "Geschäftsführung", imageSrc: "/images/team/jan-gruenewald.png" },
-  { company: "gruenewald", department: "privatkunden", name: "Myroslava Golovach", role: "Backoffice Managerin", imageSrc: "/images/gruenewald/myroslava-golovach.png", email: "golovach@gruenewaldgmbh.de", phone: "01511 4493597", gruenewaldContactPosition: "primary" },
   { company: "gruenewald", department: "privatkunden", name: "Sven Schulze", role: "Projekt- & Bauleiter", imageSrc: "/images/gruenewald/sven-schulze.png", gruenewaldContactPosition: "project-lead" },
+  { company: "gruenewald", department: "privatkunden", name: "Myroslava Golovach", role: "Backoffice Managerin", imageSrc: "/images/gruenewald/myroslava-golovach.png", email: "golovach@gruenewaldgmbh.de", phone: "01511 4493597", gruenewaldContactPosition: "primary" },
 ];
 
 const docs = [
