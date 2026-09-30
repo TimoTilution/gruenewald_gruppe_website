@@ -11,12 +11,14 @@ import { GruenewaldReferencesSection } from "@/components/gruenewald/gruenewald-
 import { HomeAboutSection } from "@/components/home/home-about-section";
 import { HomeCareerSection } from "@/components/home/home-career-section";
 import { HomeContactSection } from "@/components/home/home-contact-section";
+import { HomeHeroSection } from "@/components/home/home-hero-section";
 import { HomeInnovationsSection } from "@/components/home/home-innovations-section";
 import { HomeReferencesSection } from "@/components/home/home-references-section";
 import { HomeServicesSection } from "@/components/home/home-services-section";
 import { HomeTeamSection } from "@/components/home/home-team-section";
-import { HrwContactSection, HrwServicesSection, HrwWhySection } from "@/components/hrw/hrw-page-sections";
+import { HrwContactSection, HrwHeroSection, HrwServicesSection, HrwWhySection } from "@/components/hrw/hrw-page-sections";
 import { PageHero } from "@/components/page-hero";
+import { ScrollToRouteSection } from "@/components/scroll-to-route-section";
 import { SectionShell } from "@/components/section-shell";
 import { TilutionServicesSection } from "@/components/tilution/tilution-services-section";
 import {
@@ -25,9 +27,10 @@ import {
 } from "@/data/tilution-service-details";
 import { getOptimizedReferenceSrc } from "@/lib/reference-image";
 import { getOptimizedSiteImageSrc } from "@/lib/site-image";
-import { getCmsTeamData, type CmsTeamData } from "@/lib/sanity/team";
+import { getCmsTeamData } from "@/lib/sanity/team";
 import {
   companies,
+  type CompanySlug,
   companySectionPages,
   getAllSeoPaths,
   getCompanySlugFromPathSegment,
@@ -196,7 +199,105 @@ function TilutionServiceDetailPage({ detail }: { detail: TilutionServiceDetail }
   );
 }
 
-function getGroupRoute(path: string, groupTeamData?: CmsTeamData | null): RouteContent | null {
+async function GroupOnePager({ sectionId }: { sectionId: string }) {
+  const teamData = await getCmsTeamData("group");
+
+  return (
+    <div className="group-theme contents">
+      <ScrollToRouteSection sectionId={sectionId} />
+      <HomeHeroSection />
+      <HomeAboutSection />
+      <HomeServicesSection />
+      <HomeReferencesSection />
+      <HomeInnovationsSection />
+      <HomeTeamSection variant="group" teamData={teamData} />
+      <HomeCareerSection />
+      <HomeContactSection />
+    </div>
+  );
+}
+
+async function CompanyOnePager({
+  company,
+  sectionId,
+}: {
+  company: CompanySlug;
+  sectionId: string;
+}) {
+  if (company === "tilution") {
+    const teamData = await getCmsTeamData("tilution");
+    return (
+      <div className="tilution-theme contents">
+        <ScrollToRouteSection sectionId={sectionId} />
+        <HomeHeroSection variant="tilution" />
+        <TilutionServicesSection />
+        <HomeAboutSection />
+        <HomeReferencesSection />
+        <HomeInnovationsSection />
+        <HomeTeamSection variant="tilution" teamData={teamData} />
+        <HomeCareerSection />
+        <HomeContactSection />
+      </div>
+    );
+  }
+
+  if (company === "gruenewald") {
+    return (
+      <div className="tilution-theme gruenewald-theme contents">
+        <ScrollToRouteSection sectionId={sectionId} />
+        <HomeHeroSection variant="gruenewald" />
+        <TilutionServicesSection variant="gruenewald" />
+        <HomeAboutSection />
+        <GruenewaldReferencesSection />
+        <HomeCareerSection />
+        <GruenewaldContactSection />
+      </div>
+    );
+  }
+
+  if (company === "clay-construction") {
+    const teamData = await getCmsTeamData("clay");
+    return (
+      <div className="clay-theme contents">
+        <ScrollToRouteSection sectionId={sectionId} />
+        <HomeHeroSection variant="clay" />
+        <ClayServicesSection />
+        <HomeAboutSection />
+        <HomeReferencesSection />
+        <HomeTeamSection variant="clay" teamData={teamData} />
+        <HomeCareerSection />
+        <HomeContactSection />
+      </div>
+    );
+  }
+
+  if (company === "verwaltung") {
+    const teamData = await getCmsTeamData("verwaltung");
+    return (
+      <div className="verwaltung-theme contents">
+        <ScrollToRouteSection sectionId={sectionId} />
+        <HomeHeroSection variant="verwaltung" />
+        <TilutionServicesSection variant="verwaltung" />
+        <HomeTeamSection variant="verwaltung" teamData={teamData} />
+        <HomeCareerSection />
+        <HomeContactSection />
+      </div>
+    );
+  }
+
+  return (
+    <div className="verwaltung-theme hrw-theme contents">
+      <ScrollToRouteSection sectionId={sectionId} />
+      <HrwHeroSection />
+      <HrwServicesSection />
+      <HrwWhySection />
+      <HomeCareerSection />
+      <HrwContactSection />
+    </div>
+  );
+}
+
+function getGroupRoute(path: string): RouteContent | null {
   const page = groupPages.find((entry) => entry.path === path);
   if (!page) return null;
 
@@ -206,52 +307,7 @@ function getGroupRoute(path: string, groupTeamData?: CmsTeamData | null): RouteC
     eyebrow: page.eyebrow,
     description: page.description,
     render: () => (
-      <>
-        {path === "/leistungen" ? <HomeServicesSection /> : null}
-        {path === "/referenzen" ? <HomeReferencesSection /> : null}
-        {path === "/innovationen" ? <HomeInnovationsSection /> : null}
-        {path === "/team" ? <HomeTeamSection variant="group" teamData={groupTeamData} /> : null}
-        {path === "/karriere" ? <HomeCareerSection /> : null}
-        {path === "/kontakt" ? <HomeContactSection /> : null}
-        {path === "/karte" ? (
-          <>
-            <PageHero eyebrow={page.eyebrow} title={page.title} description={page.description} />
-            <SectionShell>
-              <section className="liquid-card overflow-hidden rounded-[1.9rem]">
-                <div className="grid gap-6 p-4 sm:p-5 lg:grid-cols-[minmax(0,1fr)_18rem] lg:items-stretch">
-                  <div className="relative min-h-[22rem] overflow-hidden rounded-[1.55rem] sm:min-h-[28rem] lg:min-h-[34rem]">
-                    <Image
-                      src={getOptimizedSiteImageSrc("/deutschland-karte.png")}
-                      alt="Deutschlandkarte mit dem Standort der Gruenewald Gruppe in Scheden"
-                      fill
-                      className="object-cover object-center"
-                      sizes="(min-width: 1024px) 70vw, 100vw"
-                      priority
-                    />
-                  </div>
-                  <aside className="liquid-card-dark flex flex-col justify-center rounded-[1.35rem] p-5 text-white sm:p-6">
-                    <p className="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-forest-100/72">
-                      Standort
-                    </p>
-                    <h2 className="mt-3 text-xl font-semibold leading-tight sm:text-2xl">
-                      Gruenewald Gruppe -
-                      <span className="block">Die Mitte Deutschlands</span>
-                    </h2>
-                    <div className="mt-6 text-sm font-semibold leading-6 text-forest-100 sm:text-base">
-                      <p>Quantzstrasse 67,</p>
-                      <p>37127 Scheden</p>
-                      <p>05546 - 608</p>
-                    </div>
-                    <p className="mt-6 text-sm leading-6 text-forest-100/78 sm:text-base">
-                      Zentrale der Gruenewald Gruppe in Scheden - Deutschlandweit fuer Sie taetig
-                    </p>
-                  </aside>
-                </div>
-              </section>
-            </SectionShell>
-          </>
-        ) : null}
-      </>
+      <GroupOnePager sectionId={path === "/karte" ? "gruppe" : path.slice(1)} />
     ),
   };
 }
@@ -275,61 +331,16 @@ function getCompanySectionRoute(path: string, slug: string[]): RouteContent | nu
     title,
     eyebrow,
     description,
-    render: () => {
-      if (company === "tilution" && section === "leistungen") {
-        return (
-          <>
-            <TilutionServicesSection />
-            <HomeContactSection />
-          </>
-        );
-      }
-      if (company === "tilution" && section === "einblicke") return <HomeAboutSection />;
-      if (company === "tilution" && section === "referenzen") return <HomeReferencesSection />;
-      if (company === "tilution" && section === "innovationen") return <HomeInnovationsSection />;
-      if (company === "tilution" && section === "team") return <HomeTeamSection />;
-      if (company === "tilution" && section === "karriere") return <HomeCareerSection />;
-      if (company === "tilution" && section === "kontakt") return <HomeContactSection />;
-
-      if (company === "gruenewald" && section === "leistungen") {
-        return (
-          <>
-            <TilutionServicesSection variant="gruenewald" />
-            <GruenewaldContactSection />
-          </>
-        );
-      }
-      if (company === "gruenewald" && section === "einblicke") return <HomeAboutSection />;
-      if (company === "gruenewald" && section === "referenzen") return <GruenewaldReferencesSection />;
-      if (company === "gruenewald" && section === "karriere") return <HomeCareerSection />;
-      if (company === "gruenewald" && section === "kontakt") return <GruenewaldContactSection />;
-
-      if (company === "clay-construction" && section === "leistungen") {
-        return (
-          <>
-            <ClayServicesSection />
-            <HomeContactSection />
-          </>
-        );
-      }
-      if (company === "clay-construction" && section === "system-ausfuehrung") return <HomeAboutSection />;
-      if (company === "clay-construction" && section === "referenzen") return <HomeReferencesSection />;
-      if (company === "clay-construction" && section === "team") return <HomeTeamSection />;
-      if (company === "clay-construction" && section === "karriere") return <HomeCareerSection />;
-      if (company === "clay-construction" && section === "kontakt") return <HomeContactSection />;
-
-      if (company === "verwaltung" && section === "leistungen") return <TilutionServicesSection variant="verwaltung" />;
-      if (company === "verwaltung" && section === "team") return <HomeTeamSection variant="verwaltung" />;
-      if (company === "verwaltung" && section === "karriere") return <HomeCareerSection />;
-      if (company === "verwaltung" && section === "kontakt") return <HomeContactSection />;
-
-      if (company === "hrw" && section === "leistungen") return <HrwServicesSection />;
-      if (company === "hrw" && section === "warum-hrw") return <HrwWhySection />;
-      if (company === "hrw" && section === "karriere") return <HomeCareerSection />;
-      if (company === "hrw" && section === "kontakt") return <HrwContactSection />;
-
-      return <PageHero eyebrow={eyebrow} title={title} description={description} />;
-    },
+    render: () => (
+      <CompanyOnePager
+        company={company}
+        sectionId={
+          section === "einblicke" || section === "system-ausfuehrung"
+            ? "gruppe"
+            : section
+        }
+      />
+    ),
   };
 }
 
@@ -546,11 +557,11 @@ function getServiceRoute(path: string, slug: string[]): RouteContent | null {
   };
 }
 
-function resolveRoute(slug: string[], groupTeamData?: CmsTeamData | null): RouteContent | null {
+function resolveRoute(slug: string[]): RouteContent | null {
   const path = normalizePath(slug);
 
   return (
-    getGroupRoute(path, groupTeamData) ??
+    getGroupRoute(path) ??
     getServiceRoute(path, slug) ??
     getReferenceRoute(path, slug) ??
     getTeamRoute(path, slug) ??
@@ -593,10 +604,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function SeoRoutePage({ params }: PageProps) {
   const { slug } = await params;
-  const groupTeamData = normalizePath(slug) === "/team"
-    ? await getCmsTeamData("group")
-    : null;
-  const route = resolveRoute(slug, groupTeamData);
+  const route = resolveRoute(slug);
 
   if (!route) {
     notFound();
