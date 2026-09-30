@@ -29,6 +29,23 @@ export const visibleGroupTeamDepartmentsQuery = `*[_type == "groupTeamDepartment
   sortOrder
 }`;
 
+export const gruenewaldContactPeopleQuery = `*[
+  _type == "teamMember" &&
+  isVisible != false &&
+  company->slug.current == "gruenewald" &&
+  gruenewaldContactPosition in ["primary", "project-lead"]
+] | order(sortOrder asc, name asc) {
+  _id,
+  name,
+  role,
+  email,
+  phone,
+  imageAlt,
+  photo,
+  legacyImagePath,
+  gruenewaldContactPosition
+}`;
+
 export const visibleReferencesQuery = `*[_type == "projectReference" && isVisible != false] | order(sortOrder asc, title asc) {
   _id,
   title,

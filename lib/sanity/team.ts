@@ -1,6 +1,7 @@
 import { sanityClient } from "@/lib/sanity/client";
 import { urlForSanityImage } from "@/lib/sanity/image";
 import {
+  gruenewaldContactPeopleQuery,
   visibleGroupTeamDepartmentsQuery,
   visibleTeamMembersQuery,
 } from "@/lib/sanity/queries";
@@ -69,6 +70,41 @@ type SanityGroupDepartment = {
   sortOrder?: number;
 };
 
+export type GruenewaldContactPerson = {
+  name: string;
+  role: string;
+  imageSrc: string;
+  imageAlt: string;
+  email?: string;
+  phone?: string;
+};
+
+export type GruenewaldContactPeople = {
+  primary: GruenewaldContactPerson;
+  projectLead: GruenewaldContactPerson;
+};
+
+type SanityGruenewaldContactPerson = SanityTeamMember & {
+  gruenewaldContactPosition?: "primary" | "project-lead";
+};
+
+const fallbackGruenewaldContactPeople: GruenewaldContactPeople = {
+  primary: {
+    name: "Myroslava Golovach",
+    role: "Backoffice Managerin",
+    imageSrc: "/images/gruenewald/myroslava-golovach.png",
+    imageAlt: "Myroslava Golovach, Backoffice Managerin",
+    email: "golovach@gruenewaldgmbh.de",
+    phone: "01511 4493597",
+  },
+  projectLead: {
+    name: "Sven Schulze",
+    role: "Projekt- & Bauleiter",
+    imageSrc: "/images/gruenewald/sven-schulze.png",
+    imageAlt: "Sven Schulze, Projekt- und Bauleiter",
+  },
+};
+
 const fallbackGroupCategories: CmsTeamCategory[] = [
   { id: "geschaeftsfuehrung", label: "Geschäftsführung" },
   { id: "vertrieb", label: "Vertrieb" },
@@ -105,6 +141,47 @@ function getImageSrc(member: SanityTeamMember) {
   }
 
   return cleanText(member.legacyImagePath);
+}
+
+export async function getGruenewaldContactPeople(): Promise<GruenewaldContactPeople> {
+  try {
+    const people = await sanityClient.fetch<SanityGruenewaldContactPerson[]>(
+      gruenewaldContactPeopleQuery,
+      {},
+      { next: { revalidate: 60 } },
+    );
+
+    const resolvePerson = (
+      position: "primary" | "project-lead",
+      fallback: GruenewaldContactPerson,
+    ) => {
+      const person = people.find(
+        (entry) => entry.gruenewaldContactPosition === position,
+      );
+      const name = cleanText(person?.name);
+      const role = cleanText(person?.role);
+      const imageSrc = person ? getImageSrc(person) : undefined;
+
+      if (!person || !name || !role || !imageSrc) return fallback;
+
+      return {
+        name,
+        role,
+        imageSrc,
+        imageAlt: cleanText(person.imageAlt) ?? `${name}, ${role}`,
+        email: cleanText(person.email),
+        phone: cleanText(person.phone),
+      };
+    };
+
+    return {
+      primary: resolvePerson("primary", fallbackGruenewaldContactPeople.primary),
+      projectLead: resolvePerson("project-lead", fallbackGruenewaldContactPeople.projectLead),
+    };
+  } catch (error) {
+    console.warn("Sanity Gruenewald contact people could not be loaded.", error);
+    return fallbackGruenewaldContactPeople;
+  }
 }
 
 function getCategoryId(member: SanityTeamMember, variant: "tilution" | "clay" | "group" | "verwaltung") {

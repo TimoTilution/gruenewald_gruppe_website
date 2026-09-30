@@ -1,0 +1,63 @@
+[
+  {
+    "_id": "teamDepartment.gruenewald.privatkunden",
+    "_type": "teamDepartment",
+    "title": "Privatkunden",
+    "slug": {"_type": "slug", "current": "privatkunden"},
+    "company": {"_type": "reference", "_ref": "company.gruenewald"},
+    "isVisible": true,
+    "sortOrder": 1
+  },
+  {
+    "_id": "5b11fe95-5f5b-4bb9-8c53-74efa7b76e95",
+    "_type": "teamMember",
+    "name": "Sven Schulze",
+    "role": "Projekt- & Bauleiter",
+    "company": {"_type": "reference", "_ref": "company.gruenewald"},
+    "department": {"_type": "reference", "_ref": "teamDepartment.gruenewald.privatkunden"},
+    "groupDepartmentRef": {"_type": "reference", "_ref": "1e6179cf-0aec-4224-8822-206699881533"},
+    "gruenewaldContactPosition": "project-lead",
+    "photo": {
+      "_type": "image",
+      "asset": {"_type": "reference", "_ref": "image-7991f335db2c6ee1f63672981c9d0d7fc6e226c2-7952x4883-jpg"}
+    },
+    "imageAlt": "Sven Schulze, Projekt- & Bauleiter",
+    "legacyImagePath": "/images/gruenewald/sven-schulze.png",
+    "isVisible": true,
+    "sortOrder": 2
+  },
+  {
+    "_id": "drafts.5b11fe95-5f5b-4bb9-8c53-74efa7b76e95",
+    "_type": "teamMember",
+    "name": "Sven Schulze",
+    "role": "Projekt- & Bauleiter",
+    "company": {"_type": "reference", "_ref": "company.gruenewald"},
+    "department": {"_type": "reference", "_ref": "teamDepartment.gruenewald.privatkunden"},
+    "groupDepartmentRef": {"_type": "reference", "_ref": "1e6179cf-0aec-4224-8822-206699881533"},
+    "gruenewaldContactPosition": "project-lead",
+    "photo": {
+      "_type": "image",
+      "asset": {"_type": "reference", "_ref": "image-7991f335db2c6ee1f63672981c9d0d7fc6e226c2-7952x4883-jpg"}
+    },
+    "imageAlt": "Sven Schulze, Projekt- & Bauleiter",
+    "legacyImagePath": "/images/gruenewald/sven-schulze.png",
+    "isVisible": true,
+    "sortOrder": 2
+  },
+  {
+    "_id": "teamMember.gruenewald.myroslava-golovach",
+    "_type": "teamMember",
+    "name": "Myroslava Golovach",
+    "role": "Backoffice Managerin",
+    "email": "golovach@gruenewaldgmbh.de",
+    "phone": "01511 4493597",
+    "company": {"_type": "reference", "_ref": "company.gruenewald"},
+    "department": {"_type": "reference", "_ref": "teamDepartment.gruenewald.privatkunden"},
+    "groupDepartmentRef": {"_type": "reference", "_ref": "1e6179cf-0aec-4224-8822-206699881533"},
+    "gruenewaldContactPosition": "primary",
+    "imageAlt": "Myroslava Golovach, Backoffice Managerin",
+    "legacyImagePath": "/images/gruenewald/myroslava-golovach.png",
+    "isVisible": true,
+    "sortOrder": 1
+  }
+]

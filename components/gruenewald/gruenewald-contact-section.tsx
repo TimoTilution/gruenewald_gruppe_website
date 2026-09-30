@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Mail, Phone } from "lucide-react";
 import { SectionShell } from "@/components/section-shell";
+import { getGruenewaldContactPeople } from "@/lib/sanity/team";
 import { getOptimizedSiteImageSrc } from "@/lib/site-image";
 
 const contactLinkClassName =
@@ -12,7 +13,13 @@ const contactValueClassName =
 const contactLabelClassName =
   "block text-xs font-semibold uppercase tracking-[0.16em] text-slate-500 sm:text-[0.8125rem]";
 
-export function GruenewaldContactSection() {
+function getPhoneHref(phone: string) {
+  return `tel:${phone.replace(/[^+\d]/g, "")}`;
+}
+
+export async function GruenewaldContactSection() {
+  const { primary, projectLead } = await getGruenewaldContactPeople();
+
   return (
     <SectionShell id="kontakt">
       <section className="section-card relative isolate overflow-hidden px-6 py-10 sm:px-9 lg:p-12">
@@ -25,7 +32,7 @@ export function GruenewaldContactSection() {
         <h2 className="section-heading">Direkt und persönlich erreichbar.</h2>
 
         <div className="relative z-10 mt-10 grid md:grid-cols-[minmax(0,1.7fr)_minmax(15rem,1fr)]">
-          <article aria-labelledby="myroslava-name" className="min-w-0 md:pr-8 lg:pr-10">
+          <article aria-labelledby="gruenewald-primary-contact-name" className="min-w-0 md:pr-8 lg:pr-10">
             <p className="text-sm font-semibold uppercase tracking-[0.14em] text-[#009CA6]">
               Ihre erste Ansprechpartnerin
             </p>
@@ -33,8 +40,8 @@ export function GruenewaldContactSection() {
             <div className="mt-5 grid min-w-0 items-start gap-0 sm:gap-7 lg:grid-cols-[13.5rem_minmax(0,1fr)] lg:gap-x-10 lg:gap-y-0">
               <div className="relative mx-auto aspect-[4/5] w-full max-w-[13.5rem] overflow-hidden rounded-[1.75rem] bg-slate-100 md:max-w-[10.5rem] lg:mx-0 lg:max-w-[13.5rem]">
                 <Image
-                  src={getOptimizedSiteImageSrc("/images/gruenewald/myroslava-golovach.png")}
-                  alt="Myroslava Golovach, Backoffice Managerin"
+                  src={getOptimizedSiteImageSrc(primary.imageSrc)}
+                  alt={primary.imageAlt}
                   fill
                   sizes="(min-width: 1024px) 216px, (min-width: 768px) 168px, calc(100vw - 88px)"
                   className="object-cover object-center"
@@ -43,18 +50,18 @@ export function GruenewaldContactSection() {
 
               <div className="mx-auto w-full max-w-[15rem] text-center lg:col-start-1 lg:row-start-2 lg:mx-0 lg:text-left">
                 <h3
-                  id="myroslava-name"
+                  id="gruenewald-primary-contact-name"
                   className="mt-3 whitespace-nowrap text-2xl font-semibold tracking-[-0.02em] text-[#272425] sm:mt-5"
                 >
-                  Myroslava Golovach
+                  {primary.name}
                 </h3>
-                <p className="mt-1 text-base font-semibold text-[#009CA6]">Backoffice Managerin</p>
+                <p className="mt-1 text-base font-semibold text-[#009CA6]">{primary.role}</p>
               </div>
 
               <address className="mt-7 grid min-w-0 gap-3 not-italic lg:col-start-2 lg:row-start-1 lg:mt-0 lg:h-full lg:grid-rows-2">
-                  <a
-                    href="mailto:golovach@gruenewaldgmbh.de"
-                    aria-label="E-Mail an Myroslava Golovach senden"
+                  {primary.email ? <a
+                    href={`mailto:${primary.email}`}
+                    aria-label={`E-Mail an ${primary.name} senden`}
                     className={contactLinkClassName}
                   >
                     <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-slate-50 text-[#009CA6] transition-colors group-hover:border-[#009CA6]/30 group-hover:bg-[#009CA6]/5 sm:h-11 sm:w-11">
@@ -65,14 +72,14 @@ export function GruenewaldContactSection() {
                         E-Mail
                       </span>
                       <span className={contactValueClassName}>
-                        golovach@gruenewaldgmbh.de
+                        {primary.email}
                       </span>
                     </span>
-                  </a>
+                  </a> : <div aria-hidden="true" />}
 
-                  <a
-                    href="tel:+4915114493597"
-                    aria-label="Myroslava Golovach unter 01511 4493597 anrufen"
+                  {primary.phone ? <a
+                    href={getPhoneHref(primary.phone)}
+                    aria-label={`${primary.name} unter ${primary.phone} anrufen`}
                     className={contactLinkClassName}
                   >
                     <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-slate-50 text-[#009CA6] transition-colors group-hover:border-[#009CA6]/30 group-hover:bg-[#009CA6]/5 sm:h-11 sm:w-11">
@@ -82,15 +89,15 @@ export function GruenewaldContactSection() {
                       <span className={contactLabelClassName}>
                         Mobil
                       </span>
-                      <span className={contactValueClassName}>01511 4493597</span>
+                      <span className={contactValueClassName}>{primary.phone}</span>
                     </span>
-                  </a>
+                  </a> : <div aria-hidden="true" />}
               </address>
             </div>
           </article>
 
           <aside
-            aria-labelledby="sven-name"
+            aria-labelledby="gruenewald-project-lead-name"
             className="flex min-w-0 flex-col border-t border-slate-200 bg-gradient-to-b from-transparent via-slate-50/70 to-transparent px-0 pb-7 pt-7 sm:px-6 md:border-l md:border-t-0 md:bg-none md:pl-8 md:pt-0 lg:pl-10"
           >
             <p className="text-sm font-semibold uppercase tracking-[0.14em] text-[#009CA6]">
@@ -99,18 +106,18 @@ export function GruenewaldContactSection() {
 
             <div className="relative mx-auto mt-5 aspect-[4/5] w-full max-w-[13.5rem] overflow-hidden rounded-[1.75rem] bg-slate-100 md:mx-0 md:max-w-[10.5rem] lg:max-w-[13.5rem]">
               <Image
-                src={getOptimizedSiteImageSrc("/images/gruenewald/sven-schulze.png")}
-                alt="Sven Schulze, Projekt- und Bauleiter"
+                src={getOptimizedSiteImageSrc(projectLead.imageSrc)}
+                alt={projectLead.imageAlt}
                 fill
                 sizes="(min-width: 1024px) 216px, (min-width: 768px) 220px, calc(100vw - 88px)"
                 className="object-cover object-center"
               />
             </div>
 
-            <h3 id="sven-name" className="mt-3 text-center text-2xl font-semibold text-[#272425] sm:mt-5 md:text-left">
-              Sven Schulze
+            <h3 id="gruenewald-project-lead-name" className="mt-3 text-center text-2xl font-semibold text-[#272425] sm:mt-5 md:text-left">
+              {projectLead.name}
             </h3>
-            <p className="mt-1 text-center text-base font-semibold text-[#009CA6] md:text-left">Projekt- &amp; Bauleiter</p>
+            <p className="mt-1 text-center text-base font-semibold text-[#009CA6] md:text-left">{projectLead.role}</p>
           </aside>
         </div>
       </section>

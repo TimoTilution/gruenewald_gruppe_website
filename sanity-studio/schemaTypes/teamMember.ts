@@ -13,6 +13,19 @@ export const teamMemberType = defineType({
     defineField({name: 'company', title: 'Unternehmen', description: 'Technische Zuordnung zur jeweiligen Unternehmensseite.', type: 'reference', to: [{type: 'company'}], validation: (Rule) => Rule.required()}),
     defineField({name: 'department', title: 'Team-Bereich', type: 'reference', to: [{type: 'teamDepartment'}], validation: (Rule) => Rule.required()}),
     defineField({
+      name: 'gruenewaldContactPosition',
+      title: 'Position im Kontaktbereich der Grünewald GmbH',
+      description: 'Optional. Bestimmt, welche der beiden besonders gestalteten Kontaktkarten diese Person auf der GmbH-Seite belegt. Jede Position sollte nur einmal vergeben werden.',
+      type: 'string',
+      options: {
+        list: [
+          {title: 'Erste Ansprechperson', value: 'primary'},
+          {title: 'Projektleitung vor Ort', value: 'project-lead'},
+        ],
+        layout: 'radio',
+      },
+    }),
+    defineField({
       name: 'groupDepartmentRef',
       title: 'Team-Bereich auf der Gruppenseite',
       description: 'Optional: Überschreibt nur auf der Grünewald-Gruppenseite die automatische Zuordnung. Leer lassen, um die bisherige Zuordnung beizubehalten.',

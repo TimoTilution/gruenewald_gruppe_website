@@ -50,6 +50,7 @@ const departments = [
   { company: "verwaltung", slug: "personalwesen", title: "Personalwesen", sortOrder: 5 },
   { company: "hrw", slug: "fachkraefteverwaltung", title: "Fachkräfteverwaltung", sortOrder: 1 },
   { company: "clay-construction", slug: "geschaeftsfuehrung", title: "Geschäftsführung", sortOrder: 1 },
+  { company: "gruenewald", slug: "privatkunden", title: "Privatkunden", sortOrder: 1 },
 ];
 
 const members = [
@@ -89,6 +90,8 @@ const members = [
   { company: "verwaltung", department: "personalwesen", name: "Theresa Janke", role: "Auszubildende", imageSrc: "/images/verwaltung/team-theresa-janke.png" },
   { company: "hrw", department: "fachkraefteverwaltung", name: "Norbert Bartholomäus", role: "Geschäftsführer der HRW GmbH", imageSrc: "/images/hrw/norbert-bartholomaeus.png" },
   { company: "clay-construction", department: "geschaeftsfuehrung", name: "Jan Grünewald", degree: "Dipl. Bau-Ing.", role: "Geschäftsführung", imageSrc: "/images/team/jan-gruenewald.png" },
+  { company: "gruenewald", department: "privatkunden", name: "Myroslava Golovach", role: "Backoffice Managerin", imageSrc: "/images/gruenewald/myroslava-golovach.png", email: "golovach@gruenewaldgmbh.de", phone: "01511 4493597", gruenewaldContactPosition: "primary" },
+  { company: "gruenewald", department: "privatkunden", name: "Sven Schulze", role: "Projekt- & Bauleiter", imageSrc: "/images/gruenewald/sven-schulze.png", gruenewaldContactPosition: "project-lead" },
 ];
 
 const docs = [
@@ -119,6 +122,7 @@ const docs = [
       degree: member.degree,
       email: member.email,
       phone: member.phone,
+      gruenewaldContactPosition: member.gruenewaldContactPosition,
       company: ref(`company.${member.company}`),
       department: ref(`teamDepartment.${member.company}.${member.department}`),
       imageAlt: `${member.name}, ${member.role}`,
