@@ -6,6 +6,7 @@ import {referenceType} from './reference'
 import {websitePageType} from './websitePage'
 import {groupPageConfigType} from './groupPageConfig'
 import {groupTeamDepartmentType} from './groupTeamDepartment'
+import {siteDeploymentType} from './siteDeployment'
 
 export const schemaTypes = [
   companyType,
@@ -16,5 +17,6 @@ export const schemaTypes = [
   referenceType,
   websitePageType,
   groupPageConfigType,
+  siteDeploymentType,
 ]
 
