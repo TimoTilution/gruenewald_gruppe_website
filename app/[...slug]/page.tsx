@@ -24,6 +24,7 @@ import {
 } from "@/data/tilution-service-details";
 import { getOptimizedReferenceSrc } from "@/lib/reference-image";
 import { getOptimizedSiteImageSrc } from "@/lib/site-image";
+import { getCmsTeamData, type CmsTeamData } from "@/lib/sanity/team";
 import {
   companies,
   companySectionPages,
@@ -194,7 +195,7 @@ function TilutionServiceDetailPage({ detail }: { detail: TilutionServiceDetail }
   );
 }
 
-function getGroupRoute(path: string): RouteContent | null {
+function getGroupRoute(path: string, groupTeamData?: CmsTeamData | null): RouteContent | null {
   const page = groupPages.find((entry) => entry.path === path);
   if (!page) return null;
 
@@ -208,7 +209,7 @@ function getGroupRoute(path: string): RouteContent | null {
         {path === "/leistungen" ? <HomeServicesSection /> : null}
         {path === "/referenzen" ? <HomeReferencesSection /> : null}
         {path === "/innovationen" ? <HomeInnovationsSection /> : null}
-        {path === "/team" ? <HomeTeamSection variant="group" /> : null}
+        {path === "/team" ? <HomeTeamSection variant="group" teamData={groupTeamData} /> : null}
         {path === "/karriere" ? <HomeCareerSection /> : null}
         {path === "/kontakt" ? <HomeContactSection /> : null}
         {path === "/karte" ? (
@@ -544,11 +545,11 @@ function getServiceRoute(path: string, slug: string[]): RouteContent | null {
   };
 }
 
-function resolveRoute(slug: string[]): RouteContent | null {
+function resolveRoute(slug: string[], groupTeamData?: CmsTeamData | null): RouteContent | null {
   const path = normalizePath(slug);
 
   return (
-    getGroupRoute(path) ??
+    getGroupRoute(path, groupTeamData) ??
     getServiceRoute(path, slug) ??
     getReferenceRoute(path, slug) ??
     getTeamRoute(path, slug) ??
@@ -591,7 +592,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function SeoRoutePage({ params }: PageProps) {
   const { slug } = await params;
-  const route = resolveRoute(slug);
+  const groupTeamData = normalizePath(slug) === "/team"
+    ? await getCmsTeamData("group")
+    : null;
+  const route = resolveRoute(slug, groupTeamData);
 
   if (!route) {
     notFound();

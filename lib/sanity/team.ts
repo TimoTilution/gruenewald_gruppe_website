@@ -264,11 +264,7 @@ export async function getCmsTeamData(
       : fallbackGroupCategories;
 
     const categories = variant === "group"
-      ? availableGroupCategories.filter((category) =>
-          uniqueMembers.some(
-            (member) => getCategoryId(member, variant) === category.id,
-          ),
-        )
+      ? availableGroupCategories
       : Array.from(categoryMap.values())
           .sort(bySortAndLabel)
           .map(({ id, label }) => ({ id, label }));
