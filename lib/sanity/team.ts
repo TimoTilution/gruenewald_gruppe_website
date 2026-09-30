@@ -37,6 +37,7 @@ type SanityTeamMember = {
   degree?: string;
   email?: string;
   phone?: string;
+  groupDepartment?: string;
   sortOrder?: number;
   imageAlt?: string;
   photo?: unknown;
@@ -62,6 +63,8 @@ const groupCategories: CmsTeamCategory[] = [
   { id: "verwaltung", label: "Verwaltung" },
   { id: "fachkraefteverwaltung", label: "Fachkräfteverwaltung" },
 ];
+
+const groupCategoryIds = new Set(groupCategories.map((category) => category.id));
 
 const groupCompanySlugs = new Set<CompanySlug>([
   "tilution",
@@ -93,6 +96,11 @@ function getImageSrc(member: SanityTeamMember) {
 
 function getCategoryId(member: SanityTeamMember, variant: "tilution" | "clay" | "group" | "verwaltung") {
   if (variant === "group") {
+    const selectedGroupDepartment = cleanText(member.groupDepartment);
+    if (selectedGroupDepartment && groupCategoryIds.has(selectedGroupDepartment)) {
+      return selectedGroupDepartment;
+    }
+
     if (member.company?.slug === "verwaltung") return "verwaltung";
     if (member.company?.slug === "hrw") return "fachkraefteverwaltung";
   }

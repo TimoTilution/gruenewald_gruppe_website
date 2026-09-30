@@ -160,3 +160,4 @@ source-assets/
 public/verify-header.html
 snapshots/
 .sanity-seed/
+sanity-studio/.sanity/

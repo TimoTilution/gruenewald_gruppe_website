@@ -12,6 +12,7 @@ export const visibleTeamMembersQuery = `*[_type == "teamMember" && isVisible != 
   degree,
   email,
   phone,
+  groupDepartment,
   sortOrder,
   imageAlt,
   photo,
