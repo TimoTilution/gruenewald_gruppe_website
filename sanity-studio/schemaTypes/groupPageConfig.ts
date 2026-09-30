@@ -22,7 +22,7 @@ export const groupPageConfigType = defineType({
           fields: [
             defineField({name: 'label', title: 'Button-Beschriftung', type: 'string', validation: (Rule) => Rule.required()}),
             defineField({name: 'href', title: 'Link', type: 'string', validation: (Rule) => Rule.required()}),
-            defineField({name: 'logoPath', title: 'Interner Logo-Pfad', type: 'string'}),
+            defineField({name: 'logoPath', title: 'Interner Logo-Pfad', type: 'string', readOnly: true, hidden: true}),
           ],
           preview: {
             select: {title: 'label', subtitle: 'href'},
