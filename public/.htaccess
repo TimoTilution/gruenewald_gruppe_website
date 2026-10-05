@@ -2,6 +2,11 @@ Options -MultiViews
 
 RewriteEngine On
 
+# A stale client-side navigation can request an exported Next.js payload with
+# a duplicated slash and then expose that text file as the visible URL.
+RewriteCond %{THE_REQUEST} "\s/+((?:tilution|gruenewaldgmbh|clay-construction|verwaltung|hrw))/{2,}index\.txt(?:[?\s])" [NC]
+RewriteRule ^ /%1/ [R=302,L,NE]
+
 # Repair legacy domain forwards whose destination prefix was configured
 # without a separating slash (for example /gruenewaldgmbhreferenzen/).
 RewriteRule ^gruenewaldgmbh([^/].*)$ /gruenewaldgmbh/$1 [R=301,L,NE]
