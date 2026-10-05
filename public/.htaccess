@@ -4,8 +4,8 @@ RewriteEngine On
 
 # Repair legacy domain forwards whose destination prefix was configured
 # without a separating slash (for example /gruenewaldgmbhreferenzen/).
-RewriteRule ^gruenewaldgmbh(.+)$ /gruenewaldgmbh/$1 [R=301,L,NE]
-RewriteRule ^tilution(.+)$ /tilution/$1 [R=301,L,NE]
-RewriteRule ^clay-construction(.+)$ /clay-construction/$1 [R=301,L,NE]
-RewriteRule ^verwaltung(.+)$ /verwaltung/$1 [R=301,L,NE]
-RewriteRule ^hrw(.+)$ /hrw/$1 [R=301,L,NE]
+RewriteRule ^gruenewaldgmbh([^/].*)$ /gruenewaldgmbh/$1 [R=301,L,NE]
+RewriteRule ^tilution([^/].*)$ /tilution/$1 [R=301,L,NE]
+RewriteRule ^clay-construction([^/].*)$ /clay-construction/$1 [R=301,L,NE]
+RewriteRule ^verwaltung([^/].*)$ /verwaltung/$1 [R=301,L,NE]
+RewriteRule ^hrw([^/].*)$ /hrw/$1 [R=301,L,NE]
