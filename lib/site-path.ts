@@ -26,6 +26,13 @@ export function withTrailingSlash(url: string) {
   return `${pathname.endsWith("/") ? pathname : `${pathname}/`}${suffix}`;
 }
 
+export function withLegacyRedirectCacheBypass(path: string) {
+  const canonicalPath = withTrailingSlash(path);
+  const separator = canonicalPath.includes("?") ? "&" : "?";
+
+  return `${canonicalPath}${separator}redirect-fix=20261005`;
+}
+
 export function normalizeSitePathname(pathname: string) {
   const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
   let normalizedPathname = pathname || "/";

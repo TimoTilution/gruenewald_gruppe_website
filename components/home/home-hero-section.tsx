@@ -1,9 +1,9 @@
 import Image from "next/image";
-import Link from "next/link";
 import { ArrowRight, Check } from "lucide-react";
 import { SectionShell } from "@/components/section-shell";
 import { getOptimizedLogoSrc } from "@/lib/logo-image";
 import { getOptimizedSiteImageSrc } from "@/lib/site-image";
+import { withLegacyRedirectCacheBypass } from "@/lib/site-path";
 
 const heroActions = [
   {
@@ -268,9 +268,9 @@ export function HomeHeroSection({ variant = "group" }: HomeHeroSectionProps) {
 
         <div className="mt-20 grid gap-6 lg:grid-cols-3">
           {heroActions.map((action) => (
-            <Link
+            <a
               key={action.href}
-              href={action.href}
+              href={withLegacyRedirectCacheBypass(action.href)}
               className={`liquid-card group flex flex-col px-6 py-5 text-center text-ink ${action.panelClassName}`}
             >
               <div className="relative min-h-[8rem] overflow-hidden sm:min-h-[9rem]">
@@ -285,7 +285,7 @@ export function HomeHeroSection({ variant = "group" }: HomeHeroSectionProps) {
               <div className="mt-6 flex justify-center">
                 <HeroButton label={action.label} />
               </div>
-            </Link>
+            </a>
           ))}
         </div>
       </section>

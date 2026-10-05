@@ -164,6 +164,19 @@ export function Header() {
   const activeLogoHref = activeBranding?.logoHref ?? "/";
   const isLegalPage = pathname === "/datenschutz" || pathname === "/impressum";
 
+  useLayoutEffect(() => {
+    const url = new URL(window.location.href);
+    if (!url.searchParams.has("redirect-fix")) return;
+
+    url.searchParams.delete("redirect-fix");
+    const search = url.searchParams.toString();
+    window.history.replaceState(
+      window.history.state,
+      "",
+      `${url.pathname}${search ? `?${search}` : ""}${url.hash}`
+    );
+  }, []);
+
   const handleLogoClick = (event: MouseEvent<HTMLAnchorElement>) => {
     if (pathname !== activeLogoHref) return;
 
