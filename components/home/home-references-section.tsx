@@ -10,7 +10,11 @@ import { X } from "lucide-react";
 import { SectionShell } from "@/components/section-shell";
 import { MobileSnapGallery } from "@/components/mobile-snap-gallery";
 import { InteractiveScrollbar } from "@/components/interactive-scrollbar";
-import { getReferencePath, references } from "@/data/site-architecture";
+import {
+  getGroupReferencePath,
+  getReferencePath,
+  references,
+} from "@/data/site-architecture";
 import { pushUrlWithoutScroll, replaceUrlWithoutScroll } from "@/lib/preserve-scroll-url";
 import { trackAnalyticsEvent } from "@/lib/analytics";
 
@@ -692,10 +696,13 @@ function getReferenceForPreview(image: ReferenceImage) {
   );
 }
 
-function getReferencePathForPreview(image: ReferenceImage) {
+function getReferencePathForPreview(image: ReferenceImage, isGroupPage = false) {
   const reference = getReferenceForPreview(image);
 
-  return reference ? getReferencePath(reference) : null;
+  if (!reference) return null;
+  return isGroupPage
+    ? getGroupReferencePath(reference)
+    : getReferencePath(reference);
 }
 
 export function HomeReferencesSection() {
@@ -750,7 +757,10 @@ export function HomeReferencesSection() {
   const displayedPreviewEntries = visiblePreviewEntries;
   const overlayImages = getReferenceOverlayImages(selectedPreviewImage);
   const activeImage = overlayImages[activeImageIndex];
-  const selectedReferenceId = getReferencePathForPreview(selectedPreviewImage)?.split("/").pop();
+  const selectedReferenceId = getReferencePathForPreview(
+    selectedPreviewImage,
+    isGroupPage,
+  )?.split("/").pop();
   const selectedReferenceDescription =
     getReferenceForPreview(selectedPreviewImage)?.description ?? project.description;
   const referenceOverviewPath = isClayPage
@@ -764,7 +774,10 @@ export function HomeReferencesSection() {
   }, [activeFilter, pathname]);
 
   const openGallery = (index: number) => {
-    const referencePath = getReferencePathForPreview(project.previewImages[index]);
+    const referencePath = getReferencePathForPreview(
+      project.previewImages[index],
+      isGroupPage,
+    );
 
     trackAnalyticsEvent("reference_open", {
       section: "references",

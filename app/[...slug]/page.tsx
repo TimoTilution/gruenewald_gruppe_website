@@ -34,6 +34,7 @@ import {
   companySectionPages,
   getAllSeoPaths,
   getCompanySlugFromPathSegment,
+  getGroupReferencePath,
   getReferencePath,
   getTeamMemberPath,
   groupPages,
@@ -345,6 +346,26 @@ function getCompanySectionRoute(path: string, slug: string[]): RouteContent | nu
 }
 
 function getReferenceRoute(path: string, slug: string[]): RouteContent | null {
+  if (slug[0] === "referenzen" && slug[1] && !slug[2]) {
+    const project = references.find((entry) => entry.slug === slug[1]);
+    if (!project || getGroupReferencePath(project) !== path) return null;
+
+    return {
+      path,
+      title: project.title,
+      eyebrow: "Referenz",
+      description: project.description,
+      render: () => (
+        <ProjectPage
+          title={project.title}
+          eyebrow="Referenz"
+          description={project.description}
+          images={project.images}
+        />
+      ),
+    };
+  }
+
   const [companySegment, section, categoryOrProject, projectSlug] = slug;
   const company = getCompanySlugFromPathSegment(companySegment);
   if (!company || section !== "referenzen") return null;

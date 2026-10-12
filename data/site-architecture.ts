@@ -428,6 +428,10 @@ export function getReferencePath(reference: ReferenceEntry) {
   return `${getCompanyPath(reference.company)}/referenzen/${reference.categorySlug}/${reference.slug}`;
 }
 
+export function getGroupReferencePath(reference: ReferenceEntry) {
+  return `/referenzen/${reference.slug}`;
+}
+
 export function getTeamMemberPath(member: TeamMemberEntry) {
   return `${getCompanyPath(member.company)}/team/${member.departmentSlug}/${member.slug}`;
 }
@@ -470,6 +474,7 @@ export function getAllSeoPaths() {
     paths.add(`${getCompanyPath(reference.company)}/referenzen/${reference.categorySlug}`);
   });
   references.forEach((reference) => paths.add(getReferencePath(reference)));
+  references.forEach((reference) => paths.add(getGroupReferencePath(reference)));
 
   uniqueBy(
     teamMembers,
