@@ -30,6 +30,8 @@ export function AnalyticsInteractionTracker() {
         item_id: element.dataset.analyticsItem,
         item_category: element.dataset.analyticsCategory,
         interaction_method: element.dataset.analyticsMethod ?? "click",
+        navigation_direction: element.dataset.analyticsDirection,
+        contact_type: element.dataset.analyticsContactType,
       });
       return true;
     };

@@ -19,6 +19,7 @@ export type CmsTeamCategory = {
 };
 
 export type CmsTeamMember = {
+  analyticsId: string;
   name: string;
   degree?: string;
   role: string;
@@ -353,6 +354,7 @@ export async function getCmsTeamData(
     const members = uniqueMembers
       .sort((left, right) => bySortAndLabel(left, right))
       .map<CmsTeamMember>((member) => ({
+        analyticsId: member._id,
         name: cleanText(member.name) ?? "",
         degree: cleanText(member.degree),
         role: getRole(member, variant),

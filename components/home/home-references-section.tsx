@@ -750,6 +750,7 @@ export function HomeReferencesSection() {
   const displayedPreviewEntries = visiblePreviewEntries;
   const overlayImages = getReferenceOverlayImages(selectedPreviewImage);
   const activeImage = overlayImages[activeImageIndex];
+  const selectedReferenceId = getReferencePathForPreview(selectedPreviewImage)?.split("/").pop();
   const selectedReferenceDescription =
     getReferenceForPreview(selectedPreviewImage)?.description ?? project.description;
   const referenceOverviewPath = isClayPage
@@ -781,7 +782,11 @@ export function HomeReferencesSection() {
   };
 
   const closeGallery = () => {
-    trackAnalyticsEvent("reference_close", { section: "references" });
+    trackAnalyticsEvent("reference_close", {
+      section: "references",
+      item_id: selectedReferenceId,
+      item_category: selectedPreviewImage?.category,
+    });
     setIsOpen(false);
 
     replaceUrlWithoutScroll(referenceOverviewPath);
@@ -800,6 +805,8 @@ export function HomeReferencesSection() {
       section: "references",
       interaction_method: "arrow",
       navigation_direction: "previous",
+      item_id: selectedReferenceId,
+      item_category: selectedPreviewImage?.category,
     });
     setActiveImageIndex((current) =>
       current === 0 ? overlayImages.length - 1 : current - 1
@@ -811,6 +818,8 @@ export function HomeReferencesSection() {
       section: "references",
       interaction_method: "arrow",
       navigation_direction: "next",
+      item_id: selectedReferenceId,
+      item_category: selectedPreviewImage?.category,
     });
     setActiveImageIndex((current) =>
       current === overlayImages.length - 1 ? 0 : current + 1
@@ -1068,6 +1077,7 @@ export function HomeReferencesSection() {
                         data-analytics-event="reference_image_select"
                         data-analytics-section="references"
                         data-analytics-item={String(index + 1)}
+                        data-analytics-category={selectedReferenceId}
                         className={`overflow-hidden rounded-[1rem] border transition ${
                           isActive
                             ? "border-white/60 ring-2 ring-white/20"

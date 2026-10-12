@@ -19,6 +19,7 @@ export type TeamCategory = {
 };
 
 export type TeamMember = {
+  analyticsId?: string;
   name: string;
   degree?: string;
   role: string;
@@ -37,6 +38,8 @@ export type TeamData = {
 type TeamSectionVariant = "tilution" | "clay" | "group" | "verwaltung";
 
 type ContactAction = {
+  memberId: string;
+  memberCategory: string;
   memberName: string;
   type: "email" | "phone";
   value: string;
@@ -52,6 +55,20 @@ function getTeamOverviewPath(variant: TeamSectionVariant) {
 
 function getTeamMemberOverlayPath(variant: TeamSectionVariant, member: TeamMember) {
   return `${getTeamOverviewPath(variant)}/${getTeamMemberSlug(member.name)}`;
+}
+
+function getTeamMemberAnalyticsId(member: TeamMember) {
+  if (member.analyticsId) return member.analyticsId;
+
+  // Fallback data has no CMS document id. This produces a stable, opaque content
+  // id without sending the employee name or contact details to Analytics.
+  const source = `${member.name}|${member.categoryId}`;
+  let hash = 2166136261;
+  for (let index = 0; index < source.length; index += 1) {
+    hash ^= source.charCodeAt(index);
+    hash = Math.imul(hash, 16777619);
+  }
+  return `team_${(hash >>> 0).toString(36)}`;
 }
 
 const teamCategories: TeamCategory[] = [
@@ -284,8 +301,11 @@ function TeamMemberContactLinks({
   onContactClick?: (contactAction: ContactAction) => void;
 }) {
   const hasContact = Boolean(member.email || member.phone);
+  const memberId = getTeamMemberAnalyticsId(member);
   const emailAction = member.email
     ? {
+        memberId,
+        memberCategory: member.categoryId,
         memberName: member.name,
         type: "email" as const,
         value: member.email,
@@ -294,6 +314,8 @@ function TeamMemberContactLinks({
     : null;
   const phoneAction = member.phone
     ? {
+        memberId,
+        memberCategory: member.categoryId,
         memberName: member.name,
         type: "phone" as const,
         value: member.phone,
@@ -314,10 +336,15 @@ function TeamMemberContactLinks({
           <button
             type="button"
             className="team-member-contact-icon"
-            data-analytics-event="contact_overlay_open"
-            data-analytics-section="team"
-            data-analytics-category="email"
-            onClick={() => onContactClick?.(emailAction)}
+            onClick={() => {
+              trackAnalyticsEvent("contact_overlay_open", {
+                section: "team",
+                item_id: memberId,
+                item_category: member.categoryId,
+                contact_type: "email",
+              });
+              onContactClick?.(emailAction);
+            }}
             aria-label={`E-Mail-Adresse von ${member.name} öffnen`}
           >
             <Mail className="h-4 w-4" aria-hidden="true" />
@@ -327,10 +354,15 @@ function TeamMemberContactLinks({
           <button
             type="button"
             className="team-member-contact-icon"
-            data-analytics-event="contact_overlay_open"
-            data-analytics-section="team"
-            data-analytics-category="phone"
-            onClick={() => onContactClick?.(phoneAction)}
+            onClick={() => {
+              trackAnalyticsEvent("contact_overlay_open", {
+                section: "team",
+                item_id: memberId,
+                item_category: member.categoryId,
+                contact_type: "phone",
+              });
+              onContactClick?.(phoneAction);
+            }}
             aria-label={`Telefonnummer von ${member.name} öffnen`}
           >
             <Phone className="h-4 w-4" aria-hidden="true" />
@@ -369,6 +401,8 @@ function TeamContactOverlay({
       setCopyLabel("Kopiert");
       trackAnalyticsEvent("contact_copy", {
         section: "team",
+        item_id: contactAction.memberId,
+        item_category: contactAction.memberCategory,
         contact_type: contactAction.type,
         result: "success",
       });
@@ -376,6 +410,8 @@ function TeamContactOverlay({
       setCopyLabel("Bitte manuell kopieren");
       trackAnalyticsEvent("contact_copy", {
         section: "team",
+        item_id: contactAction.memberId,
+        item_category: contactAction.memberCategory,
         contact_type: contactAction.type,
         result: "failed",
       });
@@ -431,6 +467,11 @@ function TeamContactOverlay({
               <p className="team-contact-send-options__label">E-Mail versenden</p>
               <a
                 href={contactAction.href}
+                data-analytics-event="contact_click"
+                data-analytics-section="team"
+                data-analytics-item={contactAction.memberId}
+                data-analytics-category={contactAction.memberCategory}
+                data-analytics-contact-type={contactAction.type}
                 className="team-contact-send-option"
               >
                 <ExternalLink className="h-4 w-4" aria-hidden="true" />
@@ -440,6 +481,11 @@ function TeamContactOverlay({
           ) : (
             <a
               href={contactAction.href}
+              data-analytics-event="contact_click"
+              data-analytics-section="team"
+              data-analytics-item={contactAction.memberId}
+              data-analytics-category={contactAction.memberCategory}
+              data-analytics-contact-type={contactAction.type}
               className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-ink"
             >
               <ExternalLink className="h-4 w-4" aria-hidden="true" />
@@ -491,7 +537,11 @@ export function HomeTeamSection({
   const displayedMembers = visibleMembers;
 
   const closeMemberOverlay = () => {
-    trackAnalyticsEvent("team_member_close", { section: "team" });
+    trackAnalyticsEvent("team_member_close", {
+      section: "team",
+      item_id: selectedMember ? getTeamMemberAnalyticsId(selectedMember) : undefined,
+      item_category: selectedMember?.categoryId,
+    });
     setSelectedMember(null);
     replaceUrlWithoutScroll(getTeamOverviewPath(variant));
   };
@@ -606,6 +656,7 @@ export function HomeTeamSection({
                       if (member.imageSrc) {
                         trackAnalyticsEvent("team_member_open", {
                           section: "team",
+                          item_id: getTeamMemberAnalyticsId(member),
                           item_category: member.categoryId,
                         });
                         setSelectedMember(member);

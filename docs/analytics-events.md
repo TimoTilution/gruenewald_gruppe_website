@@ -16,15 +16,15 @@ Formularinhalte und andere Kontaktwerte werden nicht als Parameter übertragen.
 | `service_close` | Schließen einer Leistung | `item_id` |
 | `reference_category_select` | Auswahl eines Referenzfilters | `item_id` |
 | `reference_open` | Öffnen eines Referenzprojekts | `item_id`, `item_category` |
-| `reference_image_navigate` | Bildwechsel per Pfeil oder Wischen | `interaction_method`, `navigation_direction` |
-| `reference_image_select` | Direkte Bildauswahl | `item_id` |
-| `reference_close` | Schließen einer Referenz | `company` |
+| `reference_image_navigate` | Bildwechsel per Pfeil oder Wischen | `item_id`, `item_category`, `interaction_method`, `navigation_direction` |
+| `reference_image_select` | Direkte Bildauswahl | `item_id`, `item_category` |
+| `reference_close` | Schließen einer Referenz | `item_id`, `item_category` |
 | `team_category_select` | Auswahl eines Teambereichs | `item_id` |
-| `team_member_open` | Öffnen eines Mitarbeiterprofils | `item_category` |
-| `team_member_close` | Schließen eines Mitarbeiterprofils | `company` |
-| `contact_overlay_open` | Öffnen einer Kontaktmöglichkeit | `item_category` |
-| `contact_click` | E-Mail- oder Telefonaktion | `contact_type` |
-| `contact_copy` | Kopieren einer Kontaktangabe | `contact_type`, `result` |
+| `team_member_open` | Öffnen eines Mitarbeiterprofils | `item_id`, `item_category` |
+| `team_member_close` | Schließen eines Mitarbeiterprofils | `item_id`, `item_category` |
+| `contact_overlay_open` | Öffnen einer Kontaktmöglichkeit | `item_id`, `item_category`, `contact_type` |
+| `contact_click` | E-Mail- oder Telefonaktion | `item_id`, `item_category`, `contact_type` |
+| `contact_copy` | Kopieren einer Kontaktangabe | `item_id`, `item_category`, `contact_type`, `result` |
 | `project_inquiry_click` | Klick auf Projektanfrage | `company`, `section` |
 | `content_toggle` | Mehr/Weniger anzeigen | `section`, `item_id` |
 | `video_play` | Videowiedergabe | `item_id` |
@@ -35,6 +35,11 @@ Formularinhalte und andere Kontaktwerte werden nicht als Parameter übertragen.
 | `outbound_link_click` | Aufruf einer externen Domain | `link_domain` |
 
 Alle Ereignisse enthalten außerdem `company`, `page_path` und `device_layout`.
+
+Bei Team-Ereignissen ist `item_id` eine stabile, neutrale CMS- bzw. Fallback-ID.
+Namen, E-Mail-Adressen und Telefonnummern werden nicht an GA4 übertragen. Bei
+Referenz-Bildaktionen bezeichnet `item_category` die zugehörige Referenz-ID,
+während `item_id` bei einer Direktauswahl die Bildposition enthält.
 
 ## In GA4 zu registrierende benutzerdefinierte Dimensionen
 
@@ -60,4 +65,3 @@ Alle Ereignisse enthalten außerdem `company`, `page_path` und `device_layout`.
 
 Karriereaktionen sollten ergänzt und als Schlüsselereignis markiert werden,
 sobald eine konkrete Bewerbungsaktion oder ein Bewerbungsformular vorhanden ist.
-

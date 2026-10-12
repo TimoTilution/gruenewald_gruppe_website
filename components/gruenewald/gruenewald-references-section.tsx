@@ -53,6 +53,10 @@ function getReferencePathForProject(project: GruenewaldReference) {
   return reference ? getReferencePath(reference) : null;
 }
 
+function getReferenceAnalyticsId(project: GruenewaldReference) {
+  return getReferencePathForProject(project)?.split("/").pop();
+}
+
 // Neue GmbH-Referenzen werden hier mit Cover und Galeriebildern ergänzt.
 const gruenewaldReferences: GruenewaldReference[] = [
   {
@@ -681,6 +685,9 @@ export function GruenewaldReferencesSection() {
       ]
     : [];
   const activeImage = galleryImages[activeImageIndex];
+  const selectedReferenceId = selectedProject
+    ? getReferenceAnalyticsId(selectedProject)
+    : undefined;
 
   const closeGallery = () => {
     setSelectedProject(null);
@@ -800,6 +807,7 @@ export function GruenewaldReferencesSection() {
                 type="button"
                 data-analytics-event="reference_open"
                 data-analytics-section="references"
+                data-analytics-item={getReferenceAnalyticsId(reference)}
                 data-analytics-category={gruenewaldReferenceCategoryPaths[reference.category]?.split("/").pop()}
                 onClick={() => {
                   const referencePath = getReferencePathForProject(reference);
@@ -879,6 +887,8 @@ export function GruenewaldReferencesSection() {
               onClick={closeGallery}
               data-analytics-event="reference_close"
               data-analytics-section="references"
+              data-analytics-item={selectedReferenceId}
+              data-analytics-category={selectedProject.category}
               className="reference-gallery-close absolute right-3 top-3 z-20 grid h-11 w-11 place-items-center rounded-full border border-[#009ca6]/25 bg-white/95 text-[#182956] shadow-lg transition hover:bg-[#009ca6] hover:text-white lg:-right-16 lg:-top-14"
               aria-label="Projektgalerie schließen"
               autoFocus
@@ -924,7 +934,9 @@ export function GruenewaldReferencesSection() {
                     data-analytics-event="reference_image_navigate"
                     data-analytics-section="references"
                     data-analytics-method="arrow"
-                    data-analytics-item="previous"
+                    data-analytics-direction="previous"
+                    data-analytics-item={selectedReferenceId}
+                    data-analytics-category={selectedProject.category}
                     className="absolute left-3 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full border border-white/70 bg-[#009ca6]/95 text-white shadow-lg"
                     aria-label="Vorheriges Projektbild"
                   >
@@ -936,7 +948,9 @@ export function GruenewaldReferencesSection() {
                     data-analytics-event="reference_image_navigate"
                     data-analytics-section="references"
                     data-analytics-method="arrow"
-                    data-analytics-item="next"
+                    data-analytics-direction="next"
+                    data-analytics-item={selectedReferenceId}
+                    data-analytics-category={selectedProject.category}
                     className="absolute right-3 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full border border-white/70 bg-[#009ca6]/95 text-white shadow-lg"
                     aria-label="Nächstes Projektbild"
                   >
@@ -956,6 +970,7 @@ export function GruenewaldReferencesSection() {
                       data-analytics-event="reference_image_select"
                       data-analytics-section="references"
                       data-analytics-item={String(index + 1)}
+                      data-analytics-category={selectedReferenceId}
                       className={`relative h-14 w-20 shrink-0 overflow-hidden rounded-lg border-2 sm:h-16 sm:w-24 lg:aspect-video lg:h-auto lg:w-full ${
                         index === activeImageIndex
                           ? "border-[#009ca6]"
