@@ -9,6 +9,7 @@ import { pushUrlWithoutScroll, replaceUrlWithoutScroll } from "@/lib/preserve-sc
 import { getOptimizedSiteImageSrc } from "@/lib/site-image";
 import { getTeamMemberSlug } from "@/lib/team-member-path";
 import { trackAnalyticsEvent } from "@/lib/analytics";
+import { withTrailingSlash } from "@/lib/site-path";
 
 const initialVisibleMobileTeamMemberCount = 2;
 const initialVisibleDesktopTeamMemberCount = 4;
@@ -650,10 +651,11 @@ export function HomeTeamSection({
                       : ""
                   }`}
                 >
-                  <button
-                    type="button"
-                    onClick={() => {
+                  <a
+                    href={withTrailingSlash(getTeamMemberOverlayPath(variant, member))}
+                    onClick={(event) => {
                       if (member.imageSrc) {
+                        event.preventDefault();
                         trackAnalyticsEvent("team_member_open", {
                           section: "team",
                           item_id: getTeamMemberAnalyticsId(member),
@@ -707,7 +709,7 @@ export function HomeTeamSection({
                         {member.role}
                       </p>
                     </div>
-                  </button>
+                  </a>
                   <TeamMemberContactLinks
                     member={member}
                     onContactClick={setActiveContactAction}

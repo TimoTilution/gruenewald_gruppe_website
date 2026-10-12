@@ -3,12 +3,14 @@ import type { Metadata } from "next";
 import { PageHero } from "@/components/page-hero";
 import { SectionShell } from "@/components/section-shell";
 import { privacyPolicyHtml } from "@/data/privacy-policy";
+import { createPageMetadata } from "@/lib/seo-metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = createPageMetadata({
   title: "Datenschutzerklärung",
   description:
     "Informationen zur Verarbeitung personenbezogener Daten auf gruenewald-gruppe.de.",
-};
+  path: "/datenschutz",
+});
 
 export default function DatenschutzPage() {
   return (

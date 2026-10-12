@@ -2,12 +2,14 @@ import type { Metadata } from "next";
 import { PageHero } from "@/components/page-hero";
 import { SectionShell } from "@/components/section-shell";
 import { imprints, type Imprint } from "@/data/legal";
+import { createPageMetadata } from "@/lib/seo-metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = createPageMetadata({
   title: "Impressum",
   description:
     "Impressum der Grünewald Gruppe mit Angaben zu Tilution, Grünewald GmbH, Clay Construction, HRW und Grünewald Verwaltung.",
-};
+  path: "/impressum",
+});
 
 function ImprintCard({ imprint }: { imprint: Imprint }) {
   return (

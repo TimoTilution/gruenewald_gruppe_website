@@ -51,6 +51,7 @@ type PageProps = {
 
 type RouteContent = {
   path: string;
+  canonicalPath?: string;
   title: string;
   eyebrow: string;
   description: string;
@@ -464,6 +465,7 @@ function getTeamRoute(path: string, slug: string[]): RouteContent | null {
 
     return {
       path,
+      canonicalPath: `${companies[company].basePath}/team/${member.slug}`,
       title: member.name,
       eyebrow: member.departmentTitle,
       description: `${member.name} - ${member.role} bei ${companies[company].title}.`,
@@ -604,7 +606,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     return {};
   }
 
-  const canonical = `${siteBaseUrl}${withTrailingSlash(route.path)}`;
+  const canonical = `${siteBaseUrl}${withTrailingSlash(route.canonicalPath ?? route.path)}`;
 
   return {
     title: route.title,

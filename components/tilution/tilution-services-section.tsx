@@ -12,6 +12,7 @@ import {
 import { getOptimizedSiteImageSrc } from "@/lib/site-image";
 import { pushUrlState, pushUrlWithoutScroll } from "@/lib/preserve-scroll-url";
 import { trackAnalyticsEvent } from "@/lib/analytics";
+import { withTrailingSlash } from "@/lib/site-path";
 
 type ServiceArea = {
   title: string;
@@ -380,7 +381,15 @@ function getTilutionServicePath(title: string) {
     : "/tilution/leistungen";
 }
 
-function ServiceCard({ area, onOpen }: { area: ServiceArea; onOpen?: () => void }) {
+function ServiceCard({
+  area,
+  href,
+  onOpen,
+}: {
+  area: ServiceArea;
+  href?: string;
+  onOpen?: () => void;
+}) {
   const card = (
     <article className="tilution-service-card group">
       <Image
@@ -437,15 +446,18 @@ function ServiceCard({ area, onOpen }: { area: ServiceArea; onOpen?: () => void 
     </article>
   );
 
-  return onOpen ? (
-    <button
-      type="button"
+  return onOpen && href ? (
+    <a
+      href={withTrailingSlash(href)}
       className={`tilution-service-card-button${area.title === "Generalunternehmer" ? " tilution-service-card-button--wide" : ""}`}
-      onClick={onOpen}
+      onClick={(event) => {
+        event.preventDefault();
+        onOpen();
+      }}
       aria-label={`${area.title} im Detail ansehen`}
     >
       {card}
-    </button>
+    </a>
   ) : card;
 }
 
@@ -598,6 +610,13 @@ export function TilutionServicesSection({ variant = "tilution" }: { variant?: "t
             >
               <ServiceCard
                 area={area}
+                href={
+                  activeServiceMap[area.title]
+                    ? isGruenewald
+                      ? getGruenewaldServicePath(area.title)
+                      : getTilutionServicePath(area.title)
+                    : undefined
+                }
                 onOpen={activeServiceMap[area.title] ? () => openService(area.title) : undefined}
               />
             </div>

@@ -11,7 +11,9 @@ import { ScrollToTop } from "@/components/scroll-to-top";
 import { siteBaseUrl } from "@/data/site-architecture";
 import "./globals.css";
 
-const isPreviewBuild = process.env.GITHUB_ACTIONS === "true";
+// Indexing must be disabled explicitly. GitHub Actions also builds the real
+// production site, so GITHUB_ACTIONS must never be used as a preview signal.
+const isNoIndexBuild = process.env.SITE_NOINDEX === "true";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -49,7 +51,7 @@ export const metadata: Metadata = {
       "Unternehmensgruppe für Privatkunden, Gewerbebau, Klimadecken, Personal und zentrale Steuerung.",
     images: ["/images-optimized/root/hero-start.jpg.webp"],
   },
-  robots: isPreviewBuild
+  robots: isNoIndexBuild
     ? {
         index: false,
         follow: false,

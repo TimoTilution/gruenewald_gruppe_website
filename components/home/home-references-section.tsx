@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { getOptimizedReferenceSrc } from "@/lib/reference-image";
-import { normalizeSitePathname } from "@/lib/site-path";
+import { normalizeSitePathname, withTrailingSlash } from "@/lib/site-path";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -943,10 +943,15 @@ export function HomeReferencesSection() {
           className="reference-preview-scroll mt-12 flex gap-5 overflow-x-scroll pb-4 scroll-smooth sm:grid sm:gap-6 sm:overflow-visible sm:pb-0 sm:grid-cols-2 xl:grid-cols-3"
         >
           {displayedPreviewEntries.map(({ image, index }, displayedIndex) => (
-            <button
+            <a
               key={image.src}
-              type="button"
-              onClick={() => openGallery(index)}
+              href={withTrailingSlash(
+                getReferencePathForPreview(image, isGroupPage) ?? referenceOverviewPath,
+              )}
+              onClick={(event) => {
+                event.preventDefault();
+                openGallery(index);
+              }}
               className={`reference-card liquid-card group block w-[82vw] shrink-0 text-left sm:w-full${image.src === "/references/sprudelhof-therme/title-images/sprudelhof-therme-title-01.svg" ? " reference-card--mobile-first" : ""}${canToggleReferences && !showAllReferences && displayedIndex >= INITIAL_VISIBLE_REFERENCE_COUNT ? " sm:hidden" : ""}`}
               aria-label={`Projektgalerie öffnen: ${project.title}`}
             >
@@ -967,7 +972,7 @@ export function HomeReferencesSection() {
                   </p>
                 </div>
               </div>
-            </button>
+            </a>
           ))}
         </div>
         {visiblePreviewEntries.length > 1 ? (
