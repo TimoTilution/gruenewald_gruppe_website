@@ -6,6 +6,8 @@ import { HomeTeamSection } from "@/components/home/home-team-section";
 import { TilutionServicesSection } from "@/components/tilution/tilution-services-section";
 import { getCmsTeamData } from "@/lib/sanity/team";
 import { createPageMetadata } from "@/lib/seo-metadata";
+import { StructuredData } from "@/components/structured-data";
+import { createCompanyOrganizationSchema } from "@/lib/structured-data";
 
 export const metadata: Metadata = createPageMetadata({
   title: "Grünewald Verwaltung – Zentrale Unternehmensservices",
@@ -19,6 +21,7 @@ export default async function VerwaltungPage() {
 
   return (
     <div className="verwaltung-theme contents">
+      <StructuredData data={createCompanyOrganizationSchema("verwaltung")} />
       <HomeHeroSection variant="verwaltung" />
       <TilutionServicesSection variant="verwaltung" />
       <HomeTeamSection variant="verwaltung" teamData={teamData} />

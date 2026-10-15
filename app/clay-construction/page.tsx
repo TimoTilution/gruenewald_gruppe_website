@@ -8,6 +8,8 @@ import { HomeReferencesSection } from "@/components/home/home-references-section
 import { HomeTeamSection } from "@/components/home/home-team-section";
 import { getCmsTeamData } from "@/lib/sanity/team";
 import { createPageMetadata } from "@/lib/seo-metadata";
+import { StructuredData } from "@/components/structured-data";
+import { createCompanyOrganizationSchema } from "@/lib/structured-data";
 
 export const metadata: Metadata = createPageMetadata({
   title: "Clay Construction – Lehm-Klimadecken",
@@ -21,10 +23,11 @@ export default async function ClayConstructionPage() {
 
   return (
     <div className="clay-theme contents">
+      <StructuredData data={createCompanyOrganizationSchema("clay-construction")} />
       <HomeHeroSection variant="clay" />
       <ClayServicesSection />
-      <HomeAboutSection />
       <HomeReferencesSection />
+      <HomeAboutSection />
       <HomeTeamSection variant="clay" teamData={teamData} />
       <HomeCareerSection />
       <HomeContactSection />

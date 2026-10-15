@@ -3,7 +3,7 @@ import { ArrowRight, Check } from "lucide-react";
 import { SectionShell } from "@/components/section-shell";
 import { getOptimizedLogoSrc } from "@/lib/logo-image";
 import { getOptimizedSiteImageSrc } from "@/lib/site-image";
-import { withLegacyRedirectCacheBypass } from "@/lib/site-path";
+import { withTrailingSlash } from "@/lib/site-path";
 
 const heroActions = [
   {
@@ -270,7 +270,7 @@ export function HomeHeroSection({ variant = "group" }: HomeHeroSectionProps) {
           {heroActions.map((action) => (
             <a
               key={action.href}
-              href={withLegacyRedirectCacheBypass(action.href)}
+              href={withTrailingSlash(action.href)}
               className={`liquid-card group flex flex-col px-6 py-5 text-center text-ink ${action.panelClassName}`}
             >
               <div className="relative min-h-[8rem] overflow-hidden sm:min-h-[9rem]">

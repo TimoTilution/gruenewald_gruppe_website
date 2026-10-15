@@ -7,6 +7,7 @@ export const visibleCompaniesQuery = `*[_type == "company" && isVisible != false
 
 export const visibleTeamMembersQuery = `*[_type == "teamMember" && isVisible != false] | order(sortOrder asc, name asc) {
   _id,
+  _updatedAt,
   name,
   role,
   degree,
@@ -24,6 +25,7 @@ export const visibleTeamMembersQuery = `*[_type == "teamMember" && isVisible != 
 
 export const visibleGroupTeamDepartmentsQuery = `*[_type == "groupTeamDepartment" && isVisible != false] | order(sortOrder asc, title asc) {
   _id,
+  _updatedAt,
   title,
   "slug": slug.current,
   sortOrder

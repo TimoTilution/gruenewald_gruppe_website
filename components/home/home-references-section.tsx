@@ -11,12 +11,21 @@ import { SectionShell } from "@/components/section-shell";
 import { MobileSnapGallery } from "@/components/mobile-snap-gallery";
 import { InteractiveScrollbar } from "@/components/interactive-scrollbar";
 import {
-  getGroupReferencePath,
   getReferencePath,
   references,
 } from "@/data/site-architecture";
-import { pushUrlWithoutScroll, replaceUrlWithoutScroll } from "@/lib/preserve-scroll-url";
+import {
+  pushUrlState,
+  pushUrlWithoutScroll,
+  replaceUrlWithoutScroll,
+} from "@/lib/preserve-scroll-url";
 import { trackAnalyticsEvent } from "@/lib/analytics";
+import { tilutionServiceDetailsByTitle } from "@/data/tilution-service-details";
+import {
+  clayReferenceDescription,
+  groupReferenceDescription,
+  tilutionReferenceDescriptions,
+} from "@/data/reference-category-descriptions";
 
 type ReferenceCategory =
   | "Schwimmbäder & Thermen"
@@ -49,6 +58,24 @@ const referenceFilterOptions: Array<"Alle" | ReferenceCategory> = [
   "Fassaden",
 ];
 
+const tilutionServiceToReferenceCategory: Record<string, ReferenceCategory> = {
+  "Schwimmbäder & Thermen": "Schwimmbäder & Thermen",
+  "Hotels & Wellness": "Hotels & Wellness",
+  "Öffentliche Einrichtungen": "Öffentliche Einrichtungen",
+  "Kliniken & Pflegebereiche": "Kliniken & Pflegebereiche",
+  "Großküchen": "Großküchen",
+  "Retail & Großflächen": "Retail & Gewerbeflächen",
+  "Wohnungsbau": "Wohnungsbau",
+  "Fassaden": "Fassaden",
+};
+
+const tilutionReferenceCategoryToServiceTitle = Object.fromEntries(
+  Object.entries(tilutionServiceToReferenceCategory).map(([service, category]) => [
+    category,
+    service,
+  ]),
+) as Record<ReferenceCategory, string>;
+
 const INITIAL_VISIBLE_REFERENCE_COUNT = 6;
 
 const tilutionReferenceCategoryPaths: Partial<Record<ReferenceCategory, string>> = {
@@ -62,6 +89,18 @@ const tilutionReferenceCategoryPaths: Partial<Record<ReferenceCategory, string>>
   "Fassaden": "/tilution/referenzen/fassaden",
 };
 
+function getTilutionCategoryFromPath(pathname: string) {
+  return Object.entries(tilutionReferenceCategoryPaths).find(
+    ([, categoryPath]) => {
+      const normalizedCategoryPath = normalizeSitePathname(categoryPath ?? "");
+      return (
+        pathname === normalizedCategoryPath ||
+        pathname.startsWith(`${normalizedCategoryPath}/`)
+      );
+    },
+  )?.[0] as ReferenceCategory | undefined;
+}
+
 const project: {
   title: string;
   description: string;
@@ -72,6 +111,13 @@ const project: {
   description:
     "Die Sprudelhof Therme Bad Nauheim verbindet die traditionsreiche Badekultur der Stadt mit moderner Architektur und hochwertigem Thermenkomfort. In unmittelbarer Nähe zum historischen Jugendstilensemble entstand ein anspruchsvolles Projekt mit besonderem gestalterischem Anspruch. Mit der Tilution und unseren Fliesen- und Betonwerksteinarbeiten haben wir dazu beigetragen, Geschichte, Qualität und modernes Handwerk miteinander zu verbinden.",
   previewImages: [
+    {
+      src: "/references/sprudelhof-therme/title-images/sprudelhof-therme-title-01.svg",
+      hoverText: "Sprudelhof Therme, Bad Nauheim | öffentlich | Tilution GmbH",
+      alt: "Titelbild der Sprudelhof Therme Bad Nauheim",
+      isSvg: true,
+      category: "Schwimmbäder & Thermen",
+    },
     {
       src: "/references/rheingau-bad-geisenheim/title-images/rheingau-bad-title-01.png",
       hoverText: "Rheingau-Bad, Geisenheim | öffentlich | Tilution GmbH",
@@ -89,13 +135,6 @@ const project: {
       hoverText:
         "Badeparadies Eiswiese, Göttingen | öffentlich | Tilution GmbH",
       alt: "Luftaufnahme des Badeparadieses Eiswiese in Göttingen",
-      category: "Schwimmbäder & Thermen",
-    },
-    {
-      src: "/references/sprudelhof-therme/title-images/sprudelhof-therme-title-01.svg",
-      hoverText: "Sprudelhof Therme, Bad Nauheim | öffentlich | Tilution GmbH",
-      alt: "Titelbild der Sprudelhof Therme Bad Nauheim",
-      isSvg: true,
       category: "Schwimmbäder & Thermen",
     },
     {
@@ -696,16 +735,20 @@ function getReferenceForPreview(image: ReferenceImage) {
   );
 }
 
-function getReferencePathForPreview(image: ReferenceImage, isGroupPage = false) {
+function getReferencePathForPreview(image: ReferenceImage) {
   const reference = getReferenceForPreview(image);
 
   if (!reference) return null;
-  return isGroupPage
-    ? getGroupReferencePath(reference)
-    : getReferencePath(reference);
+  return getReferencePath(reference);
 }
 
-export function HomeReferencesSection() {
+export function HomeReferencesSection({
+  integratedTilution = false,
+  modalOnly = false,
+}: {
+  integratedTilution?: boolean;
+  modalOnly?: boolean;
+} = {}) {
   const pathname = normalizeSitePathname(usePathname());
   const isGroupPage = pathname === "/" || pathname === "/referenzen";
   const isTilutionPage = pathname === "/tilution" || pathname.startsWith("/tilution/");
@@ -716,7 +759,10 @@ export function HomeReferencesSection() {
   const [selectedPreviewIndex, setSelectedPreviewIndex] = useState(0);
   const [showAllReferences, setShowAllReferences] = useState(false);
   const [activeFilter, setActiveFilter] =
-    useState<(typeof referenceFilterOptions)[number]>("Alle");
+    useState<(typeof referenceFilterOptions)[number]>(
+      getTilutionCategoryFromPath(pathname) ??
+        (integratedTilution ? "Schwimmbäder & Thermen" : "Alle"),
+    );
   const referenceFilterRef = useRef<HTMLDivElement | null>(null);
   const referencePreviewRef = useRef<HTMLDivElement | null>(null);
   const referenceFilterButtonRefs = useRef<Array<HTMLButtonElement | null>>([]);
@@ -751,16 +797,16 @@ export function HomeReferencesSection() {
               );
             })
           : previewEntries;
+  const initialVisibleReferenceCount = integratedTilution
+    ? 2
+    : INITIAL_VISIBLE_REFERENCE_COUNT;
   const canToggleReferences =
     (isGroupPage || isTilutionPage || isClayPage) &&
-    visiblePreviewEntries.length > INITIAL_VISIBLE_REFERENCE_COUNT;
+    visiblePreviewEntries.length > initialVisibleReferenceCount;
   const displayedPreviewEntries = visiblePreviewEntries;
   const overlayImages = getReferenceOverlayImages(selectedPreviewImage);
   const activeImage = overlayImages[activeImageIndex];
-  const selectedReferenceId = getReferencePathForPreview(
-    selectedPreviewImage,
-    isGroupPage,
-  )?.split("/").pop();
+  const selectedReferenceId = getReferencePathForPreview(selectedPreviewImage)?.split("/").pop();
   const selectedReferenceDescription =
     getReferenceForPreview(selectedPreviewImage)?.description ?? project.description;
   const referenceOverviewPath = isClayPage
@@ -769,15 +815,89 @@ export function HomeReferencesSection() {
       ? "/tilution/referenzen"
       : "/referenzen";
 
+  const activeTilutionCategoryPath =
+    activeFilter === "Alle"
+      ? "/tilution/referenzen"
+      : tilutionReferenceCategoryPaths[activeFilter] ?? "/tilution/referenzen";
+  const activeTilutionServicePath =
+    activeFilter === "Alle"
+      ? "/tilution/leistungen"
+      : `/tilution/leistungen/${
+          tilutionServiceDetailsByTitle[
+            tilutionReferenceCategoryToServiceTitle[activeFilter]
+          ]?.slug ?? ""
+        }`;
+
   useEffect(() => {
+    if (!isTilutionPage) return;
+
+    const handleServiceSelected = (event: Event) => {
+      const title = (event as CustomEvent<{ title?: string }>).detail?.title;
+      const category = title ? tilutionServiceToReferenceCategory[title] : undefined;
+      if (!category) return;
+      setActiveFilter(category);
+      setShowAllReferences(false);
+    };
+
+    window.addEventListener("tilution:service-selected", handleServiceSelected);
+    return () =>
+      window.removeEventListener("tilution:service-selected", handleServiceSelected);
+  }, [isTilutionPage]);
+
+  useEffect(() => {
+    if (!modalOnly || !isTilutionPage) return;
+
+    const handleReferenceOpen = (event: Event) => {
+      const path = normalizeSitePathname(
+        (event as CustomEvent<{ path?: string }>).detail?.path ?? "",
+      );
+      const matchingIndex = project.previewImages.findIndex((image) => {
+        const referencePath = getReferencePathForPreview(image);
+        return referencePath && normalizeSitePathname(referencePath) === path;
+      });
+      if (matchingIndex < 0) return;
+      openGallery(matchingIndex);
+    };
+
+    window.addEventListener("tilution:reference-open", handleReferenceOpen);
+    return () =>
+      window.removeEventListener("tilution:reference-open", handleReferenceOpen);
+  });
+
+  useEffect(() => {
+    if (!isTilutionPage) return;
+
+    const matchingCategory = getTilutionCategoryFromPath(pathname);
+
+    if (matchingCategory) {
+      setActiveFilter(matchingCategory);
+      setShowAllReferences(true);
+    }
+
+    const matchingProjectIndex = project.previewImages.findIndex((image) => {
+      const projectPath = getReferencePathForPreview(image);
+      return projectPath && normalizeSitePathname(projectPath) === pathname;
+    });
+
+    if (matchingProjectIndex >= 0) {
+      setSelectedPreviewIndex(matchingProjectIndex);
+      setActiveImageIndex(0);
+      setIsOpen(true);
+    }
+  }, [isTilutionPage, pathname]);
+
+  useEffect(() => {
+    if (
+      isTilutionPage &&
+      pathname.startsWith("/tilution/referenzen/")
+    ) {
+      return;
+    }
     setShowAllReferences(false);
-  }, [activeFilter, pathname]);
+  }, [activeFilter, integratedTilution, isTilutionPage, pathname]);
 
   const openGallery = (index: number) => {
-    const referencePath = getReferencePathForPreview(
-      project.previewImages[index],
-      isGroupPage,
-    );
+    const referencePath = getReferencePathForPreview(project.previewImages[index]);
 
     trackAnalyticsEvent("reference_open", {
       section: "references",
@@ -802,7 +922,87 @@ export function HomeReferencesSection() {
     });
     setIsOpen(false);
 
-    replaceUrlWithoutScroll(referenceOverviewPath);
+    replaceUrlWithoutScroll(
+      integratedTilution && isTilutionPage
+        ? showAllReferences
+          ? activeTilutionCategoryPath
+          : activeTilutionServicePath
+        : referenceOverviewPath,
+    );
+  };
+
+  const goToInsights = () => {
+    trackAnalyticsEvent("reference_video_click", {
+      section: "references",
+      item_id: selectedReferenceId,
+      item_category: selectedPreviewImage?.category,
+    });
+    setIsOpen(false);
+    document.body.classList.remove("reference-gallery-open");
+    document.body.classList.remove("site-overlay-open");
+    document.body.style.overflow = "";
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        window.setTimeout(() => {
+          const targetSection = document.getElementById("gruppe");
+          if (!targetSection) return;
+
+          const headerOffset =
+            document.querySelector("header")?.getBoundingClientRect().height ?? 0;
+          const getTargetTop = () =>
+            Math.max(
+              targetSection.getBoundingClientRect().top + window.scrollY - headerOffset - 16,
+              0,
+            );
+
+          pushUrlState("/tilution/einblicke");
+          if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+            window.scrollTo({ top: getTargetTop(), behavior: "auto" });
+            return;
+          }
+
+          const previousScrollBehavior = document.documentElement.style.scrollBehavior;
+          document.documentElement.style.scrollBehavior = "auto";
+
+          const animateScroll = (
+            startTop: number,
+            duration: number,
+            onComplete: () => void,
+          ) => {
+            const startedAt = performance.now();
+            const step = (now: number) => {
+              const progress = Math.min((now - startedAt) / duration, 1);
+              const easedProgress = 1 - Math.pow(1 - progress, 3);
+              const currentTargetTop = getTargetTop();
+              window.scrollTo(
+                0,
+                startTop + (currentTargetTop - startTop) * easedProgress,
+              );
+
+              if (progress < 1) {
+                requestAnimationFrame(step);
+              } else {
+                onComplete();
+              }
+            };
+            requestAnimationFrame(step);
+          };
+
+          animateScroll(window.scrollY, 900, () => {
+            window.setTimeout(() => {
+              const remainingDistance = Math.abs(getTargetTop() - window.scrollY);
+              if (remainingDistance > 2) {
+                animateScroll(window.scrollY, 350, () => {
+                  document.documentElement.style.scrollBehavior = previousScrollBehavior;
+                });
+              } else {
+                document.documentElement.style.scrollBehavior = previousScrollBehavior;
+              }
+            }, 80);
+          });
+        }, 80);
+      });
+    });
   };
 
   useEffect(() => {
@@ -873,18 +1073,30 @@ export function HomeReferencesSection() {
   }, [isOpen]);
 
   return (
-    <SectionShell id="referenzen">
-      <section className="section-card overflow-hidden px-6 py-10 sm:px-9 lg:p-12">
-        <div className="w-full">
+    <SectionShell
+      id={modalOnly ? undefined : "referenzen"}
+      outerClassName={modalOnly ? "hidden" : integratedTilution ? "tilution-combined-projects-shell" : undefined}
+    >
+      <section className={`section-card overflow-hidden px-6 py-10 sm:px-9 lg:p-12${integratedTilution ? " tilution-combined-projects" : ""}`}>
+        <div className={`w-full${integratedTilution ? " tilution-combined-projects__header" : ""}`}>
           <p className="section-eyebrow">
-            Referenzen
+            {integratedTilution ? "Passende Projekte" : "Referenzen"}
           </p>
           <h2 className="section-heading">
-            Projekte aus unterschiedlichen Bereichen
+            {integratedTilution
+              ? activeFilter === "Alle"
+                ? "Ausgeführte Qualität aus dem Objektbau"
+                : `Projekte: ${activeFilter}`
+              : "Projekte aus unterschiedlichen Bereichen"}
           </h2>
-          <p className="section-subline !max-w-none">
-            Gebündelte Kompetenz der Grünewald Gruppe - von der Planung bis zur
-            Umsetzung
+          <p className="section-subline lg:!max-w-none">
+            {integratedTilution
+              ? tilutionReferenceDescriptions[activeFilter]
+              : isClayPage
+                ? clayReferenceDescription
+                : isGroupPage
+                  ? groupReferenceDescription
+                  : tilutionReferenceDescriptions[activeFilter]}
           </p>
         </div>
 
@@ -946,13 +1158,13 @@ export function HomeReferencesSection() {
             <a
               key={image.src}
               href={withTrailingSlash(
-                getReferencePathForPreview(image, isGroupPage) ?? referenceOverviewPath,
+                getReferencePathForPreview(image) ?? referenceOverviewPath,
               )}
               onClick={(event) => {
                 event.preventDefault();
                 openGallery(index);
               }}
-              className={`reference-card liquid-card group block w-[82vw] shrink-0 text-left sm:w-full${image.src === "/references/sprudelhof-therme/title-images/sprudelhof-therme-title-01.svg" ? " reference-card--mobile-first" : ""}${canToggleReferences && !showAllReferences && displayedIndex >= INITIAL_VISIBLE_REFERENCE_COUNT ? " sm:hidden" : ""}`}
+              className={`reference-card liquid-card group block w-[82vw] shrink-0 text-left sm:w-full${image.src === "/references/sprudelhof-therme/title-images/sprudelhof-therme-title-01.svg" ? " reference-card--mobile-first" : ""}${canToggleReferences && !showAllReferences && displayedIndex >= initialVisibleReferenceCount ? integratedTilution ? " hidden" : " sm:hidden" : ""}`}
               aria-label={`Projektgalerie öffnen: ${project.title}`}
             >
               <div className="relative aspect-[4/3] w-full overflow-hidden lg:aspect-[16/11]">
@@ -992,16 +1204,36 @@ export function HomeReferencesSection() {
         ) : null}
 
         {canToggleReferences ? (
-          <div className="mt-10 hidden justify-center sm:flex">
+          <div
+            className={
+              integratedTilution
+                ? "mt-8 flex justify-center sm:mt-10"
+                : "mt-10 hidden justify-center sm:flex"
+            }
+          >
             <button
               type="button"
-              onClick={() => setShowAllReferences((current) => !current)}
+              onClick={() => {
+                setShowAllReferences((current) => {
+                  const next = !current;
+                  if (integratedTilution && isTilutionPage) {
+                    pushUrlWithoutScroll(
+                      next ? activeTilutionCategoryPath : activeTilutionServicePath,
+                    );
+                  }
+                  return next;
+                });
+              }}
               data-analytics-event="content_toggle"
               data-analytics-section="references"
               data-analytics-item={showAllReferences ? "collapse" : "expand"}
               className="show-more-primary-button liquid-card group inline-flex items-center gap-3 rounded-full px-6 py-3 text-sm font-semibold text-white transition-transform duration-300 hover:-translate-y-1 sm:px-7 sm:py-4 sm:text-base"
             >
-              {showAllReferences ? "Weniger anzeigen" : "Mehr anzeigen"}
+              {showAllReferences
+                ? "Weniger Projekte anzeigen"
+                : integratedTilution
+                  ? `Alle ${visiblePreviewEntries.length} Projekte anzeigen`
+                  : "Mehr anzeigen"}
             </button>
           </div>
         ) : null}
@@ -1044,6 +1276,14 @@ export function HomeReferencesSection() {
                     }
                   : undefined
               }
+              action={
+                isTilutionPage && selectedReferenceId === "sprudelhof-therme-bad-nauheim"
+                  ? {
+                      label: "Video zur Therme ansehen",
+                      onClick: goToInsights,
+                    }
+                  : undefined
+              }
             />
             <div className="reference-gallery-panel relative hidden w-full max-w-[118rem] items-center gap-6 overflow-visible p-4 sm:grid lg:grid-cols-[minmax(0,1.42fr)_14rem] lg:gap-8 lg:p-6">
               <div className="flex flex-col justify-center gap-4">
@@ -1071,9 +1311,20 @@ export function HomeReferencesSection() {
                 </div>
 
                 <div className="liquid-card-dark hidden rounded-[1.25rem] px-5 py-4 sm:block">
-                  <p className="text-sm font-bold tracking-[0.18em] text-white">
-                    Beschreibung
-                  </p>
+                  <div className="flex items-center justify-between gap-4">
+                    <p className="text-sm font-bold tracking-[0.18em] text-white">
+                      Beschreibung
+                    </p>
+                    {isTilutionPage && selectedReferenceId === "sprudelhof-therme-bad-nauheim" ? (
+                      <button
+                        type="button"
+                        onClick={goToInsights}
+                        className="shrink-0 rounded-full border border-white/25 bg-[#ec6602] px-5 py-2.5 text-sm font-bold text-white shadow-[0_12px_28px_rgba(0,0,0,0.22)] transition hover:-translate-y-0.5 hover:bg-[#c95302] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+                      >
+                        Video zur Therme ansehen
+                      </button>
+                    ) : null}
+                  </div>
                   <p className="mt-2 text-base font-normal leading-7 text-white">
                     <FormattedReferenceDescription
                       text={selectedReferenceDescription}

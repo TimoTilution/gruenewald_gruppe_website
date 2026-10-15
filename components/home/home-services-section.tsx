@@ -2,7 +2,7 @@ import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { SectionShell } from "@/components/section-shell";
 import { getOptimizedLogoSrc } from "@/lib/logo-image";
-import { withBasePath, withLegacyRedirectCacheBypass } from "@/lib/site-path";
+import { withBasePath, withTrailingSlash } from "@/lib/site-path";
 
 type CompanyCard = {
   href: string;
@@ -135,7 +135,7 @@ export function HomeServicesSection() {
             return (
               <a
                 key={company.href}
-                href={withLegacyRedirectCacheBypass(company.href)}
+                href={withTrailingSlash(company.href)}
                 className={`liquid-card group flex h-full flex-col ${company.cardTone} text-center ${
                   isSupporting
                     ? "p-4 sm:px-5 sm:pb-3 sm:pt-3"

@@ -487,6 +487,46 @@ export function getAllSeoPaths() {
   return Array.from(paths).sort();
 }
 
+/**
+ * URLs that should be actively submitted to search engines.
+ *
+ * `getAllSeoPaths` intentionally remains broader because those routes are also
+ * used for static generation and for the one-pager's browser history. The
+ * sitemap, however, must contain only preferred landing pages:
+ * - group-level project aliases are duplicates of the company project pages;
+ * - department URLs are UI filter states rather than standalone editorial pages.
+ */
+export function getIndexableSeoPaths() {
+  const duplicateGroupReferencePaths = new Set(
+    references.map(getGroupReferencePath),
+  );
+  const teamDepartmentPaths = new Set(
+    uniqueBy(
+      teamMembers,
+      (member) => `${member.company}/${member.departmentSlug}`,
+    ).map(
+      (member) =>
+        `${getCompanyPath(member.company)}/team/${member.departmentSlug}`,
+    ),
+  );
+
+  return getAllSeoPaths().filter(
+    (path) =>
+      !duplicateGroupReferencePaths.has(path) &&
+      !teamDepartmentPaths.has(path),
+  );
+}
+
+export function getTeamDepartmentPaths() {
+  return uniqueBy(
+    teamMembers,
+    (member) => `${member.company}/${member.departmentSlug}`,
+  ).map(
+    (member) =>
+      `${getCompanyPath(member.company)}/team/${member.departmentSlug}`,
+  );
+}
+
 export function uniqueBy<T>(items: T[], getKey: (item: T) => string) {
   const seen = new Set<string>();
   return items.filter((item) => {

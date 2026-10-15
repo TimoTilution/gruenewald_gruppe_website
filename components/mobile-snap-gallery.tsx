@@ -104,11 +104,16 @@ export function MobileSnapGallery({
   activeIndex,
   onActiveIndexChange,
   intro,
+  action,
 }: {
   images: GalleryImage[];
   activeIndex: number;
   onActiveIndexChange: (index: number) => void;
   intro?: MobileGalleryIntro;
+  action?: {
+    label: string;
+    onClick: () => void;
+  };
 }) {
   const trackRef = useRef<HTMLDivElement>(null);
 
@@ -173,6 +178,15 @@ export function MobileSnapGallery({
           <p className="mobile-snap-gallery__intro-description">
             <FormattedIntroDescription text={intro.description} />
           </p>
+          {action ? (
+            <button
+              type="button"
+              onClick={action.onClick}
+              className="mt-4 w-full rounded-full border border-white/25 bg-[#ec6602] px-5 py-3 text-sm font-bold text-white shadow-[0_12px_28px_rgba(0,0,0,0.22)] transition hover:bg-[#c95302] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+            >
+              {action.label}
+            </button>
+          ) : null}
         </div>
       ) : null}
       <div className="mobile-snap-gallery__progress" aria-label={`Bild ${activeIndex + 1} von ${images.length}`}>

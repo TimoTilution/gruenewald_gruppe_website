@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { ArrowRight, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, X } from "lucide-react";
+import { ArrowRight, ArrowUpRight, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, X } from "lucide-react";
 import { SectionShell } from "@/components/section-shell";
 import {
   tilutionServiceDetails,
@@ -13,6 +13,8 @@ import { getOptimizedSiteImageSrc } from "@/lib/site-image";
 import { pushUrlState, pushUrlWithoutScroll } from "@/lib/preserve-scroll-url";
 import { trackAnalyticsEvent } from "@/lib/analytics";
 import { withTrailingSlash } from "@/lib/site-path";
+import { getReferencePath, references } from "@/data/site-architecture";
+import { getOptimizedReferenceSrc } from "@/lib/reference-image";
 
 type ServiceArea = {
   title: string;
@@ -108,6 +110,23 @@ const serviceAreas: ServiceArea[] = [
     },
   },
 ];
+
+const tilutionReferenceCategoryByService: Record<string, string> = {
+  "Schwimmbäder & Thermen": "schwimmbaeder-thermen",
+  "Hotels & Wellness": "hotels-wellness",
+  "Öffentliche Einrichtungen": "oeffentliche-einrichtungen",
+  "Kliniken & Pflegebereiche": "kliniken-pflegebereiche",
+  "Großküchen": "grosskuechen",
+  "Retail & Großflächen": "retail-gewerbeflaechen",
+  Wohnungsbau: "wohnungsbau",
+  Fassaden: "fassaden",
+};
+
+const gruenewaldReferenceCategoryByService: Record<string, string> = {
+  "Außengestaltung": "aussengestaltung",
+  "Badsanierung": "badsanierung",
+  "Haus- & Wohnsanierung": "haus-wohnsanierung",
+};
 
 const gruenewaldServiceAreas: ServiceArea[] = [
   {
@@ -385,10 +404,14 @@ function ServiceCard({
   area,
   href,
   onOpen,
+  referenceHref,
+  onReferenceOpen,
 }: {
   area: ServiceArea;
   href?: string;
   onOpen?: () => void;
+  referenceHref?: string;
+  onReferenceOpen?: () => void;
 }) {
   const card = (
     <article className="tilution-service-card group">
@@ -446,7 +469,7 @@ function ServiceCard({
     </article>
   );
 
-  return onOpen && href ? (
+  const detailCard = onOpen && href ? (
     <a
       href={withTrailingSlash(href)}
       className={`tilution-service-card-button${area.title === "Generalunternehmer" ? " tilution-service-card-button--wide" : ""}`}
@@ -459,15 +482,43 @@ function ServiceCard({
       {card}
     </a>
   ) : card;
+
+  if (!referenceHref || !onReferenceOpen) return detailCard;
+
+  return (
+    <div className="tilution-service-card-shell">
+      {detailCard}
+      <a
+        href={withTrailingSlash(referenceHref)}
+        className="tilution-service-card-reference-cta"
+        onClick={(event) => {
+          event.preventDefault();
+          onReferenceOpen();
+        }}
+        aria-label={`Referenzen für ${area.title} ansehen`}
+      >
+        <span>Referenzen ansehen</span>
+        <ArrowRight aria-hidden="true" size={17} strokeWidth={2.2} />
+      </a>
+    </div>
+  );
 }
 
-export function TilutionServicesSection({ variant = "tilution" }: { variant?: "tilution" | "gruenewald" | "verwaltung" }) {
+export function TilutionServicesSection({
+  variant = "tilution",
+  combinedWithProjects = false,
+}: {
+  variant?: "tilution" | "gruenewald" | "verwaltung";
+  combinedWithProjects?: boolean;
+}) {
   const isGruenewald = variant === "gruenewald";
   const isVerwaltung = variant === "verwaltung";
   const areas = isGruenewald ? gruenewaldServiceAreas : isVerwaltung ? verwaltungServiceAreas : serviceAreas;
   const [activeServiceTitle, setActiveServiceTitle] = useState<string | null>(null);
   const [activeServiceDetailIndex, setActiveServiceDetailIndex] = useState(0);
   const [showAllServices, setShowAllServices] = useState(false);
+  const [selectedCombinedService, setSelectedCombinedService] = useState(serviceAreas[0].title);
+  const [showAllCombinedProjects, setShowAllCombinedProjects] = useState(false);
   const touchStart = useRef<{ x: number; y: number } | null>(null);
   const activeServiceMap = isGruenewald ? gruenewaldServiceDetails : tilutionServiceDetailsByTitle;
   const activeServiceSequence = activeServiceTitle
@@ -480,6 +531,52 @@ export function TilutionServicesSection({ variant = "tilution" }: { variant?: "t
     : emptyServiceSubcategories;
   const activeServiceDetails = activeServiceSequence[activeServiceDetailIndex];
   const contactPath = isGruenewald ? "/gruenewaldgmbh/kontakt" : "/tilution/kontakt";
+  const selectedCombinedArea = serviceAreas.find(
+    (area) => area.title === selectedCombinedService,
+  ) ?? serviceAreas[0];
+  const selectedCombinedDetail = tilutionServiceDetailsByTitle[selectedCombinedArea.title];
+  const selectedCombinedCategory = tilutionReferenceCategoryByService[selectedCombinedArea.title];
+  const selectedCombinedReferences = references.filter(
+    (reference) =>
+      reference.company === "tilution" &&
+      reference.categorySlug === selectedCombinedCategory,
+  );
+
+  const selectCombinedService = (title: string) => {
+    setSelectedCombinedService(title);
+    setShowAllCombinedProjects(false);
+    trackAnalyticsEvent("service_select", {
+      section: "services_projects",
+      item_id: tilutionServiceDetailsByTitle[title]?.slug ?? title,
+      item_category: "commercial",
+    });
+  };
+
+  const openCombinedReference = (path: string) => {
+    window.dispatchEvent(
+      new CustomEvent("tilution:reference-open", { detail: { path } }),
+    );
+  };
+
+  useEffect(() => {
+    if (isGruenewald || isVerwaltung) return;
+
+    const pathname = window.location.pathname.replace(/\/+$/, "");
+    const detailIndex = tilutionServiceDetails.findIndex(
+      (detail) => pathname === `/tilution/leistungen/${detail.slug}`,
+    );
+    if (detailIndex < 0) return;
+
+    setActiveServiceTitle(tilutionServiceDetails[detailIndex].title);
+    setActiveServiceDetailIndex(detailIndex);
+    if (combinedWithProjects) {
+      window.dispatchEvent(
+        new CustomEvent("tilution:service-selected", {
+          detail: { title: tilutionServiceDetails[detailIndex].title },
+        }),
+      );
+    }
+  }, [combinedWithProjects, isGruenewald, isVerwaltung]);
 
   const scrollToContact = () => {
     const targetSection = document.getElementById("kontakt");
@@ -496,6 +593,53 @@ export function TilutionServicesSection({ variant = "tilution" }: { variant?: "t
     pushUrlState(contactPath);
   };
 
+  const openReferences = (title: string) => {
+    const category = isGruenewald
+      ? gruenewaldReferenceCategoryByService[title]
+      : tilutionReferenceCategoryByService[title];
+    if (!category) return;
+
+    trackAnalyticsEvent("reference_category_select", {
+      section: "services",
+      item_id: category,
+      item_category: isGruenewald ? "private" : "commercial",
+      interaction_method: "service_card_cta",
+    });
+    window.dispatchEvent(
+      new CustomEvent(
+        isGruenewald ? "gruenewald:service-selected" : "tilution:service-selected",
+        { detail: { title } },
+      ),
+    );
+
+    const targetSection = document.getElementById("referenzen");
+    if (targetSection) {
+      const headerOffset =
+        document.querySelector("header")?.getBoundingClientRect().height ?? 0;
+      const targetTop =
+        targetSection.getBoundingClientRect().top + window.scrollY - headerOffset - 16;
+      window.scrollTo({ top: Math.max(targetTop, 0), behavior: "smooth" });
+    }
+    pushUrlState(
+      isGruenewald
+        ? `/gruenewaldgmbh/referenzen/${category}`
+        : `/tilution/referenzen/${category}`,
+    );
+  };
+
+  const openReferencesFromOverlay = () => {
+    const title = isGruenewald
+      ? activeServiceTitle
+      : activeServiceDetails?.title ?? activeServiceTitle;
+    if (!title) return;
+
+    setActiveServiceTitle(null);
+    setActiveServiceDetailIndex(0);
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => openReferences(title));
+    });
+  };
+
   const openService = (title: string) => {
     trackAnalyticsEvent("service_open", {
       section: "services",
@@ -503,6 +647,11 @@ export function TilutionServicesSection({ variant = "tilution" }: { variant?: "t
       item_category: isGruenewald ? "private" : "commercial",
     });
     setActiveServiceTitle(title);
+    if (!isGruenewald && !isVerwaltung && combinedWithProjects) {
+      window.dispatchEvent(
+        new CustomEvent("tilution:service-selected", { detail: { title } }),
+      );
+    }
     setActiveServiceDetailIndex(
       isGruenewald
         ? 0
@@ -588,17 +737,203 @@ export function TilutionServicesSection({ variant = "tilution" }: { variant?: "t
   }, [activeServiceDetails]);
 
   return (
-    <SectionShell id="leistungen">
-      <section className="tilution-services-section">
+    <SectionShell
+      id="leistungen"
+      outerClassName={combinedWithProjects ? "tilution-combined-services-shell" : undefined}
+    >
+      <section className={`tilution-services-section${combinedWithProjects && !isGruenewald && !isVerwaltung ? " tilution-services-section--combined" : ""}`}>
+        {combinedWithProjects && !isGruenewald && !isVerwaltung ? (
+          <div className="tilution-combined-experience">
+            <span id="referenzen" className="tilution-combined-experience__anchor" aria-hidden="true" />
+            <header className="tilution-combined-experience__header">
+              <div>
+                <p className="tilution-services-eyebrow">Leistungen &amp; Projekte</p>
+                <h2 className="tilution-services-heading">Kompetenz, die sich sehen lässt.</h2>
+                <p className="tilution-services-subline">
+                  Entdecken Sie unsere Leistungen im Objektbau und ausgewählte Projekte, in denen wir unsere Kompetenz unter Beweis stellen.
+                </p>
+              </div>
+              <div className="tilution-combined-experience__counter" aria-label={`${areas.findIndex((area) => area.title === selectedCombinedArea.title) + 1} von ${areas.length}`}>
+                <strong>{String(areas.findIndex((area) => area.title === selectedCombinedArea.title) + 1).padStart(2, "0")}</strong>
+                <span />
+                <span>{String(areas.length).padStart(2, "0")}</span>
+              </div>
+            </header>
+
+            <div className="tilution-combined-tabs" role="tablist" aria-label="Leistungsbereiche">
+              {areas.map((area) => (
+                <button
+                  key={area.title}
+                  type="button"
+                  role="tab"
+                  aria-selected={area.title === selectedCombinedArea.title}
+                  onClick={() => selectCombinedService(area.title)}
+                >
+                  {area.title}
+                </button>
+              ))}
+            </div>
+
+            <div className="tilution-combined-stage" key={selectedCombinedArea.title}>
+              <article className="tilution-combined-copy">
+                <div className="tilution-combined-copy__intro">
+                  <p className="tilution-combined-copy__number">
+                    {String(areas.findIndex((area) => area.title === selectedCombinedArea.title) + 1).padStart(2, "0")}
+                  </p>
+                  <h3>
+                    {selectedCombinedArea.title.includes(" & ") ? (
+                      <>
+                        <span>{selectedCombinedArea.title.split(" & ")[0]}</span>
+                        <span>&amp; {selectedCombinedArea.title.split(" & ").slice(1).join(" & ")}</span>
+                      </>
+                    ) : selectedCombinedArea.title}
+                  </h3>
+                  <p className="tilution-combined-copy__lead">{selectedCombinedDetail?.lead}</p>
+                </div>
+                <div className="tilution-combined-copy__details">
+                  <p className="tilution-combined-copy__body">{selectedCombinedDetail?.paragraphs[0]}</p>
+                  <ul>
+                    {selectedCombinedArea.attributes.map((attribute) => (
+                      <li key={attribute}>{attribute}</li>
+                    ))}
+                  </ul>
+                  <a
+                    href={withTrailingSlash(getTilutionServicePath(selectedCombinedArea.title))}
+                    onClick={(event) => {
+                      event.preventDefault();
+                      openService(selectedCombinedArea.title);
+                    }}
+                    className="tilution-combined-copy__cta"
+                  >
+                    <span>Leistung im Detail</span>
+                    <ArrowUpRight aria-hidden="true" />
+                  </a>
+                </div>
+              </article>
+
+              <div className="tilution-combined-projects-area">
+                <div className="tilution-combined-projects-area__heading">
+                  <p>Passende Projekte</p>
+                  <span>{selectedCombinedReferences.length} {selectedCombinedReferences.length === 1 ? "Referenz" : "Referenzen"}</span>
+                </div>
+
+                {selectedCombinedReferences.length ? (
+                  <div className="tilution-combined-project-grid">
+                    {selectedCombinedReferences.slice(0, 2).map((reference, index) => {
+                      const path = getReferencePath(reference);
+                      const titleParts = reference.title.split(",");
+                      const place = titleParts.length > 1
+                        ? titleParts[titleParts.length - 1].trim()
+                        : "Referenzprojekt";
+                      return (
+                        <a
+                          key={reference.slug}
+                          href={withTrailingSlash(path)}
+                          className={`tilution-combined-project-card tilution-combined-project-card--${index === 0 ? "large" : "small"}`}
+                          onClick={(event) => {
+                            event.preventDefault();
+                            openCombinedReference(path);
+                          }}
+                        >
+                          <Image
+                            src={getOptimizedReferenceSrc(reference.images[0].src)}
+                            alt={reference.images[0].alt}
+                            fill
+                            unoptimized={reference.images[0].isSvg}
+                            sizes={index === 0 ? "(max-width: 767px) 90vw, 38vw" : "(max-width: 767px) 90vw, 24vw"}
+                            className="object-cover"
+                          />
+                          <span className="tilution-combined-project-card__shade" />
+                          <span className="tilution-combined-project-card__copy">
+                            <small>{place}</small>
+                            <strong>{titleParts[0]}</strong>
+                            <ArrowUpRight aria-hidden="true" />
+                          </span>
+                        </a>
+                      );
+                    })}
+                    <button
+                      type="button"
+                      className="tilution-combined-project-card tilution-combined-project-card--all"
+                      onClick={() => {
+                        setShowAllCombinedProjects((current) => !current);
+                        trackAnalyticsEvent("content_toggle", {
+                          section: "references",
+                          item_id: showAllCombinedProjects ? "collapse" : "expand",
+                          item_category: selectedCombinedCategory,
+                        });
+                      }}
+                      aria-expanded={showAllCombinedProjects}
+                    >
+                      <span>
+                        <small>Projektübersicht</small>
+                        <strong>{showAllCombinedProjects ? "Weniger Projekte" : "Alle Projekte"}</strong>
+                      </span>
+                      <ArrowRight aria-hidden="true" />
+                    </button>
+                  </div>
+                ) : (
+                  <div className="tilution-combined-projects-empty">
+                    Für diesen Leistungsbereich sind aktuell noch keine Referenzen hinterlegt.
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {showAllCombinedProjects && selectedCombinedReferences.length ? (
+              <div className="tilution-combined-all-projects">
+                {selectedCombinedReferences.map((reference) => {
+                  const path = getReferencePath(reference);
+                  return (
+                    <a
+                      key={reference.slug}
+                      href={withTrailingSlash(path)}
+                      onClick={(event) => {
+                        event.preventDefault();
+                        openCombinedReference(path);
+                      }}
+                    >
+                      <span className="tilution-combined-all-projects__image">
+                        <Image
+                          src={getOptimizedReferenceSrc(reference.images[0].src)}
+                          alt={reference.images[0].alt}
+                          fill
+                          unoptimized={reference.images[0].isSvg}
+                          sizes="(max-width: 639px) 82vw, (max-width: 1023px) 44vw, 28vw"
+                          className="object-cover"
+                        />
+                      </span>
+                      <strong>{reference.title}</strong>
+                      <ArrowUpRight aria-hidden="true" />
+                    </a>
+                  );
+                })}
+              </div>
+            ) : null}
+          </div>
+        ) : null}
+
         <header className="tilution-services-header">
-          <p className="tilution-services-eyebrow">Leistungen</p>
+          <p className="tilution-services-eyebrow">
+            {combinedWithProjects && !isGruenewald && !isVerwaltung
+              ? "Leistungen & Projekte"
+              : "Leistungen"}
+          </p>
           <h2 className="tilution-services-heading">
-            {isGruenewald ? "Leistungen für Ihr Zuhause" : isVerwaltung ? "Leistungen" : "Leistungen im Objektbau"}
+            {isGruenewald
+              ? "Leistungen für Ihr Zuhause"
+              : isVerwaltung
+                ? "Leistungen"
+                : combinedWithProjects
+                  ? "Kompetenz, die sich sehen lässt"
+                  : "Leistungen im Objektbau"}
           </h2>
           {!isVerwaltung ? <p className={`tilution-services-subline${isGruenewald ? " tilution-services-subline--single-line" : ""}`}>
             {isGruenewald
               ? "Persönliche Planung und hochwertige Ausführung für private Bau- und Sanierungsprojekte."
-              : "Technische Fliesen- und Plattenarbeiten für anspruchsvolle Großprojekte."}
+              : combinedWithProjects
+                ? "Wählen Sie eine Leistung und entdecken Sie direkt die passenden ausgeführten Projekte."
+                : "Technische Fliesen- und Plattenarbeiten für anspruchsvolle Großprojekte."}
           </p> : null}
         </header>
 
@@ -618,6 +953,19 @@ export function TilutionServicesSection({ variant = "tilution" }: { variant?: "t
                     : undefined
                 }
                 onOpen={activeServiceMap[area.title] ? () => openService(area.title) : undefined}
+                referenceHref={
+                  isGruenewald && gruenewaldReferenceCategoryByService[area.title]
+                    ? `/gruenewaldgmbh/referenzen/${gruenewaldReferenceCategoryByService[area.title]}`
+                    : !isGruenewald && !isVerwaltung
+                      ? `/tilution/referenzen/${tilutionReferenceCategoryByService[area.title]}`
+                      : undefined
+                }
+                onReferenceOpen={
+                  !isVerwaltung &&
+                  (!isGruenewald || Boolean(gruenewaldReferenceCategoryByService[area.title]))
+                    ? () => openReferences(area.title)
+                    : undefined
+                }
               />
             </div>
           ))}
@@ -765,6 +1113,17 @@ export function TilutionServicesSection({ variant = "tilution" }: { variant?: "t
                     <li key={highlight}>{highlight}</li>
                   ))}
                 </ul>
+              ) : null}
+              {!isVerwaltung &&
+              (!isGruenewald || Boolean(activeServiceTitle && gruenewaldReferenceCategoryByService[activeServiceTitle])) ? (
+                <button
+                  type="button"
+                  className="tilution-service-modal__references-button"
+                  onClick={openReferencesFromOverlay}
+                >
+                  <span>Referenzen ansehen</span>
+                  <ArrowRight aria-hidden="true" />
+                </button>
               ) : null}
             </div>
 

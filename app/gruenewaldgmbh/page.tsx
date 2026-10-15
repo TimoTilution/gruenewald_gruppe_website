@@ -6,6 +6,8 @@ import { HomeHeroSection } from "@/components/home/home-hero-section";
 import { GruenewaldReferencesSection } from "@/components/gruenewald/gruenewald-references-section";
 import { TilutionServicesSection } from "@/components/tilution/tilution-services-section";
 import { createPageMetadata } from "@/lib/seo-metadata";
+import { StructuredData } from "@/components/structured-data";
+import { createCompanyOrganizationSchema } from "@/lib/structured-data";
 
 export const metadata: Metadata = createPageMetadata({
   title: "Badsanierung & Fliesenarbeiten – Grünewald",
@@ -17,10 +19,11 @@ export const metadata: Metadata = createPageMetadata({
 export default function GruenewaldPage() {
   return (
     <div className="tilution-theme gruenewald-theme contents">
+      <StructuredData data={createCompanyOrganizationSchema("gruenewald")} />
       <HomeHeroSection variant="gruenewald" />
       <TilutionServicesSection variant="gruenewald" />
-      <HomeAboutSection />
       <GruenewaldReferencesSection />
+      <HomeAboutSection />
       <HomeCareerSection />
       <GruenewaldContactSection />
     </div>

@@ -4,12 +4,15 @@ import Image from "next/image";
 import { getOptimizedReferenceSrc } from "@/lib/reference-image";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { SectionShell } from "@/components/section-shell";
 import { MobileSnapGallery } from "@/components/mobile-snap-gallery";
 import { InteractiveScrollbar } from "@/components/interactive-scrollbar";
 import { getReferencePath, references } from "@/data/site-architecture";
-import { pushUrlWithoutScroll } from "@/lib/preserve-scroll-url";
+import { pushUrlState, pushUrlWithoutScroll } from "@/lib/preserve-scroll-url";
+import { normalizeSitePathname } from "@/lib/site-path";
+import { usePathname } from "next/navigation";
+import { gruenewaldReferenceDescriptions } from "@/data/reference-category-descriptions";
 
 type GruenewaldReferenceCategory =
   | "Außengestaltung"
@@ -36,6 +39,7 @@ const referenceFilters: Array<"Alle" | GruenewaldReferenceCategory> = [
 ];
 
 const INITIAL_VISIBLE_REFERENCE_COUNT = 6;
+const POOL_REFERENCE_TITLE = "Poolbau & Gartengestaltung";
 
 const gruenewaldReferenceCategoryPaths: Partial<
   Record<GruenewaldReferenceCategory, string>
@@ -642,8 +646,17 @@ const gruenewaldReferences: GruenewaldReference[] = [
 ];
 
 export function GruenewaldReferencesSection() {
+  const pathname = normalizeSitePathname(usePathname());
+  const initialCategoryBySlug: Record<string, GruenewaldReferenceCategory> = {
+    aussengestaltung: "Außengestaltung",
+    badsanierung: "Badsanierung",
+    "haus-wohnsanierung": "Haus- & Wohnsanierung",
+  };
+  const initialCategory = initialCategoryBySlug[
+    pathname.replace(/\/+$/, "").split("/").pop() ?? ""
+  ];
   const [activeFilter, setActiveFilter] =
-    useState<(typeof referenceFilters)[number]>("Alle");
+    useState<(typeof referenceFilters)[number]>(initialCategory ?? "Alle");
   const [selectedProject, setSelectedProject] =
     useState<GruenewaldReference | null>(null);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
@@ -667,12 +680,17 @@ export function GruenewaldReferencesSection() {
     });
   };
 
-  const visibleProjects =
+  const visibleProjects = (
     activeFilter === "Alle"
       ? gruenewaldReferences
       : gruenewaldReferences.filter(
           (reference) => reference.category === activeFilter
-        );
+        )
+  ).slice().sort((first, second) => {
+    if (first.title === POOL_REFERENCE_TITLE) return -1;
+    if (second.title === POOL_REFERENCE_TITLE) return 1;
+    return 0;
+  });
   const canToggleReferences =
     visibleProjects.length > INITIAL_VISIBLE_REFERENCE_COUNT;
   const displayedProjects = visibleProjects;
@@ -693,6 +711,29 @@ export function GruenewaldReferencesSection() {
     setSelectedProject(null);
     setActiveImageIndex(0);
     pushUrlWithoutScroll("/gruenewaldgmbh/referenzen");
+  };
+
+  const goToInsights = () => {
+    setSelectedProject(null);
+    setActiveImageIndex(0);
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const targetSection = document.getElementById("gruppe");
+        if (!targetSection) return;
+
+        const headerOffset =
+          document.querySelector("header")?.getBoundingClientRect().height ?? 0;
+        const targetTop =
+          targetSection.getBoundingClientRect().top + window.scrollY - headerOffset - 16;
+
+        pushUrlState("/gruenewaldgmbh/einblicke");
+        window.scrollTo({
+          top: Math.max(targetTop, 0),
+          behavior: "smooth",
+        });
+      });
+    });
   };
 
   const showPreviousImage = () => {
@@ -734,15 +775,50 @@ export function GruenewaldReferencesSection() {
     setShowAllReferences(false);
   }, [activeFilter]);
 
+  useEffect(() => {
+    const categoriesByService: Record<string, GruenewaldReferenceCategory> = {
+      "Außengestaltung": "Außengestaltung",
+      "Badsanierung": "Badsanierung",
+      "Haus- & Wohnsanierung": "Haus- & Wohnsanierung",
+    };
+    const categoriesBySlug: Record<string, GruenewaldReferenceCategory> = {
+      aussengestaltung: "Außengestaltung",
+      badsanierung: "Badsanierung",
+      "haus-wohnsanierung": "Haus- & Wohnsanierung",
+    };
+
+    const selectCategory = (category: GruenewaldReferenceCategory) => {
+      setActiveFilter(category);
+      const index = referenceFilters.indexOf(category);
+      window.setTimeout(() => scrollActiveFilterIntoView(index), 0);
+    };
+
+    const pathCategory = categoriesBySlug[
+      window.location.pathname.replace(/\/+$/, "").split("/").pop() ?? ""
+    ];
+    if (pathCategory) selectCategory(pathCategory);
+
+    const handleServiceSelection = (event: Event) => {
+      const title = (event as CustomEvent<{ title?: string }>).detail?.title;
+      if (!title) return;
+      const category = categoriesByService[title];
+      if (category) selectCategory(category);
+    };
+
+    window.addEventListener("gruenewald:service-selected", handleServiceSelection);
+    return () => {
+      window.removeEventListener("gruenewald:service-selected", handleServiceSelection);
+    };
+  }, []);
+
   return (
     <SectionShell id="referenzen">
       <section className="section-card px-6 py-10 sm:px-9 lg:p-12">
         <div className="w-full">
           <p className="section-eyebrow">Referenzen</p>
           <h2 className="section-heading">Projekte für Ihr Zuhause</h2>
-          <p className="section-subline !max-w-none">
-            Ausgewählte Arbeiten der Grünewald GmbH – von der ersten Idee bis
-            zur hochwertigen Umsetzung.
+          <p className="section-subline lg:!max-w-none">
+            {gruenewaldReferenceDescriptions[activeFilter]}
           </p>
         </div>
 
@@ -904,6 +980,14 @@ export function GruenewaldReferencesSection() {
                 eyebrow: selectedProject.category,
                 title: selectedProject.title,
               }}
+              action={
+                selectedProject.title === POOL_REFERENCE_TITLE
+                  ? {
+                      label: "Video zum Projekt ansehen",
+                      onClick: goToInsights,
+                    }
+                  : undefined
+              }
             />
             <div className="reference-gallery-image relative hidden h-[76vh] min-h-[18rem] w-full overflow-hidden rounded-[1.25rem] sm:block">
               <div className="absolute left-4 top-4 z-10 max-w-[calc(100%-8rem)] rounded-xl bg-[#071426]/75 px-4 py-3 text-white backdrop-blur-md sm:left-5 sm:top-5">
@@ -926,6 +1010,16 @@ export function GruenewaldReferencesSection() {
                 sizes="(min-width: 1024px) 75vw, 100vw"
                 className="object-contain"
               />
+              {selectedProject.title === POOL_REFERENCE_TITLE ? (
+                <button
+                  type="button"
+                  onClick={goToInsights}
+                  className="absolute bottom-4 left-1/2 z-10 inline-flex min-h-11 -translate-x-1/2 items-center gap-2 rounded-full bg-[#009ca6] px-5 py-2.5 text-sm font-bold text-white shadow-[0_12px_28px_rgba(0,0,0,0.28)] transition hover:-translate-x-1/2 hover:-translate-y-0.5 hover:bg-[#007f87] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+                >
+                  <span>Video zum Projekt ansehen</span>
+                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                </button>
+              ) : null}
               {galleryImages.length > 1 ? (
                 <>
                   <button

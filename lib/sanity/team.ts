@@ -1,5 +1,6 @@
 import { sanityClient } from "@/lib/sanity/client";
 import { urlForSanityImage } from "@/lib/sanity/image";
+import { getTeamMemberSlug } from "@/lib/team-member-path";
 import {
   gruenewaldContactPeopleQuery,
   visibleGroupTeamDepartmentsQuery,
@@ -20,6 +21,8 @@ export type CmsTeamCategory = {
 
 export type CmsTeamMember = {
   analyticsId: string;
+  updatedAt?: string;
+  canonicalPath?: string;
   name: string;
   degree?: string;
   role: string;
@@ -37,6 +40,7 @@ export type CmsTeamData = {
 
 type SanityTeamMember = {
   _id: string;
+  _updatedAt?: string;
   name?: string;
   role?: string;
   degree?: string;
@@ -66,6 +70,7 @@ type SanityTeamMember = {
 
 type SanityGroupDepartment = {
   _id: string;
+  _updatedAt?: string;
   title?: string;
   slug?: string;
   sortOrder?: number;
@@ -130,6 +135,12 @@ const companySlugsByVariant = {
   group: groupCompanySlugs,
   verwaltung: new Set<CompanySlug>(["verwaltung"]),
 } satisfies Record<"tilution" | "clay" | "group" | "verwaltung", Set<CompanySlug>>;
+
+const indexableCompanyTeamBasePaths = new Map<CompanySlug, string>([
+  ["tilution", "/tilution/team"],
+  ["clay-construction", "/clay-construction/team"],
+  ["verwaltung", "/verwaltung/team"],
+]);
 
 function cleanText(value?: string) {
   const trimmed = value?.trim();
@@ -273,6 +284,24 @@ export async function getCmsTeamData(
       return null;
     }
 
+    const indexableCompanyPathsByPerson = sanityMembers.reduce(
+      (pathsByPerson, member) => {
+        const companySlug = member.company?.slug;
+        const teamBasePath = companySlug
+          ? indexableCompanyTeamBasePaths.get(companySlug)
+          : undefined;
+        const name = cleanText(member.name);
+        if (!teamBasePath || !name) return pathsByPerson;
+
+        const personKey = normalizeKey(name);
+        const paths = pathsByPerson.get(personKey) ?? new Set<string>();
+        paths.add(`${teamBasePath}/${getTeamMemberSlug(name)}`);
+        pathsByPerson.set(personKey, paths);
+        return pathsByPerson;
+      },
+      new Map<string, Set<string>>(),
+    );
+
     const uniqueMembers = Array.from(
       relevantMembers
         .sort((left, right) => bySortAndLabel(left, right))
@@ -353,16 +382,29 @@ export async function getCmsTeamData(
 
     const members = uniqueMembers
       .sort((left, right) => bySortAndLabel(left, right))
-      .map<CmsTeamMember>((member) => ({
-        analyticsId: member._id,
-        name: cleanText(member.name) ?? "",
-        degree: cleanText(member.degree),
-        role: getRole(member, variant),
-        categoryId: getCategoryId(member, variant),
-        imageSrc: getImageSrc(member),
-        email: cleanText(member.email),
-        phone: cleanText(member.phone),
-      }));
+      .map<CmsTeamMember>((member) => {
+        const name = cleanText(member.name) ?? "";
+        const personKey = normalizeKey(name);
+        const companyPaths = Array.from(
+          indexableCompanyPathsByPerson.get(personKey) ?? [],
+        );
+
+        return {
+          analyticsId: member._id,
+          updatedAt: cleanText(member._updatedAt),
+          canonicalPath:
+            companyPaths.length === 1
+              ? companyPaths[0]
+              : `/team/${getTeamMemberSlug(name)}`,
+          name,
+          degree: cleanText(member.degree),
+          role: getRole(member, variant),
+          categoryId: getCategoryId(member, variant),
+          imageSrc: getImageSrc(member),
+          email: cleanText(member.email),
+          phone: cleanText(member.phone),
+        };
+      });
 
     return { categories, members };
   } catch (error) {

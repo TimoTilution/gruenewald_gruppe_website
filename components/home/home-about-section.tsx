@@ -231,15 +231,23 @@ export function HomeAboutSection() {
           {isTilutionVideoActive ? (
             <video
               className="block aspect-video w-full object-cover"
-              src={withBasePath("/videos/tilution-bad-nauheim.mp4")}
               autoPlay
-              muted
               loop
               playsInline
               controls
-              preload="auto"
+              preload="metadata"
               aria-label="Tilution Bad Nauheim Projektvideo"
-            />
+            >
+              <source
+                media="(max-width: 640px)"
+                src={withBasePath("/videos/tilution-bad-nauheim-mobile.mp4")}
+                type="video/mp4"
+              />
+              <source
+                src={withBasePath("/videos/tilution-bad-nauheim.mp4")}
+                type="video/mp4"
+              />
+            </video>
           ) : (
             <button
               type="button"

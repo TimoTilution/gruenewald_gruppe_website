@@ -20,6 +20,7 @@ import { HrwContactSection, HrwHeroSection, HrwServicesSection, HrwWhySection } 
 import { PageHero } from "@/components/page-hero";
 import { ScrollToRouteSection } from "@/components/scroll-to-route-section";
 import { SectionShell } from "@/components/section-shell";
+import { StructuredData } from "@/components/structured-data";
 import { TilutionServicesSection } from "@/components/tilution/tilution-services-section";
 import {
   tilutionServiceDetailsBySlug,
@@ -27,7 +28,16 @@ import {
 } from "@/data/tilution-service-details";
 import { getOptimizedReferenceSrc } from "@/lib/reference-image";
 import { getOptimizedSiteImageSrc } from "@/lib/site-image";
+import {
+  createBreadcrumbSchema,
+  createCompanyOrganizationSchema,
+  createProfilePageSchema,
+  createReferenceSchema,
+  createServiceSchema,
+  createSprudelhofVideoSchema,
+} from "@/lib/structured-data";
 import { getCmsTeamData } from "@/lib/sanity/team";
+import { getReferenceCategoryDescription } from "@/data/reference-category-descriptions";
 import {
   companies,
   type CompanySlug,
@@ -37,6 +47,7 @@ import {
   getGroupReferencePath,
   getReferencePath,
   getTeamMemberPath,
+  getTeamDepartmentPaths,
   groupPages,
   references,
   serviceDetails,
@@ -52,9 +63,11 @@ type PageProps = {
 type RouteContent = {
   path: string;
   canonicalPath?: string;
+  robots?: Metadata["robots"];
   title: string;
   eyebrow: string;
   description: string;
+  structuredData?: Array<Record<string, unknown>>;
   render: () => ReactNode;
 };
 
@@ -233,8 +246,8 @@ async function CompanyOnePager({
         <ScrollToRouteSection sectionId={sectionId} />
         <HomeHeroSection variant="tilution" />
         <TilutionServicesSection />
-        <HomeAboutSection />
         <HomeReferencesSection />
+        <HomeAboutSection />
         <HomeInnovationsSection />
         <HomeTeamSection variant="tilution" teamData={teamData} />
         <HomeCareerSection />
@@ -249,8 +262,8 @@ async function CompanyOnePager({
         <ScrollToRouteSection sectionId={sectionId} />
         <HomeHeroSection variant="gruenewald" />
         <TilutionServicesSection variant="gruenewald" />
-        <HomeAboutSection />
         <GruenewaldReferencesSection />
+        <HomeAboutSection />
         <HomeCareerSection />
         <GruenewaldContactSection />
       </div>
@@ -264,8 +277,8 @@ async function CompanyOnePager({
         <ScrollToRouteSection sectionId={sectionId} />
         <HomeHeroSection variant="clay" />
         <ClayServicesSection />
-        <HomeAboutSection />
         <HomeReferencesSection />
+        <HomeAboutSection />
         <HomeTeamSection variant="clay" teamData={teamData} />
         <HomeCareerSection />
         <HomeContactSection />
@@ -308,6 +321,12 @@ function getGroupRoute(path: string): RouteContent | null {
     title: page.title,
     eyebrow: page.eyebrow,
     description: page.description,
+    structuredData: [
+      createBreadcrumbSchema([
+        { name: "Start", path: "/" },
+        { name: page.title, path },
+      ]),
+    ],
     render: () => (
       <GroupOnePager sectionId={path === "/karte" ? "gruppe" : path.slice(1)} />
     ),
@@ -333,6 +352,17 @@ function getCompanySectionRoute(path: string, slug: string[]): RouteContent | nu
     title,
     eyebrow,
     description,
+    structuredData: [
+      createCompanyOrganizationSchema(company),
+      createBreadcrumbSchema([
+        { name: "Start", path: "/" },
+        { name: companyInfo.title, path: companyInfo.basePath },
+        { name: title, path },
+      ]),
+      ...(company === "tilution" && section === "einblicke"
+        ? [createSprudelhofVideoSchema()]
+        : []),
+    ],
     render: () => (
       <CompanyOnePager
         company={company}
@@ -353,9 +383,23 @@ function getReferenceRoute(path: string, slug: string[]): RouteContent | null {
 
     return {
       path,
+      canonicalPath: getReferencePath(project),
       title: project.title,
       eyebrow: "Referenz",
       description: project.description,
+      structuredData: [
+        createCompanyOrganizationSchema(project.company),
+        createReferenceSchema(project),
+        createBreadcrumbSchema([
+          { name: "Start", path: "/" },
+          { name: companies[project.company].title, path: companies[project.company].basePath },
+          { name: "Referenzen", path: `${companies[project.company].basePath}/referenzen` },
+          ...(project.categorySlug
+            ? [{ name: project.categoryTitle ?? "Kategorie", path: `${companies[project.company].basePath}/referenzen/${project.categorySlug}` }]
+            : []),
+          { name: project.title, path: getReferencePath(project) },
+        ]),
+      ],
       render: () => (
         <ProjectPage
           title={project.title}
@@ -382,6 +426,16 @@ function getReferenceRoute(path: string, slug: string[]): RouteContent | null {
       title: project.title,
       eyebrow: "Referenz",
       description: project.description,
+      structuredData: [
+        createCompanyOrganizationSchema(company),
+        createReferenceSchema(project),
+        createBreadcrumbSchema([
+          { name: "Start", path: "/" },
+          { name: companies[company].title, path: companies[company].basePath },
+          { name: "Referenzen", path: `${companies[company].basePath}/referenzen` },
+          { name: project.title, path: getReferencePath(project) },
+        ]),
+      ],
       render: () => (
         <ProjectPage
           title={project.title}
@@ -409,43 +463,72 @@ function getReferenceRoute(path: string, slug: string[]): RouteContent | null {
       title: project.title,
       eyebrow: project.categoryTitle ?? "Referenz",
       description: project.description,
-      render: () => (
-        <ProjectPage
-          title={project.title}
-          eyebrow={project.categoryTitle ?? "Referenz"}
-          description={project.description}
-          images={project.images}
-        />
-      ),
+      structuredData: [
+        createCompanyOrganizationSchema(company),
+        createReferenceSchema(project),
+        createBreadcrumbSchema([
+          { name: "Start", path: "/" },
+          { name: companies[company].title, path: companies[company].basePath },
+          { name: "Referenzen", path: `${companies[company].basePath}/referenzen` },
+          { name: project.categoryTitle ?? "Kategorie", path: `${companies[company].basePath}/referenzen/${categoryOrProject}` },
+          { name: project.title, path: getReferencePath(project) },
+        ]),
+      ],
+      render: () =>
+        company === "tilution" ? (
+          <CompanyOnePager company="tilution" sectionId="referenzen" />
+        ) : (
+          <ProjectPage
+            title={project.title}
+            eyebrow={project.categoryTitle ?? "Referenz"}
+            description={project.description}
+            images={project.images}
+          />
+        ),
     };
   }
 
   const categoryTitle = categoryEntries[0]?.categoryTitle ?? "Referenzen";
+  const categoryDescription =
+    getReferenceCategoryDescription(company, categoryOrProject) ??
+    `Ausgewaehlte Referenzen im Bereich ${categoryTitle}.`;
   return {
     path,
     title: `${categoryTitle} - Referenzen`,
     eyebrow: "Referenzen",
-    description: `Ausgewaehlte Referenzen im Bereich ${categoryTitle}.`,
-    render: () => (
-      <>
-        <PageHero
-          eyebrow="Referenzen"
-          title={`${categoryTitle} - Referenzen`}
-          description={`Ausgewaehlte Bauvorhaben und Projektbeispiele im Bereich ${categoryTitle}.`}
-        />
-        <DetailGrid>
-          {categoryEntries.map((entry) => (
-            <LinkCard
-              key={entry.slug}
-              href={getReferencePath(entry)}
-              title={entry.title}
-              description={entry.description}
-              image={entry.images[0]}
-            />
-          ))}
-        </DetailGrid>
-      </>
-    ),
+    description: categoryDescription,
+    structuredData: [
+      createCompanyOrganizationSchema(company),
+      createBreadcrumbSchema([
+        { name: "Start", path: "/" },
+        { name: companies[company].title, path: companies[company].basePath },
+        { name: "Referenzen", path: `${companies[company].basePath}/referenzen` },
+        { name: categoryTitle, path },
+      ]),
+    ],
+    render: () =>
+      company === "tilution" ? (
+        <CompanyOnePager company="tilution" sectionId="referenzen" />
+      ) : (
+        <>
+          <PageHero
+            eyebrow="Referenzen"
+            title={`${categoryTitle} - Referenzen`}
+            description={categoryDescription}
+          />
+          <DetailGrid>
+            {categoryEntries.map((entry) => (
+              <LinkCard
+                key={entry.slug}
+                href={getReferencePath(entry)}
+                title={entry.title}
+                description={entry.description}
+                image={entry.images[0]}
+              />
+            ))}
+          </DetailGrid>
+        </>
+      ),
   };
 }
 
@@ -469,6 +552,15 @@ function getTeamRoute(path: string, slug: string[]): RouteContent | null {
       title: member.name,
       eyebrow: member.departmentTitle,
       description: `${member.name} - ${member.role} bei ${companies[company].title}.`,
+      structuredData: [
+        createProfilePageSchema({
+          canonicalPath: `${companies[company].basePath}/team/${member.slug}`,
+          name: member.name,
+          role: member.role,
+          company,
+          imageSrc: member.imageSrc,
+        }),
+      ],
       render: () => (
         <ProjectPage
           title={member.name}
@@ -487,6 +579,8 @@ function getTeamRoute(path: string, slug: string[]): RouteContent | null {
   const departmentTitle = departmentMembers[0]?.departmentTitle ?? "Team";
   return {
     path,
+    canonicalPath: `${companies[company].basePath}/team`,
+    robots: { index: false, follow: true },
     title: `${departmentTitle} - Team`,
     eyebrow: "Team",
     description: `Ansprechpartnerinnen und Ansprechpartner im Bereich ${departmentTitle}.`,
@@ -537,7 +631,17 @@ function getServiceRoute(path: string, slug: string[]): RouteContent | null {
       title: service.title,
       eyebrow: "Leistung",
       description: service.description,
-      render: () => <TilutionServiceDetailPage detail={detail} />,
+      structuredData: [
+        createCompanyOrganizationSchema(company),
+        createServiceSchema(service, path),
+        createBreadcrumbSchema([
+          { name: "Start", path: "/" },
+          { name: companies[company].title, path: companies[company].basePath },
+          { name: "Leistungen", path: `${companies[company].basePath}/leistungen` },
+          { name: service.title, path },
+        ]),
+      ],
+      render: () => <CompanyOnePager company="tilution" sectionId="leistungen" />,
     };
   }
 
@@ -555,6 +659,17 @@ function getServiceRoute(path: string, slug: string[]): RouteContent | null {
       title: serviceDetail.title,
       eyebrow: service.title,
       description: serviceDetail.description,
+      structuredData: [
+        createCompanyOrganizationSchema(company),
+        createServiceSchema(serviceDetail, path),
+        createBreadcrumbSchema([
+          { name: "Start", path: "/" },
+          { name: companies[company].title, path: companies[company].basePath },
+          { name: "Leistungen", path: `${companies[company].basePath}/leistungen` },
+          { name: service.title, path: `${companies[company].basePath}/leistungen/${service.slug}` },
+          { name: serviceDetail.title, path },
+        ]),
+      ],
       render: () => (
         <PageHero
           eyebrow={service.title}
@@ -570,6 +685,16 @@ function getServiceRoute(path: string, slug: string[]): RouteContent | null {
     title: service.title,
     eyebrow: "Leistung",
     description: service.description,
+    structuredData: [
+      createCompanyOrganizationSchema(company),
+      createServiceSchema(service, path),
+      createBreadcrumbSchema([
+        { name: "Start", path: "/" },
+        { name: companies[company].title, path: companies[company].basePath },
+        { name: "Leistungen", path: `${companies[company].basePath}/leistungen` },
+        { name: service.title, path },
+      ]),
+    ],
     render: () => (
       <PageHero
         eyebrow="Leistung"
@@ -593,7 +718,8 @@ function resolveRoute(slug: string[]): RouteContent | null {
 }
 
 export function generateStaticParams() {
-  return getAllSeoPaths().map((path) => ({
+  const teamDepartmentPaths = new Set(getTeamDepartmentPaths());
+  return getAllSeoPaths().filter((path) => !teamDepartmentPaths.has(path)).map((path) => ({
     slug: path.split("/").filter(Boolean),
   }));
 }
@@ -611,6 +737,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title: route.title,
     description: route.description,
+    robots: route.robots,
     alternates: {
       canonical,
     },
@@ -633,5 +760,10 @@ export default async function SeoRoutePage({ params }: PageProps) {
     notFound();
   }
 
-  return route.render();
+  return (
+    <>
+      {route.structuredData ? <StructuredData data={route.structuredData} /> : null}
+      {route.render()}
+    </>
+  );
 }

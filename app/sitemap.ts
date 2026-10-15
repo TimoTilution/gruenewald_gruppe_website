@@ -1,12 +1,12 @@
 import type { MetadataRoute } from "next";
 import {
-  getAllSeoPaths,
+  getIndexableSeoPaths,
   getTeamMemberPath,
   siteBaseUrl,
   teamMembers,
 } from "@/data/site-architecture";
 import { withTrailingSlash } from "@/lib/site-path";
-import { getCmsTeamData } from "@/lib/sanity/team";
+import { getCmsTeamData, type CmsTeamMember } from "@/lib/sanity/team";
 import { getTeamMemberSlug } from "@/lib/team-member-path";
 
 export const dynamic = "force-static";
@@ -19,20 +19,65 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     getCmsTeamData("clay"),
     getCmsTeamData("verwaltung"),
   ]);
+  const companyTeams = [
+    { basePath: "/tilution", members: tilutionTeam?.members ?? [] },
+    { basePath: "/clay-construction", members: clayTeam?.members ?? [] },
+    { basePath: "/verwaltung", members: verwaltungTeam?.members ?? [] },
+  ];
+  const companyPathsByPerson = new Map<string, string[]>();
+  const updatedAtByPerson = new Map<string, Date>();
+
+  const registerUpdatedAt = (name: string, updatedAt?: string) => {
+    if (!updatedAt) return;
+    const date = new Date(updatedAt);
+    if (Number.isNaN(date.getTime())) return;
+    const slug = getTeamMemberSlug(name);
+    const current = updatedAtByPerson.get(slug);
+    if (!current || date > current) updatedAtByPerson.set(slug, date);
+  };
+
+  (groupTeam?.members ?? []).forEach((member) =>
+    registerUpdatedAt(member.name, member.updatedAt),
+  );
+
+  companyTeams.forEach(({ basePath, members }) => {
+    members.forEach((member) => {
+      const slug = getTeamMemberSlug(member.name);
+      registerUpdatedAt(member.name, member.updatedAt);
+      const paths = companyPathsByPerson.get(slug) ?? [];
+      paths.push(`${basePath}/team/${slug}`);
+      companyPathsByPerson.set(slug, paths);
+    });
+  });
+
+  // A person assigned to exactly one company is indexed there. People working
+  // across multiple companies use the group profile as their single main URL.
   const cmsTeamPaths = [
-    ...(groupTeam?.members ?? []).map(
-      (member) => `/team/${getTeamMemberSlug(member.name)}`,
-    ),
-    ...(tilutionTeam?.members ?? []).map(
-      (member) => `/tilution/team/${getTeamMemberSlug(member.name)}`,
-    ),
-    ...(clayTeam?.members ?? []).map(
-      (member) => `/clay-construction/team/${getTeamMemberSlug(member.name)}`,
-    ),
-    ...(verwaltungTeam?.members ?? []).map(
-      (member) => `/verwaltung/team/${getTeamMemberSlug(member.name)}`,
+    ...(groupTeam?.members ?? []).flatMap((member) => {
+      const slug = getTeamMemberSlug(member.name);
+      const companyPaths = companyPathsByPerson.get(slug) ?? [];
+      return companyPaths.length === 1 ? [] : [`/team/${slug}`];
+    }),
+    ...Array.from(companyPathsByPerson.entries()).flatMap(([slug, paths]) =>
+      paths.length === 1 ? paths : [],
     ),
   ];
+
+  const latestTeamUpdate = (members: CmsTeamMember[]) => {
+    const dates = members
+      .map((member) => member.updatedAt && new Date(member.updatedAt))
+      .filter((date): date is Date => Boolean(date && !Number.isNaN(date.getTime())));
+    return dates.length > 0
+      ? new Date(Math.max(...dates.map((date) => date.getTime())))
+      : undefined;
+  };
+
+  const teamOverviewUpdates = new Map<string, Date | undefined>([
+    ["/team", latestTeamUpdate(groupTeam?.members ?? [])],
+    ["/tilution/team", latestTeamUpdate(tilutionTeam?.members ?? [])],
+    ["/clay-construction/team", latestTeamUpdate(clayTeam?.members ?? [])],
+    ["/verwaltung/team", latestTeamUpdate(verwaltungTeam?.members ?? [])],
+  ]);
 
   const entries: MetadataRoute.Sitemap = [
     {
@@ -75,17 +120,27 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "yearly",
       priority: 0.4,
     },
-    ...getAllSeoPaths()
+    ...getIndexableSeoPaths()
       .filter((path) => !legacyTeamDetailPaths.has(path))
       .map((path) => ({
       url: `${siteBaseUrl}${withTrailingSlash(path)}`,
       changeFrequency: "monthly" as const,
       priority: path.split("/").length > 4 ? 0.55 : 0.7,
+      ...(teamOverviewUpdates.get(path)
+        ? { lastModified: teamOverviewUpdates.get(path) }
+        : {}),
     })),
     ...cmsTeamPaths.map((path) => ({
       url: `${siteBaseUrl}${withTrailingSlash(path)}`,
       changeFrequency: "monthly" as const,
       priority: 0.6,
+      ...(updatedAtByPerson.get(path.split("/").filter(Boolean).at(-1) ?? "")
+        ? {
+            lastModified: updatedAtByPerson.get(
+              path.split("/").filter(Boolean).at(-1) ?? "",
+            ),
+          }
+        : {}),
     })),
   ];
 

@@ -21,6 +21,7 @@ export type TeamCategory = {
 
 export type TeamMember = {
   analyticsId?: string;
+  canonicalPath?: string;
   name: string;
   degree?: string;
   role: string;
@@ -55,7 +56,7 @@ function getTeamOverviewPath(variant: TeamSectionVariant) {
 }
 
 function getTeamMemberOverlayPath(variant: TeamSectionVariant, member: TeamMember) {
-  return `${getTeamOverviewPath(variant)}/${getTeamMemberSlug(member.name)}`;
+  return member.canonicalPath ?? `${getTeamOverviewPath(variant)}/${getTeamMemberSlug(member.name)}`;
 }
 
 function getTeamMemberAnalyticsId(member: TeamMember) {

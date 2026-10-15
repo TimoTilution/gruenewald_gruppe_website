@@ -9,6 +9,8 @@ import { HomeTeamSection } from "@/components/home/home-team-section";
 import { TilutionServicesSection } from "@/components/tilution/tilution-services-section";
 import { getCmsTeamData } from "@/lib/sanity/team";
 import { createPageMetadata } from "@/lib/seo-metadata";
+import { StructuredData } from "@/components/structured-data";
+import { createCompanyOrganizationSchema } from "@/lib/structured-data";
 
 export const metadata: Metadata = createPageMetadata({
   title: "Tilution – Fliesenarbeiten für Großprojekte",
@@ -22,10 +24,11 @@ export default async function TilutionPage() {
 
   return (
     <div className="tilution-theme contents">
+      <StructuredData data={createCompanyOrganizationSchema("tilution")} />
       <HomeHeroSection variant="tilution" />
       <TilutionServicesSection />
-      <HomeAboutSection />
       <HomeReferencesSection />
+      <HomeAboutSection />
       <HomeInnovationsSection />
       <HomeTeamSection variant="tilution" teamData={teamData} />
       <HomeCareerSection />

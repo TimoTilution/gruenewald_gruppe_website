@@ -20,7 +20,7 @@ export const tilutionServiceDetails: TilutionServiceDetail[] = [
       "Wir realisieren keramische Beläge für Schwimmbäder und Thermen – von Untergrundvorbereitung und Gefälleausbildung über fachgerechte Abdichtung bis zur sicheren Verlegung.",
       "Dabei berücksichtigen wir Rutschhemmung, Beckenköpfe, Rinnen, Treppen, Fugen, Einbauteile und dauerhaft stark beanspruchte Nassbereiche.",
     ],
-    closing: "Für Schwimmbadlösungen, die technisch sicher, langlebig und präzise ausgeführt sind.",
+    closing: "Für sichere und langlebige Schwimmbadlösungen.",
   },
   {
     slug: "hotels-wellness",
@@ -32,7 +32,7 @@ export const tilutionServiceDetails: TilutionServiceDetail[] = [
       "Wir realisieren Fliesen- und Plattenarbeiten für Hotels und Wellnessbereiche – von Zimmerbädern und Fluren bis zu Spa-, Sauna- und Nassbereichen.",
       "Dabei achten wir auf hochwertige Oberflächen, sichere Abdichtung, Rutschhemmung, belastbare Fugen und eine saubere Ausführung bis ins Detail.",
     ],
-    closing: "Für Räume, die Komfort, Design und Funktion dauerhaft verbinden.",
+    closing: "Für Komfort, Design und dauerhafte Funktion.",
   },
   {
     slug: "oeffentliche-einrichtungen",
@@ -44,7 +44,7 @@ export const tilutionServiceDetails: TilutionServiceDetail[] = [
       "Wir realisieren langlebige Fliesen- und Plattenflächen für Schulen, Universitäten, Verwaltungsgebäude und weitere öffentliche Einrichtungen.",
       "Dabei berücksichtigen wir Rutschhemmung, barrierearme Details, Blindleitsysteme, hohe Beanspruchung sowie pflegeleichte und robuste Oberflächen.",
     ],
-    closing: "Für öffentliche Räume, die sicher, belastbar und dauerhaft nutzbar bleiben.",
+    closing: "Für sichere, dauerhaft belastbare öffentliche Räume.",
   },
   {
     slug: "kliniken-pflegebereiche",
@@ -56,7 +56,7 @@ export const tilutionServiceDetails: TilutionServiceDetail[] = [
       "In Kliniken und Pflegeeinrichtungen sind hygienische, sichere und widerstandsfähige Oberflächen unverzichtbar.",
       "Wir realisieren Fliesen- und Plattenarbeiten mit rutschhemmenden Belägen, barrierearmen Übergängen, leicht zu reinigenden Oberflächen und langlebigen Fugenlösungen.",
     ],
-    closing: "Für Bereiche, in denen Hygiene, Sicherheit und Funktion täglich zählen.",
+    closing: "Für Hygiene, Sicherheit und Funktion im Alltag.",
   },
   {
     slug: "grosskuechen",
@@ -68,7 +68,7 @@ export const tilutionServiceDetails: TilutionServiceDetail[] = [
       "Großküchen stellen besondere Anforderungen an Boden- und Wandflächen. Wir realisieren robuste Beläge mit Gefälleausbildung, Abläufen, Hohlkehlen und chemisch belastbaren Fugen.",
       "Rutschhemmung, Hygiene, Temperaturbeständigkeit und eine dauerhaft sichere Entwässerung werden von Beginn an mitgedacht.",
     ],
-    closing: "Für Küchenflächen, die auch unter Dauerbelastung zuverlässig funktionieren.",
+    closing: "Für Küchenflächen, die jeder Dauerbelastung standhalten.",
   },
   {
     slug: "retail-grossflaechen",
@@ -80,7 +80,7 @@ export const tilutionServiceDetails: TilutionServiceDetail[] = [
       "Wir realisieren belastbare Bodenflächen für Verkaufsräume, Autohäuser, Märkte und weitere großflächige Gewerbeobjekte.",
       "Von großformatigen Fliesen über Rüttelboden bis zur präzisen Ebenheit achten wir auf hohe Belastbarkeit, saubere Raster, effiziente Ausführung und ein dauerhaft hochwertiges Erscheinungsbild.",
     ],
-    closing: "Für Flächen, die auch bei hoher Nutzung überzeugen.",
+    closing: "Für dauerhaft überzeugende Flächen bei hoher Nutzung.",
   },
   {
     slug: "wohnungsbau",
@@ -92,7 +92,7 @@ export const tilutionServiceDetails: TilutionServiceDetail[] = [
       "Im Wohnungsbau verbinden wir wirtschaftliche Ausführung mit verlässlicher Qualität. Wir realisieren Serienbäder, Treppenhäuser, Flure und weitere Wohnbereiche mit abgestimmten Fliesen- und Plattenbelägen.",
       "Klare Abläufe, standardisierte Details und eine effiziente Logistik ermöglichen auch bei großen Stückzahlen eine gleichbleibend hohe Ausführungsqualität.",
     ],
-    closing: "Für Wohnungsbau, der wirtschaftlich bleibt und dauerhaft überzeugt.",
+    closing: "Für wirtschaftlichen Wohnungsbau in dauerhaft hoher Qualität.",
   },
   {
     slug: "fassaden",
@@ -104,7 +104,7 @@ export const tilutionServiceDetails: TilutionServiceDetail[] = [
       "Wir realisieren hochwertige Fassaden mit Klinker, Riemchen, Keramik und Feinsteinzeug – langlebig, witterungsbeständig und abgestimmt auf die Architektur des Gebäudes.",
       "Von der Untergrundvorbereitung über Befestigung und Verlegung bis zu Anschlüssen und Detailausbildungen achten wir auf eine technisch sichere und präzise Ausführung.",
     ],
-    closing: "Für Fassaden, die schützen, gestalten und dauerhaft wirken.",
+    closing: "Für Fassaden, die schützen, gestalten und Bestand haben.",
   },
 ];
 

@@ -24,8 +24,8 @@ const defaultSecondaryNavigation = [
 const tilutionSecondaryNavigation = [
   { href: "/tilution", sectionId: "hero", label: "Start" },
   { href: "/tilution/leistungen", sectionId: "leistungen", label: "Leistungen" },
-  { href: "/tilution/einblicke", sectionId: "gruppe", label: "Einblicke" },
   { href: "/tilution/referenzen", sectionId: "referenzen", label: "Referenzen" },
+  { href: "/tilution/einblicke", sectionId: "gruppe", label: "Einblicke" },
   { href: "/tilution/innovationen", sectionId: "innovationen", label: "Innovationen" },
   { href: "/tilution/team", sectionId: "team", label: "Team" },
   { href: "/tilution/karriere", sectionId: "karriere", label: "Karriere" },
@@ -35,8 +35,8 @@ const tilutionSecondaryNavigation = [
 const gruenewaldSecondaryNavigation = [
   { href: "/gruenewaldgmbh", sectionId: "hero", label: "Start" },
   { href: "/gruenewaldgmbh/leistungen", sectionId: "leistungen", label: "Leistungen" },
-  { href: "/gruenewaldgmbh/einblicke", sectionId: "gruppe", label: "Einblicke" },
   { href: "/gruenewaldgmbh/referenzen", sectionId: "referenzen", label: "Referenzen" },
+  { href: "/gruenewaldgmbh/einblicke", sectionId: "gruppe", label: "Einblicke" },
   { href: "/gruenewaldgmbh/karriere", sectionId: "karriere", label: "Karriere" },
   { href: "/gruenewaldgmbh/kontakt", sectionId: "kontakt", label: "Kontakt" },
 ];
@@ -44,8 +44,8 @@ const gruenewaldSecondaryNavigation = [
 const claySecondaryNavigation = [
   { href: "/clay-construction", sectionId: "hero", label: "Start" },
   { href: "/clay-construction/leistungen", sectionId: "leistungen", label: "Leistungen" },
-  { href: "/clay-construction/system-ausfuehrung", sectionId: "gruppe", label: "System & Ausführung" },
   { href: "/clay-construction/referenzen", sectionId: "referenzen", label: "Referenzen" },
+  { href: "/clay-construction/system-ausfuehrung", sectionId: "gruppe", label: "System & Ausführung" },
   { href: "/clay-construction/team", sectionId: "team", label: "Team" },
   { href: "/clay-construction/karriere", sectionId: "karriere", label: "Karriere" },
   { href: "/clay-construction/kontakt", sectionId: "kontakt", label: "Kontakt" },

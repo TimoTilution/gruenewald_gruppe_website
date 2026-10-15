@@ -4,7 +4,6 @@ import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { SectionShell } from "@/components/section-shell";
 import { getOptimizedSiteImageSrc } from "@/lib/site-image";
-import { withBasePath } from "@/lib/site-path";
 import { pushUrlState } from "@/lib/preserve-scroll-url";
 
 type ServiceArea = {
@@ -56,9 +55,13 @@ const serviceAreas: ServiceArea[] = [
   },
 ];
 
-function ServiceCard({ area }: { area: ServiceArea }) {
+function ServiceCard({
+  area,
+}: {
+  area: ServiceArea;
+}) {
   return (
-    <article className="tilution-service-card group">
+    <article className="tilution-service-card clay-service-card group">
       <Image
         src={getOptimizedSiteImageSrc(area.image)}
         alt={`${area.title} Beispielbild`}
@@ -102,6 +105,21 @@ function ServiceCard({ area }: { area: ServiceArea }) {
 }
 
 export function ClayServicesSection() {
+  const scrollToReferences = () => {
+    const targetSection = document.getElementById("referenzen");
+    if (!targetSection) return;
+
+    const headerOffset = document.querySelector("header")?.getBoundingClientRect().height ?? 0;
+    const targetTop =
+      targetSection.getBoundingClientRect().top + window.scrollY - headerOffset - 16;
+
+    window.scrollTo({
+      top: Math.max(targetTop, 0),
+      behavior: "smooth",
+    });
+    pushUrlState("/clay-construction/referenzen");
+  };
+
   const scrollToContact = () => {
     const targetSection = document.getElementById("kontakt");
     if (!targetSection) return;
@@ -135,6 +153,16 @@ export function ClayServicesSection() {
           {serviceAreas.map((area) => (
             <ServiceCard key={area.title} area={area} />
           ))}
+
+          <button
+            type="button"
+            className="clay-services-reference-cta"
+            onClick={scrollToReferences}
+            aria-label="Alle Referenzen von Clay Construction ansehen"
+          >
+            <span>Referenzen ansehen</span>
+            <ArrowRight aria-hidden="true" size={18} strokeWidth={2.2} />
+          </button>
         </div>
 
         <div className="tilution-services-cta">

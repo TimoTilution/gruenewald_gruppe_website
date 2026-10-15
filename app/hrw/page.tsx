@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { HrwContactSection, HrwHeroSection, HrwServicesSection, HrwWhySection } from "@/components/hrw/hrw-page-sections";
 import { HomeCareerSection } from "@/components/home/home-career-section";
 import { createPageMetadata } from "@/lib/seo-metadata";
+import { StructuredData } from "@/components/structured-data";
+import { createCompanyOrganizationSchema } from "@/lib/structured-data";
 
 export const metadata: Metadata = createPageMetadata({
   title: "HRW GmbH – Fachkräfte für Bauprojekte",
@@ -13,6 +15,7 @@ export const metadata: Metadata = createPageMetadata({
 export default function HrwPage() {
   return (
     <div className="verwaltung-theme hrw-theme contents">
+      <StructuredData data={createCompanyOrganizationSchema("hrw")} />
       <HrwHeroSection />
       <HrwServicesSection />
       <HrwWhySection />
