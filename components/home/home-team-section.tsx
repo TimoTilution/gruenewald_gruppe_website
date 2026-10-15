@@ -1,7 +1,7 @@
 ﻿"use client";
 
 import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Copy, ExternalLink, Mail, Phone, X } from "lucide-react";
 import { SectionShell } from "@/components/section-shell";
@@ -528,6 +528,7 @@ export function HomeTeamSection({
   const [activeContactAction, setActiveContactAction] =
     useState<ContactAction | null>(null);
   const [showAllMembers, setShowAllMembers] = useState(false);
+  const teamSectionRef = useRef<HTMLElement>(null);
   const activeCategory = categories.find(
     (category) => category.id === activeCategoryId,
   );
@@ -537,6 +538,27 @@ export function HomeTeamSection({
     [activeCategoryId, members],
   );
   const displayedMembers = visibleMembers;
+
+  useEffect(() => {
+    const section = teamSectionRef.current;
+    if (!section) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+
+        trackAnalyticsEvent("team_section_view", {
+          section: "team",
+          item_id: variant,
+        });
+        observer.disconnect();
+      },
+      { threshold: 0.35 },
+    );
+
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, [variant]);
 
   const closeMemberOverlay = () => {
     trackAnalyticsEvent("team_member_close", {
@@ -584,7 +606,7 @@ export function HomeTeamSection({
 
   return (
     <SectionShell id="team">
-      <section className="section-card px-6 py-10 sm:px-9 lg:p-12">
+      <section ref={teamSectionRef} className="section-card px-6 py-10 sm:px-9 lg:p-12">
         <div className="flex flex-col gap-7 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-5xl">
             <p className="section-eyebrow">Team</p>
@@ -600,7 +622,7 @@ export function HomeTeamSection({
         </div>
 
         <div
-          className="mt-9 flex gap-2 overflow-x-auto pb-2"
+          className="mt-9 flex gap-2 overflow-x-auto pb-2 lg:overflow-visible lg:pb-0"
           role="tablist"
           aria-label="Teambereiche"
         >
