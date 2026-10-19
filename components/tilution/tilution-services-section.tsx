@@ -393,6 +393,34 @@ function getGruenewaldServicePath(title: string, detailTitle?: string) {
     : `/gruenewaldgmbh/leistungen/${serviceSlug}`;
 }
 
+function getGruenewaldServiceFromPath(pathname: string) {
+  const segments = pathname.replace(/\/+$/, "").split("/").filter(Boolean);
+  if (segments[0] !== "gruenewaldgmbh" || segments[1] !== "leistungen") {
+    return null;
+  }
+
+  const serviceTitle = Object.entries(gruenewaldServiceSlugs).find(
+    ([, slug]) => slug === segments[2],
+  )?.[0];
+  if (!serviceTitle) return null;
+
+  const detailTitle = segments[3]
+    ? Object.entries(gruenewaldServiceDetailSlugs[serviceTitle] ?? {}).find(
+        ([, slug]) => slug === segments[3],
+      )?.[0]
+    : undefined;
+  const detailIndex = detailTitle
+    ? (gruenewaldServiceSubcategories[serviceTitle] ?? []).findIndex(
+        (detail) => detail.title === detailTitle,
+      ) + 1
+    : 0;
+
+  return {
+    title: serviceTitle,
+    detailIndex: Math.max(detailIndex, 0),
+  };
+}
+
 function getTilutionServicePath(title: string) {
   const serviceSlug = tilutionServiceDetailsByTitle[title]?.slug;
   return serviceSlug
@@ -559,9 +587,18 @@ export function TilutionServicesSection({
   };
 
   useEffect(() => {
-    if (isGruenewald || isVerwaltung) return;
+    if (isVerwaltung) return;
 
     const pathname = window.location.pathname.replace(/\/+$/, "");
+    if (isGruenewald) {
+      const serviceState = getGruenewaldServiceFromPath(pathname);
+      if (!serviceState) return;
+
+      setActiveServiceTitle(serviceState.title);
+      setActiveServiceDetailIndex(serviceState.detailIndex);
+      return;
+    }
+
     const detailIndex = tilutionServiceDetails.findIndex(
       (detail) => pathname === `/tilution/leistungen/${detail.slug}`,
     );

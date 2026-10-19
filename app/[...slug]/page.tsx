@@ -670,13 +670,7 @@ function getServiceRoute(path: string, slug: string[]): RouteContent | null {
           { name: serviceDetail.title, path },
         ]),
       ],
-      render: () => (
-        <PageHero
-          eyebrow={service.title}
-          title={serviceDetail.title}
-          description={serviceDetail.description}
-        />
-      ),
+      render: () => <CompanyOnePager company="gruenewald" sectionId="leistungen" />,
     };
   }
 
@@ -695,13 +689,7 @@ function getServiceRoute(path: string, slug: string[]): RouteContent | null {
         { name: service.title, path },
       ]),
     ],
-    render: () => (
-      <PageHero
-        eyebrow="Leistung"
-        title={service.title}
-        description={service.description}
-      />
-    ),
+    render: () => <CompanyOnePager company="gruenewald" sectionId="leistungen" />,
   };
 }
 
