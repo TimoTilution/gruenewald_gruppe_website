@@ -124,7 +124,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       .filter((path) => !legacyTeamDetailPaths.has(path))
       .map((path) => ({
       url: `${siteBaseUrl}${withTrailingSlash(path)}`,
-      changeFrequency: "monthly" as const,
+      changeFrequency: "weekly" as const,
       priority: path.split("/").length > 4 ? 0.55 : 0.7,
       ...(teamOverviewUpdates.get(path)
         ? { lastModified: teamOverviewUpdates.get(path) }
@@ -132,7 +132,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
     ...cmsTeamPaths.map((path) => ({
       url: `${siteBaseUrl}${withTrailingSlash(path)}`,
-      changeFrequency: "monthly" as const,
+      changeFrequency: "weekly" as const,
       priority: 0.6,
       ...(updatedAtByPerson.get(path.split("/").filter(Boolean).at(-1) ?? "")
         ? {
