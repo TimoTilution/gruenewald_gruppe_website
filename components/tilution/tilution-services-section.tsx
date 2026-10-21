@@ -170,8 +170,8 @@ const gruenewaldServiceDetails: Record<string, GruenewaldServiceDetail> = {
     image: "/images/gruenewald-aussengestaltung-terrasse.png",
     alt: "Modern gestaltete Terrasse mit Sitzbereich und Garten",
     paragraphs: [
-      "Wir verstehen Ihren Außenbereich als Verlängerung Ihres Lebensstils. Deshalb verbinden wir funktionale, ästhetische Lösungen mit langfristiger Haltbarkeit – für Ihren Wohlfühlort unter freiem Himmel.",
-      "Ob gemütliches Refugium oder geselliger Treffpunkt: Mit vielfältigen Materialien und Stilen gestalten wir Ihren Lieblingsplatz – modern und minimalistisch oder rustikal und naturnah.",
+      "Wir gestalten Terrassen, Wege, Treppen und Außenanlagen, die Funktion, Ästhetik und dauerhafte Qualität verbinden.",
+      "Mit passenden Materialien und präziser Ausführung entsteht Ihr persönlicher Lieblingsplatz im Freien.",
     ],
   },
   "Badsanierung": {
@@ -179,8 +179,8 @@ const gruenewaldServiceDetails: Record<string, GruenewaldServiceDetail> = {
     image: "/about-bathroom.png",
     alt: "Modern saniertes Badezimmer mit hochwertiger Ausstattung",
     paragraphs: [
-      "Ihr Bad soll funktional sein und zugleich Ihren persönlichen Stil widerspiegeln. Wir verwandeln Ihr altes Badezimmer in einen Ort der Erholung – modern-minimalistisch oder klassisch-zeitlos.",
-      "Dabei verbinden wir ansprechende Ästhetik mit einer attraktiven Wertsteigerung Ihrer Immobilie. Retro-Fliesen, platzsparende Nischen, raffinierte LED-Beleuchtung oder die Dusche vor Ihrem Lieblingsfoto – you name it, wir machen’s möglich.",
+      "Wir realisieren komplette Badsanierungen mit sicherer Abdichtung, modernen Fliesen und durchdachter Raumplanung.",
+      "Bodengleiche Duschen und präzise Details schaffen ein Bad mit dauerhaftem Komfort und persönlichem Stil.",
     ],
   },
   "Haus- & Wohnsanierung": {
@@ -188,7 +188,8 @@ const gruenewaldServiceDetails: Record<string, GruenewaldServiceDetail> = {
     image: "/images/gruenewald-haus-wohnsanierung.png",
     alt: "Hochwertig sanierter Wohn- und Essbereich",
     paragraphs: [
-      "Nachhaltige Energiesanierung aus einer Hand – von Dämmung und Abdichtung bis zu effizienter Heiz- und Lüftungstechnik. Passende Fenster und Bodenbeläge verbinden Energieeffizienz mit Ihrem Stil: für weniger Heizkosten und mehr Wohnkomfort.",
+      "Wir realisieren Haus- und Wohnsanierungen – von Innenausbau und Bodenbelägen bis zu energetischen Maßnahmen.",
+      "Abgestimmte Materialien und saubere Abläufe schaffen mehr Wohnkomfort, Energieeffizienz und Werterhalt.",
     ],
     highlights: [
       "Fassade & Innenbereich",
@@ -217,8 +218,8 @@ const gruenewaldServiceSubcategories: Record<string, GruenewaldServiceDetail[]> 
       alt: "Hochwertig gestalteter Balkon mit Sitzbereich und Stadtblick",
       lead: "Draußen zuhause.",
       paragraphs: [
-        "Wir gestalten Balkone und Terrassen als echte Erweiterung Ihres Wohnraums – funktional, hochwertig und passend zu Ihrem persönlichen Stil.",
-        "Mit langlebigen Materialien, durchdachten Details und einer Gestaltung, die zu Ihrem Zuhause passt, schaffen wir Außenbereiche zum Entspannen, Genießen und Zusammensein.",
+        "Wir gestalten Balkone und Terrassen als hochwertige, wetterbeständige Erweiterung Ihres Wohnraums.",
+        "Fachgerechter Terrassenbau und langlebige Beläge schaffen Platz zum Entspannen und Zusammensein.",
       ],
       closing: "Für mehr Wohngefühl unter freiem Himmel.",
     },
@@ -228,8 +229,8 @@ const gruenewaldServiceSubcategories: Record<string, GruenewaldServiceDetail[]> 
       alt: "Außentreppe aus Stein neben einer Natursteinmauer",
       lead: "Wege, die Eindruck machen.",
       paragraphs: [
-        "Treppen, Wege und Pflasterflächen prägen den ersten Eindruck Ihres Zuhauses – deshalb verbinden wir Funktion, Gestaltung und Langlebigkeit zu einem stimmigen Gesamtbild.",
-        "Ob elegante Steintreppe, klar geführter Gartenweg oder hochwertig gepflasterte Fläche: Wir schaffen Außenbereiche, die praktisch sind und dauerhaft gut aussehen.",
+        "Treppen, Gartenwege und Pflasterarbeiten verbinden Funktion und Gestaltung zu einem stimmigen Gesamtbild.",
+        "Wir realisieren belastbare Außenflächen, die sicher nutzbar sind und dauerhaft hochwertig wirken.",
       ],
       closing: "Für einen Auftritt, der schon vor der Haustür beginnt.",
     },
@@ -239,8 +240,8 @@ const gruenewaldServiceSubcategories: Record<string, GruenewaldServiceDetail[]> 
       alt: "Bepflanzte Gartenanlage mit Natursteinweg und Stützmauern",
       lead: "Freiraum, der zu Ihnen passt.",
       paragraphs: [
-        "Wir gestalten Gärten und Außenanlagen so, dass sie zu Ihrem Zuhause, Ihrem Stil und Ihrer Nutzung passen – vom einladenden Vorgarten bis zum großzügigen Rückzugsort.",
-        "Ob modern, natürlich, geradlinig oder verspielt: Mit einer durchdachten Gestaltung schaffen wir Außenbereiche, die Atmosphäre, Funktion und Wertigkeit miteinander verbinden.",
+        "Wir planen Gärten und Außenanlagen passend zu Ihrem Zuhause, Ihrem Stil und der gewünschten Nutzung.",
+        "Wege, Pflanzflächen und Einfassungen verbinden Atmosphäre und Funktion zu einem harmonischen Außenbereich.",
       ],
       closing: "Für einen Garten, der mehr ist als nur Grünfläche.",
     },
@@ -250,8 +251,8 @@ const gruenewaldServiceSubcategories: Record<string, GruenewaldServiceDetail[]> 
       alt: "Poolanlage während des Baus und nach der Fertigstellung",
       lead: "Wellness unter freiem Himmel.",
       paragraphs: [
-        "Ob Pool oder Außensauna – wir schaffen private Rückzugsorte, die Entspannung, Gestaltung und hochwertige Ausführung miteinander verbinden.",
-        "Mit langlebigen Materialien, durchdachter Planung und handwerklicher Präzision entstehen Außenbereiche, die nicht nur gut aussehen, sondern Ihnen dauerhaft Freude bereiten.",
+        "Mit individuellem Poolbau und Außensaunen schaffen wir private Rückzugsorte für Entspannung und Komfort.",
+        "Sichere Abdichtung, langlebige Materialien und präzise Ausführung gewährleisten dauerhaft hohe Qualität.",
       ],
       closing: "Für Erholung, die direkt vor Ihrer Tür beginnt.",
     },
@@ -263,8 +264,8 @@ const gruenewaldServiceSubcategories: Record<string, GruenewaldServiceDetail[]> 
       alt: "Modernisiertes helles Badezimmer mit integrierter Holzsauna",
       lead: "Aus alt wird genau Ihr Bad.",
       paragraphs: [
-        "Wir modernisieren Ihr Badezimmer technisch, funktional und gestalterisch – passend zu Ihren Wünschen und Ihrem Zuhause.",
-        "Ob neue Fliesen, moderne Beleuchtung, clevere Stauraumlösungen oder eine komplett neue Raumwirkung: Wir machen aus Ihrem bestehenden Bad einen Ort, an dem Sie sich wieder gerne aufhalten.",
+        "Wir modernisieren Ihr Badezimmer technisch, funktional und gestalterisch passend zu Ihrem Zuhause.",
+        "Neue Fliesen, Beleuchtung und Stauraumlösungen schaffen mehr Komfort und eine klare Raumwirkung.",
       ],
       closing: "Durchdacht geplant. Hochwertig umgesetzt. Ganz nach Ihrem Stil.",
     },
@@ -274,8 +275,8 @@ const gruenewaldServiceSubcategories: Record<string, GruenewaldServiceDetail[]> 
       alt: "Modernes Badezimmer mit großzügiger bodengleicher Dusche",
       lead: "Mehr Platz. Mehr Komfort. Weniger Hürden.",
       paragraphs: [
-        "Wir ersetzen Ihre bestehende Badewanne durch eine moderne Dusche – komfortabel, platzsparend und passend zu Ihrem Badezimmer.",
-        "Ob großzügige Walk-in-Dusche oder kompakte Lösung für kleinere Räume: Wir schaffen einen Duschbereich, der den Alltag einfacher macht und Ihr Bad gleichzeitig moderner wirken lässt.",
+        "Wir ersetzen Ihre Badewanne fachgerecht durch eine moderne, komfortable und platzsparende Dusche.",
+        "Ob Walk-in- oder bodengleiche Dusche: Die neue Lösung erleichtert den Alltag und wertet Ihr Bad auf.",
       ],
       closing: "Bequem einsteigen. Besser nutzen. Neu wohlfühlen.",
     },
@@ -285,8 +286,8 @@ const gruenewaldServiceSubcategories: Record<string, GruenewaldServiceDetail[]> 
       alt: "Barrierefreies Badezimmer mit Haltegriffen und Sitzbadewanne",
       lead: "Komfort, der mitdenkt.",
       paragraphs: [
-        "Wir gestalten Ihr Badezimmer so, dass es sicher, komfortabel und langfristig gut nutzbar bleibt – ohne dabei auf modernes Design zu verzichten.",
-        "Bodengleiche Duschen, rutschhemmende Oberflächen, durchdachte Bewegungsflächen sowie passende Halte- und Sitzlösungen sorgen für mehr Sicherheit und Selbstständigkeit im Alltag.",
+        "Wir gestalten barrierefreie Badezimmer sicher, komfortabel und langfristig nutzbar – mit modernem Design.",
+        "Bodengleiche Duschen, rutschhemmende Fliesen und Haltegriffe schaffen mehr Selbstständigkeit im Alltag.",
       ],
       closing: "Heute komfortabel. Morgen genauso gut.",
     },
@@ -296,8 +297,8 @@ const gruenewaldServiceSubcategories: Record<string, GruenewaldServiceDetail[]> 
       alt: "Platzsparend eingerichtetes modernes Mini-Bad",
       lead: "Kleiner Raum. Große Möglichkeiten.",
       paragraphs: [
-        "Auch auf wenigen Quadratmetern lässt sich ein vollwertiges und komfortables Badezimmer realisieren.",
-        "Mit cleverer Raumaufteilung, platzsparenden Sanitärobjekten und durchdachten Stauraumlösungen nutzen wir jeden Zentimeter sinnvoll – ohne dass Funktion oder Gestaltung zu kurz kommen.",
+        "Auch auf wenigen Quadratmetern realisieren wir eine vollständige und komfortable Badsanierung.",
+        "Clevere Raumplanung, kompakte Sanitärobjekte und Stauraum nutzen jeden Zentimeter des Mini-Bads sinnvoll.",
       ],
       closing: "So wird aus wenig Fläche ein Bad, das sich nach mehr anfühlt.",
     },
@@ -307,8 +308,8 @@ const gruenewaldServiceSubcategories: Record<string, GruenewaldServiceDetail[]> 
       alt: "Private Sauna mit angrenzendem modernem Duschbereich",
       lead: "Wellness, die zu Hause beginnt.",
       paragraphs: [
-        "Ob private Sauna oder eigener Indoorpool – wir schaffen Rückzugsorte, die Entspannung, Komfort und hochwertige Gestaltung miteinander verbinden.",
-        "Von der Planung bis zur Umsetzung entwickeln wir individuelle Lösungen, die zu Ihrem Zuhause, Ihren Wünschen und den räumlichen Gegebenheiten passen.",
+        "Mit privater Sauna oder Indoorpool schaffen wir hochwertige Rückzugsorte für Entspannung und Komfort.",
+        "Von Abdichtung und Fliesen bis zur Ausstattung entsteht eine Lösung passend zu Ihrem Zuhause.",
       ],
       closing: "Für mehr Erholung. Mehr Komfort. Mehr Zuhause.",
     },
@@ -320,8 +321,8 @@ const gruenewaldServiceSubcategories: Record<string, GruenewaldServiceDetail[]> 
       alt: "Fachgerechtes Verlegen großformatiger dunkler Bodenfliesen",
       lead: "Neue Oberflächen. Neues Wohngefühl.",
       paragraphs: [
-        "Ob Wände, Decken oder Böden – wir verleihen Ihren Räumen mit hochwertigen Materialien und sauberer Ausführung ein neues Erscheinungsbild.",
-        "Von klassischen Maler- und Putzarbeiten bis zu Parkett, Designvinyl, Fliesen oder Naturstein: Wir schaffen Oberflächen, die zu Ihrem Zuhause passen und Funktion, Qualität und Gestaltung miteinander verbinden.",
+        "Wir erneuern Wände, Decken und Böden mit hochwertigen Materialien und fachgerechter Ausführung.",
+        "Maler- und Putzarbeiten sowie Parkett, Designvinyl, Fliesen und Naturstein verbinden Qualität und Gestaltung.",
       ],
       closing: "Für Räume, die sich wieder richtig nach Zuhause anfühlen.",
     },
@@ -331,8 +332,8 @@ const gruenewaldServiceSubcategories: Record<string, GruenewaldServiceDetail[]> 
       alt: "Energieausweis vor einem modernisierten Wohnhaus",
       lead: "Weniger Energieverbrauch. Mehr Wohnkomfort.",
       paragraphs: [
-        "Wir verbessern die Energieeffizienz Ihres Zuhauses mit passenden Lösungen für Dämmung sowie moderne Heiz- und Kühlsysteme.",
-        "Ob Innen- oder Außendämmung, ökologische Dämmstoffe oder Wärmedämmverbundsysteme: Wir entwickeln Maßnahmen passend zu Ihrem Gebäude und Sanierungsfahrplan.",
+        "Wir verbessern die Energieeffizienz Ihres Hauses mit Innen-, Außen- oder ökologischen Dämmungen.",
+        "Alle Maßnahmen orientieren sich an der Bausubstanz, Ihren Zielen und dem individuellen Sanierungsfahrplan.",
       ],
       closing: "Für ein Zuhause, das effizienter, komfortabler und zukunftsfähiger wird.",
     },
@@ -342,8 +343,8 @@ const gruenewaldServiceSubcategories: Record<string, GruenewaldServiceDetail[]> 
       alt: "Traditioneller Lehmbaustoff mit natürlichen Pflanzenfasern",
       lead: "Tradition bewahren. Substanz erhalten.",
       paragraphs: [
-        "Wir sanieren Fachwerkhäuser mit Sorgfalt, Erfahrung und einem Gespür für historische Bausubstanz – auch unter Berücksichtigung von Denkmalschutzauflagen.",
-        "Mit natürlichen Baustoffen wie Lehm, fachgerechter Instandsetzung und passenden Lösungen für Gefache, Balken, Fenster, Türen und Böden verbinden wir traditionelles Handwerk mit zeitgemäßem Wohnkomfort.",
+        "Wir sanieren Fachwerkhäuser sorgfältig und unter Beachtung der historischen Bausubstanz und des Denkmalschutzes.",
+        "Lehm und natürliche Baustoffe verbinden fachgerechte Fachwerksanierung mit modernem Wohnkomfort.",
       ],
       closing: "Für Gebäude mit Geschichte – und eine Zukunft, die dazu passt.",
     },

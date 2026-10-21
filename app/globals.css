@@ -3676,7 +3676,7 @@ body:has(.gruenewald-theme) {
   }
 
   .gruenewald-service-modal__content--with-highlights {
-    padding: clamp(0.85rem, 2vh, 1.2rem) 1.15rem 0.75rem;
+    padding: clamp(0.85rem, 2vh, 1.2rem) 1.15rem 1rem;
   }
 
   .gruenewald-service-modal__content--with-highlights .gruenewald-service-modal__highlights {
