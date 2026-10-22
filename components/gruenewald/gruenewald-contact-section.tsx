@@ -13,12 +13,24 @@ const contactValueClassName =
 const contactLabelClassName =
   "block text-xs font-semibold uppercase tracking-[0.16em] text-slate-500 sm:text-[0.8125rem]";
 
+const generalLandline = "+49 5546 608";
+
 function getPhoneHref(phone: string) {
   return `tel:${phone.replace(/[^+\d]/g, "")}`;
 }
 
+function getInternationalGermanPhone(phone: string) {
+  const trimmedPhone = phone.trim();
+  return trimmedPhone.startsWith("0")
+    ? `+49 ${trimmedPhone.slice(1)}`
+    : trimmedPhone;
+}
+
 export async function GruenewaldContactSection() {
   const { primary, projectLead } = await getGruenewaldContactPeople();
+  const primaryPhone = primary.phone
+    ? getInternationalGermanPhone(primary.phone)
+    : undefined;
 
   return (
     <SectionShell id="kontakt">
@@ -58,7 +70,7 @@ export async function GruenewaldContactSection() {
                 <p className="mt-1 text-base font-semibold text-[#009CA6]">{primary.role}</p>
               </div>
 
-              <address className="mt-7 grid min-w-0 gap-3 not-italic lg:col-start-2 lg:row-start-1 lg:mt-0 lg:h-full lg:grid-rows-2">
+              <address className="mt-7 grid min-w-0 gap-3 not-italic lg:col-start-2 lg:row-start-1 lg:mt-0 lg:h-full lg:grid-rows-3">
                   {primary.email ? <a
                     href={`mailto:${primary.email}`}
                     aria-label={`E-Mail an ${primary.name} senden`}
@@ -77,9 +89,23 @@ export async function GruenewaldContactSection() {
                     </span>
                   </a> : <div aria-hidden="true" />}
 
-                  {primary.phone ? <a
-                    href={getPhoneHref(primary.phone)}
-                    aria-label={`${primary.name} unter ${primary.phone} anrufen`}
+                  <a
+                    href={getPhoneHref(generalLandline)}
+                    aria-label={`Grünewald GmbH unter ${generalLandline} anrufen`}
+                    className={contactLinkClassName}
+                  >
+                    <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-slate-50 text-[#009CA6] transition-colors group-hover:border-[#009CA6]/30 group-hover:bg-[#009CA6]/5 sm:h-11 sm:w-11">
+                      <Phone aria-hidden="true" className="h-5 w-5 stroke-[2]" />
+                    </span>
+                    <span className="min-w-0">
+                      <span className={contactLabelClassName}>Festnetz</span>
+                      <span className={contactValueClassName}>{generalLandline}</span>
+                    </span>
+                  </a>
+
+                  {primaryPhone ? <a
+                    href={getPhoneHref(primaryPhone)}
+                    aria-label={`${primary.name} unter ${primaryPhone} anrufen`}
                     className={contactLinkClassName}
                   >
                     <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-slate-50 text-[#009CA6] transition-colors group-hover:border-[#009CA6]/30 group-hover:bg-[#009CA6]/5 sm:h-11 sm:w-11">
@@ -89,7 +115,7 @@ export async function GruenewaldContactSection() {
                       <span className={contactLabelClassName}>
                         Mobil
                       </span>
-                      <span className={contactValueClassName}>{primary.phone}</span>
+                      <span className={contactValueClassName}>{primaryPhone}</span>
                     </span>
                   </a> : <div aria-hidden="true" />}
               </address>

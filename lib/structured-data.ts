@@ -53,6 +53,7 @@ export function createCompanyOrganizationSchema(company: CompanySlug) {
     url,
     logo: absoluteUrl(companyLogos[company]),
     description: info.description,
+    ...(company === "gruenewald" ? { telephone: "+49 5546 608" } : {}),
     address: {
       "@type": "PostalAddress",
       streetAddress: "Quantzstraße 67",
