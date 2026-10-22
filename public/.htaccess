@@ -2,9 +2,10 @@ Options -MultiViews
 
 RewriteEngine On
 
-# Keep one canonical host for users, search engines and cached client bundles.
+# Keep one canonical HTTPS host for users, search engines and cached client bundles.
 # Preserve the complete path and query string on the redirect.
-RewriteCond %{HTTP_HOST} ^gruenewald-gruppe\.de$ [NC]
+RewriteCond %{HTTPS} !=on [OR]
+RewriteCond %{HTTP_HOST} !^www\.gruenewald-gruppe\.de$ [NC]
 RewriteRule ^ https://www.gruenewald-gruppe.de%{REQUEST_URI} [R=301,L,NE]
 
 # A stale client-side navigation can request an exported Next.js payload with
