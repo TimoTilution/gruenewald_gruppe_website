@@ -226,7 +226,7 @@ async function GroupOnePager({ sectionId }: { sectionId: string }) {
       <HomeReferencesSection />
       <HomeInnovationsSection />
       <HomeTeamSection variant="group" teamData={teamData} />
-      <HomeCareerSection />
+      <HomeCareerSection variant="group" />
       <HomeContactSection />
     </div>
   );
@@ -250,7 +250,7 @@ async function CompanyOnePager({
         <HomeAboutSection />
         <HomeInnovationsSection />
         <HomeTeamSection variant="tilution" teamData={teamData} />
-        <HomeCareerSection />
+        <HomeCareerSection variant="tilution" />
         <HomeContactSection />
       </div>
     );

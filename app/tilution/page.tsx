@@ -31,7 +31,7 @@ export default async function TilutionPage() {
       <HomeAboutSection />
       <HomeInnovationsSection />
       <HomeTeamSection variant="tilution" teamData={teamData} />
-      <HomeCareerSection />
+      <HomeCareerSection variant="tilution" />
       <HomeContactSection />
     </div>
   );

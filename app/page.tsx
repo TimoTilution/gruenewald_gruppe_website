@@ -28,7 +28,7 @@ export default async function HomePage() {
       <HomeReferencesSection />
       <HomeInnovationsSection />
       <HomeTeamSection variant="group" teamData={teamData} />
-      <HomeCareerSection />
+      <HomeCareerSection variant="group" />
       <HomeContactSection />
     </div>
   );

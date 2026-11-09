@@ -1966,6 +1966,10 @@ body {
     .tilution-services-section {
       padding: 3rem;
     }
+
+    .tilution-services-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
   }
 
   @media (min-width: 1280px) {
@@ -2932,6 +2936,42 @@ body:has(.tilution-theme) > div > .pointer-events-none {
 .tilution-theme .tilution-services-cta__text,
 .tilution-theme [class*="text-forest-100"] {
   color: var(--text-secondary) !important;
+}
+
+.tilution-theme .career-job-card {
+  border-color: rgba(236, 102, 2, 0.24);
+  background: #ffffff;
+  box-shadow: 0 14px 34px rgba(32, 36, 43, 0.1);
+}
+
+.tilution-theme .career-job-card:hover {
+  border-color: rgba(236, 102, 2, 0.55);
+  background: #ffffff;
+  box-shadow: 0 20px 44px rgba(32, 36, 43, 0.14);
+}
+
+.tilution-theme .career-job-card__label {
+  color: var(--company-primary);
+}
+
+.tilution-theme .career-job-card__title {
+  color: var(--text-primary);
+}
+
+.tilution-theme .career-job-card__icon {
+  border-color: rgba(236, 102, 2, 0.24);
+  background: rgba(236, 102, 2, 0.08);
+  color: var(--company-primary);
+}
+
+.tilution-theme .career-job-card__action {
+  border-color: var(--company-primary);
+  background: var(--company-primary);
+  color: #ffffff;
+}
+
+.tilution-theme .career-job-card:hover .career-job-card__action {
+  background: #d85d02;
 }
 
 .tilution-theme #hero .section-eyebrow {
