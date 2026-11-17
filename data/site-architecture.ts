@@ -416,7 +416,6 @@ export const teamMembers: TeamMemberEntry[] = [
   { company: "verwaltung", departmentSlug: "kaufmaennische-leitung", departmentTitle: "Kaufmaennische Leitung", slug: "mirco-mueller", name: "Mirco Mueller", role: "Kaufmaennische Leitung", imageSrc: "/images/verwaltung/team-mirco-mueller.png" },
   { company: "verwaltung", departmentSlug: "kreditorenbuchhaltung", departmentTitle: "Kreditorenbuchhaltung", slug: "birgit-peters", name: "Birgit Peters", role: "Kreditorenbereich & Immobilienverwaltung", imageSrc: "/images/verwaltung/team-birgit-peters.png" },
   { company: "verwaltung", departmentSlug: "debitorenbuchhaltung", departmentTitle: "Debitorenbuchhaltung", slug: "simone-seibert", name: "Simone Seibert", role: "Debitorenbereich, Buergschaftswesen & Rechtsfaelle", imageSrc: "/images/verwaltung/team-simone-seibert.png" },
-  { company: "verwaltung", departmentSlug: "it", departmentTitle: "IT", slug: "shqiprim-salihu", name: "Shqiprim Salihu", role: "Sachbearbeiter IT", imageSrc: "/images/verwaltung/team-shqiprim-salihu.png" },
   { company: "verwaltung", departmentSlug: "personalwesen", departmentTitle: "Personalwesen", slug: "brigitte-marx", name: "Brigitte Marx", role: "Lohnbuchhaltung", imageSrc: "/images/verwaltung/team-brigitte-marx.png" },
 ];
 

@@ -220,6 +220,14 @@ function normalizeKey(value?: string) {
     .replace(/^-+|-+$/g, "");
 }
 
+// Former employees can remain in Sanity for editorial history, but must not
+// reappear on the website, in generated profile pages or in the sitemap.
+const retiredTeamMemberSlugs = new Set(["sven-kapke"]);
+
+function isRetiredTeamMember(name?: string) {
+  return retiredTeamMemberSlugs.has(normalizeKey(name));
+}
+
 function getRole(member: SanityTeamMember, variant: "tilution" | "clay" | "group" | "verwaltung") {
   if (
     variant === "group" &&
@@ -275,6 +283,7 @@ export async function getCmsTeamData(
         companySlug &&
           companySlugs.has(companySlug) &&
           cleanText(member.name) &&
+          !isRetiredTeamMember(member.name) &&
           cleanText(member.role) &&
           cleanText(member.department?.slug),
       );
@@ -291,7 +300,7 @@ export async function getCmsTeamData(
           ? indexableCompanyTeamBasePaths.get(companySlug)
           : undefined;
         const name = cleanText(member.name);
-        if (!teamBasePath || !name) return pathsByPerson;
+        if (!teamBasePath || !name || isRetiredTeamMember(name)) return pathsByPerson;
 
         const personKey = normalizeKey(name);
         const paths = pathsByPerson.get(personKey) ?? new Set<string>();

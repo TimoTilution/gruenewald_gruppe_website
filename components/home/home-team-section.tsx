@@ -173,12 +173,6 @@ const teamMembers: TeamMember[] = [
     imageSrc: "/images/team/michael-giese.png",
   },
   {
-    name: "Sven Kapke",
-    role: "Bauleiter",
-    categoryId: "produktion",
-    imageSrc: "/images/team/sven-kapke.png",
-  },
-  {
     name: "Pia Schnittker",
     degree: "B.A. Architektur",
     role: "Bauleiterin",
@@ -257,7 +251,6 @@ const verwaltungTeamCategories: TeamCategory[] = [
   { id: "kaufmaennische-leitung", label: "Kaufmännische Leitung" },
   { id: "kreditorenbuchhaltung", label: "Kreditorenbuchhaltung" },
   { id: "debitorenbuchhaltung", label: "Debitorenbuchhaltung" },
-  { id: "it", label: "IT" },
   { id: "personalwesen", label: "Personalwesen" },
 ];
 
@@ -267,7 +260,6 @@ const verwaltungTeamMembers: TeamMember[] = [
   { name: "Birgit Peters", role: "Kreditorenbereich & Immobilienverwaltung", categoryId: "kreditorenbuchhaltung", imageSrc: "/images/verwaltung/team-birgit-peters.png" },
   { name: "Simone Seibert", role: "Debitorenbereich, Bürgschaftswesen & Rechtsfälle", categoryId: "debitorenbuchhaltung", imageSrc: "/images/verwaltung/team-simone-seibert.png" },
   { name: "Anke Rode", role: "Debitorenbuchhaltung", categoryId: "debitorenbuchhaltung", imageSrc: "/images/verwaltung/team-anke-rode.png", imagePosition: "center top" },
-  { name: "Shqiprim Salihu", role: "Sachbearbeiter IT", categoryId: "it", imageSrc: "/images/verwaltung/team-shqiprim-salihu.png" },
   { name: "Brigitte Marx", role: "Lohnbuchhaltung", categoryId: "personalwesen", imageSrc: "/images/verwaltung/team-brigitte-marx.png" },
   { name: "Theresa Janke", role: "Auszubildende", categoryId: "personalwesen", imageSrc: "/images/verwaltung/team-theresa-janke.png" },
 ];
