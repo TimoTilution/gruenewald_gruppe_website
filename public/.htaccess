@@ -2,6 +2,18 @@ Options -MultiViews
 
 RewriteEngine On
 
+# Always revalidate documents and exported Next.js navigation payloads.
+# This prevents browsers from reopening an outdated one-pager or overlay after
+# a deployment while keeping fingerprinted CSS, JavaScript, images and videos
+# available for efficient long-term caching.
+<IfModule mod_headers.c>
+  <FilesMatch "\.(?:html?|txt)$">
+    Header always set Cache-Control "no-cache, must-revalidate"
+    Header always set Pragma "no-cache"
+    Header always set Expires "0"
+  </FilesMatch>
+</IfModule>
+
 # Keep one canonical HTTPS host for users, search engines and cached client bundles.
 # Preserve the complete path and query string on the redirect.
 RewriteCond %{HTTPS} !=on [OR]
