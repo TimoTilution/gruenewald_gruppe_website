@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound, permanentRedirect } from "next/navigation";
-import { TeamMemberDetailPage } from "@/components/team-member-detail-page";
+import { TeamMemberOnePager } from "@/components/team-member-onepager";
 import { siteBaseUrl } from "@/data/site-architecture";
 import { getCmsTeamData } from "@/lib/sanity/team";
 import { getTeamMemberSlug } from "@/lib/team-member-path";
@@ -14,10 +14,11 @@ type PageProps = { params: Promise<{ person: string }> };
 
 async function getMember(person: string) {
   const data = await getCmsTeamData("group");
-  const member = data?.members.find((entry) => getTeamMemberSlug(entry.name) === person);
+  if (!data) return null;
+  const member = data.members.find((entry) => getTeamMemberSlug(entry.name) === person);
   if (!member) return null;
   const department = data?.categories.find((entry) => entry.id === member.categoryId)?.label ?? "Team";
-  return { member, department };
+  return { member, department, data };
 }
 
 async function isDepartment(person: string) {
@@ -90,7 +91,11 @@ export default async function GroupTeamMemberPage({ params }: PageProps) {
           imageSrc: result.member.imageSrc,
         })}
       />
-      <TeamMemberDetailPage {...result.member} department={result.department} />
+      <TeamMemberOnePager
+        variant="group"
+        teamData={result.data}
+        initialMemberSlug={person}
+      />
     </>
   );
 }

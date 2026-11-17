@@ -865,9 +865,11 @@ export function HomeReferencesSection({
   });
 
   useEffect(() => {
-    if (!isTilutionPage) return;
+    if (!isTilutionPage && !isClayPage) return;
 
-    const matchingCategory = getTilutionCategoryFromPath(pathname);
+    const matchingCategory = isTilutionPage
+      ? getTilutionCategoryFromPath(pathname)
+      : null;
 
     if (matchingCategory) {
       setActiveFilter(matchingCategory);
@@ -884,7 +886,7 @@ export function HomeReferencesSection({
       setActiveImageIndex(0);
       setIsOpen(true);
     }
-  }, [isTilutionPage, pathname]);
+  }, [isClayPage, isTilutionPage, pathname]);
 
   useEffect(() => {
     if (

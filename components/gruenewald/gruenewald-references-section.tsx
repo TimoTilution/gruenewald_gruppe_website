@@ -707,6 +707,20 @@ export function GruenewaldReferencesSection() {
     ? getReferenceAnalyticsId(selectedProject)
     : undefined;
 
+  useEffect(() => {
+    const matchingProject = gruenewaldReferences.find((project) => {
+      const projectPath = getReferencePathForProject(project);
+      return projectPath && normalizeSitePathname(projectPath) === pathname;
+    });
+
+    if (!matchingProject) return;
+
+    setActiveFilter(matchingProject.category);
+    setShowAllReferences(true);
+    setSelectedProject(matchingProject);
+    setActiveImageIndex(0);
+  }, [pathname]);
+
   const closeGallery = () => {
     setSelectedProject(null);
     setActiveImageIndex(0);

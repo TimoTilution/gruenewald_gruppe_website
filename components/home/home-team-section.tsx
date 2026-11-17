@@ -503,9 +503,11 @@ function TeamContactOverlay({
 export function HomeTeamSection({
   variant = "tilution",
   teamData,
+  initialMemberSlug,
 }: {
   variant?: TeamSectionVariant;
   teamData?: TeamData | null;
+  initialMemberSlug?: string;
 }) {
   const fallbackCategories =
     variant === "verwaltung"
@@ -523,12 +525,24 @@ export function HomeTeamSection({
     ? teamData.categories
     : fallbackCategories;
   const members = teamData?.members.length ? teamData.members : fallbackMembers;
-  const [activeCategoryId, setActiveCategoryId] = useState(categories[0].id);
+  const initialMember = useMemo(
+    () =>
+      initialMemberSlug
+        ? members.find(
+            (member) => getTeamMemberSlug(member.name) === initialMemberSlug,
+          ) ?? null
+        : null,
+    [initialMemberSlug, members],
+  );
+  const [activeCategoryId, setActiveCategoryId] = useState(
+    initialMember?.categoryId ?? categories[0].id,
+  );
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
   const [activeContactAction, setActiveContactAction] =
     useState<ContactAction | null>(null);
   const [showAllMembers, setShowAllMembers] = useState(false);
   const teamSectionRef = useRef<HTMLElement>(null);
+  const initialMemberOpenedRef = useRef(false);
   const activeCategory = categories.find(
     (category) => category.id === activeCategoryId,
   );
@@ -538,6 +552,41 @@ export function HomeTeamSection({
     [activeCategoryId, members],
   );
   const displayedMembers = visibleMembers;
+
+  const scrollTeamSectionIntoView = () => {
+    const section = teamSectionRef.current;
+    if (!section) return;
+
+    const headerOffset =
+      document.querySelector("header")?.getBoundingClientRect().height ?? 0;
+    const targetTop =
+      section.getBoundingClientRect().top + window.scrollY - headerOffset - 16;
+    window.scrollTo({ top: Math.max(targetTop, 0), behavior: "auto" });
+  };
+
+  useEffect(() => {
+    if (!initialMember || initialMemberOpenedRef.current) return;
+
+    const timeout = window.setTimeout(() => {
+      if (initialMemberOpenedRef.current) return;
+
+      initialMemberOpenedRef.current = true;
+      setActiveCategoryId(initialMember.categoryId);
+      setShowAllMembers(true);
+
+      scrollTeamSectionIntoView();
+
+      setSelectedMember(initialMember);
+      trackAnalyticsEvent("team_member_open", {
+        section: "team",
+        item_id: getTeamMemberAnalyticsId(initialMember),
+        item_category: initialMember.categoryId,
+        interaction_method: "direct_url",
+      });
+    }, 150);
+
+    return () => window.clearTimeout(timeout);
+  }, [initialMember]);
 
   useEffect(() => {
     const section = teamSectionRef.current;
@@ -568,6 +617,9 @@ export function HomeTeamSection({
     });
     setSelectedMember(null);
     replaceUrlWithoutScroll(getTeamOverviewPath(variant));
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(scrollTeamSectionIntoView);
+    });
   };
 
   useEffect(() => {

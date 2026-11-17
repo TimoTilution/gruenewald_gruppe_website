@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound, permanentRedirect } from "next/navigation";
-import { TeamMemberDetailPage } from "@/components/team-member-detail-page";
+import { TeamMemberOnePager } from "@/components/team-member-onepager";
 import { siteBaseUrl } from "@/data/site-architecture";
 import { getCmsTeamData } from "@/lib/sanity/team";
 import { getTeamMemberSlug } from "@/lib/team-member-path";
@@ -26,10 +26,17 @@ async function getMember(company: string, person: string) {
   const config = routeConfig[company as CompanyRoute];
   if (!config) return null;
   const data = await getCmsTeamData(config.variant);
-  const member = data?.members.find((entry) => getTeamMemberSlug(entry.name) === person);
+  if (!data) return null;
+  const member = data.members.find((entry) => getTeamMemberSlug(entry.name) === person);
   if (!member) return null;
   const department = data?.categories.find((entry) => entry.id === member.categoryId)?.label ?? "Team";
-  return { member, department, companyTitle: config.title };
+  return {
+    member,
+    department,
+    companyTitle: config.title,
+    variant: config.variant,
+    data,
+  };
 }
 
 async function isDepartment(company: string, person: string) {
@@ -105,7 +112,11 @@ export default async function TeamMemberPage({ params }: PageProps) {
           imageSrc: result.member.imageSrc,
         })}
       />
-      <TeamMemberDetailPage {...result.member} department={result.department} />
+      <TeamMemberOnePager
+        variant={result.variant}
+        teamData={result.data}
+        initialMemberSlug={person}
+      />
     </>
   );
 }

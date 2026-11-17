@@ -197,10 +197,15 @@ export function Header() {
     : activeBranding
       ? tilutionSecondaryNavigation
       : defaultSecondaryNavigation;
+  const isTeamMemberOnepager = secondaryNavigation.some(
+    (item) =>
+      item.sectionId === "team" && pathname.startsWith(`${item.href}/`),
+  );
   const isLocalOnepager =
     pathname === "/" ||
     pathname === activeLogoHref ||
-    secondaryNavigation.some((item) => pathname === item.href);
+    secondaryNavigation.some((item) => pathname === item.href) ||
+    isTeamMemberOnepager;
   const router = useRouter();
   const handleLegalBack = () => {
     const queryReturnPath = new URLSearchParams(window.location.search).get("zurueck");

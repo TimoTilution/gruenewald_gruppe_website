@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { withTrailingSlash } from "@/lib/site-path";
 import { ArrowRight } from "lucide-react";
 import { ClayServicesSection } from "@/components/clay/clay-services-section";
@@ -437,12 +437,7 @@ function getReferenceRoute(path: string, slug: string[]): RouteContent | null {
         ]),
       ],
       render: () => (
-        <ProjectPage
-          title={project.title}
-          eyebrow="Referenz"
-          description={project.description}
-          images={project.images}
-        />
+        <CompanyOnePager company="clay-construction" sectionId="referenzen" />
       ),
     };
   }
@@ -475,8 +470,8 @@ function getReferenceRoute(path: string, slug: string[]): RouteContent | null {
         ]),
       ],
       render: () =>
-        company === "tilution" ? (
-          <CompanyOnePager company="tilution" sectionId="referenzen" />
+        company === "tilution" || company === "gruenewald" ? (
+          <CompanyOnePager company={company} sectionId="referenzen" />
         ) : (
           <ProjectPage
             title={project.title}
@@ -507,8 +502,8 @@ function getReferenceRoute(path: string, slug: string[]): RouteContent | null {
       ]),
     ],
     render: () =>
-      company === "tilution" ? (
-        <CompanyOnePager company="tilution" sectionId="referenzen" />
+      company === "tilution" || company === "gruenewald" ? (
+        <CompanyOnePager company={company} sectionId="referenzen" />
       ) : (
         <>
           <PageHero
@@ -742,6 +737,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function SeoRoutePage({ params }: PageProps) {
   const { slug } = await params;
+
+  if (slug[0] === "referenzen" && slug[1] && !slug[2]) {
+    const legacyProject = references.find(
+      (project) => getGroupReferencePath(project) === normalizePath(slug),
+    );
+    if (legacyProject) {
+      permanentRedirect(withTrailingSlash(getReferencePath(legacyProject)));
+    }
+  }
+
   const route = resolveRoute(slug);
 
   if (!route) {
